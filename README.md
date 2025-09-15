@@ -1,7 +1,7 @@
 ## Welcome to the team repo for SeminarHub!
 
 ### Members
-- Tony Do
+- Khai (Tony) Do
 - Cooper Birmingham
 - Cooper Braddon
 - Ash McConnel
