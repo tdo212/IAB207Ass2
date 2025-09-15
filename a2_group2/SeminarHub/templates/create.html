@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Seminar - SeminarHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #3a506b;
+            --secondary: #5bc0be;
+            --light: #f8f9fa;
+            --dark: #1c2541;
+            --accent: #e07a5f;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background-color: var(--primary);
+        }
+        
+        .form-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark);
+            border-color: var(--dark);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-mortarboard-fill me-2"></i>SeminarHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="create.html">Create Seminar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bookings.html">My Bookings</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-light me-2">Login</a>
+                    <a href="#" class="btn btn-light">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Seminar</li>
+            </ol>
+        </nav>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="form-section">
+                    <h2 class="mb-4">Create a New Seminar</h2>
+                    
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="seminarTitle" class="form-label">Seminar Title *</label>
+                                <input type="text" class="form-control" id="seminarTitle" placeholder="Enter seminar title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="seminarCategory" class="form-label">Category *</label>
+                                <select class="form-select" id="seminarCategory" required>
+                                    <option value="" selected disabled>Select a category</option>
+                                    <option value="cs">Computer Science</option>
+                                    <option value="business">Business</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="medicine">Medicine</option>
+                                    <option value="social">Social Sciences</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="seminarDescription" class="form-label">Description *</label>
+                            <textarea class="form-control" id="seminarDescription" rows="4" placeholder="Describe your seminar in detail..." required></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="seminarDate" class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="seminarDate" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="startTime" class="form-label">Start Time *</label>
+                                <input type="time" class="form-control" id="startTime" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="endTime" class="form-label">End Time *</label>
+                                <input type="time" class="form-control" id="endTime" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="seminarLocation" class="form-label">Location *</label>
+                                <input type="text" class="form-control" id="seminarLocation" placeholder="e.g., Main Auditorium" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="seminarCapacity" class="form-label">Capacity *</label>
+                                <input type="number" class="form-control" id="seminarCapacity" min="1" placeholder="Maximum attendees" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="speakerName" class="form-label">Speaker Name *</label>
+                            <input type="text" class="form-control" id="speakerName" placeholder="Enter speaker's name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="speakerBio" class="form-label">Speaker Bio</label>
+                            <textarea class="form-control" id="speakerBio" rows="3" placeholder="Brief background about the speaker..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="seminarImage" class="form-label">Seminar Image</label>
+                            <input type="file" class="form-control" id="seminarImage" accept="image/*">
+                            <div class="form-text">Upload an image that represents your seminar. Max size 5MB.</div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="termsAgreement" required>
+                            <label class="form-check-label" for="termsAgreement">
+                                I agree to the <a href="#">terms and conditions</a> and confirm that I have the rights to organize this event.
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md
