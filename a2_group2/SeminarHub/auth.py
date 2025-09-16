@@ -60,6 +60,7 @@ def login():
     return render_template('login.html', form = login_form, heading = 'Login', logo_message = 'Log in to')
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
     """Logs the user out of their account."""
     
