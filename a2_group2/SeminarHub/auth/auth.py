@@ -1,12 +1,12 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
-from .models import User
-from .forms import LoginForm, RegisterForm
-from . import db
+from ..models import User
+from ..forms import LoginForm, RegisterForm
+from .. import db
 
 # Create a blueprint - make sure all BPs have unique names
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 # this is a hint for a login function
 @auth_bp.route('/login', methods=['GET', 'POST'])

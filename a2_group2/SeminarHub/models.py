@@ -12,14 +12,14 @@ class User(db.Model, UserMixin):
     # TODO: Add table name when database integrated into app
     __tablename__ = 'TABLE NAME HERE' 
 
-    # TODO: Uncomment this out when database is integrated into app
+    # TODO: Implement database for this to work
     # User model inputs into database columns
-    # id = db.Column(db.Integer, primary_key=True)
-    # name = db.Column(db.String(64), unique=True, index=True)
-    # email = db.Column(db.String(64), unique=True)
-    # password_hash = db.Column(db.String(256), nullable=False)
-    # number = db.Column(db.String(64), nullable=False)
-    # address = db.Column(db.String(256), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, index=True)
+    email = db.Column(db.String(64), unique=True)
+    password_hash = db.Column(db.String(256), nullable=False)
+    number = db.Column(db.String(64), nullable=False)
+    address = db.Column(db.String(256), nullable=False)
 
     def __repr__(self):
         """
@@ -27,8 +27,8 @@ class User(db.Model, UserMixin):
         """
         return '<User: {}>'.format(self.name)
 
-class Event(db.Model):
+# class Event(db.Model):
 
-class Comment(db.Model):
+# class Comment(db.Model):
 
-class Order(db.Model):
+# class Order(db.Model):
