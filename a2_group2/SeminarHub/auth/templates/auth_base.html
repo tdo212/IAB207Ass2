@@ -1,5 +1,5 @@
-<!-- Uncomment this when base.html has been created -->
-<!-- {% extends 'base.html' %} -->
+<!-- Uncomment this when base.html has been created and add back in %% -->
+<!-- {  extends 'base.html' } -->
 <!-- {% block title %}{{heading}}{% endblock title %} -->
 
 <!-- Remove below until section when base.html has been created -->
@@ -11,89 +11,12 @@
   <title>SeminarHub - {{heading}}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <style>
-    :root {
-        --primary: #3a506b;
-        --secondary: #5bc0be;
-        --light: #f8f9fa;
-        --dark: #1c2541;
-        --accent: #e07a5f;
-    }
-    
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f5f7fa;
-        color: #333;
-    }
-    
-    .navbar {
-        background-color: var(--primary);
-    }
-
-    /* Login form */
-    .login-form {
-        width: 60%;
-    }
-
-    /* Background colour */
-    .login-background {
-        background-color: var(--light);
-        color: #3d3936;
-    }
-
-    /* Form container colours */
-    .form-container {
-        background-color: white;
-        color: #333;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    }
-
-    /* Form input colours */
-    .auth-form-control {
-        background-color: #e9ecef;
-        border-color: #444;
-    }
-
-    .login-button {
-        border-radius: 50px; 
-        padding: 10px;
-    }
-
-    .login-button:hover {
-        transform: scale(1.03);
-    }
-
-    .text-accent {
-      color: var(--accent);
-    }
-
-    /* Make alternate logos pop when hovered over to make them being buttons obvious. */
-    .alternate-login-method:hover {
-        transform: scale(1.1);
-    }
-
-    /* To allow text within the hr. Taken from https://stackoverflow.com/a/41981005 */
-    .hr-sect {
-        display: flex;
-        flex-basis: 100%;
-        align-items: center;
-        margin: 8px 0px;
-    }
-    .hr-sect:before,
-    .hr-sect:after {
-        content: "";
-        flex-grow: 1;
-        background: lightgrey;
-        height: 1px;
-        font-size: 0px;
-        line-height: 0px;
-        margin: 0px 8px;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/stylesheet.css') }}">
 </head>
 <body>
   
-  <!-- navbar -->
+  <header>
+      <!-- navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">
@@ -115,10 +38,13 @@
       </div>
     </div>
   </nav>
+  </header>
 
-<!-- Uncomment this when base.html has been created -->
-<!-- {% block content %} -->
 
+<!-- Uncomment this when base.html has been created and add back in %% -->
+<!-- { block content } -->
+
+<main>
 <section class="min-vh-100 login-background bg-gradient pt-5">
     <div class="container pt-5">
         <div class="row justify-content-center p-2 p-md-0">
@@ -169,8 +95,9 @@
         </div>
     </div>
 </section>
-<!-- Uncomment this when base.html has been created -->
-<!-- {% endblock %} -->
+</main>
+<!-- Uncomment this when base.html has been created and add back in %% -->
+<!-- { endblock } -->
 
 <!-- Remove below when base.html has been created -->
   <!-- Bootstrap JS -->
