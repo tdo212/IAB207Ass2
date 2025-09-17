@@ -1,5 +1,5 @@
 # import flask - from 'package' import 'Class'
-from flask import Flask 
+from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -41,5 +41,22 @@ def create_app():
 
    from .auth import auth
    app.register_blueprint(auth.auth_bp)
+
+   # Error handling for errors 404 and 500
+   @app.errorhandler(404)
+   def page_not_found(error):
+      # Gets the page the user was on prior to error
+      back = request.referrer
+      if back is None:
+         back = url_for('main.index')
+      return render_template('404.html', heading = 'Page Missing', back = back), 404
+
+   @app.errorhandler(500)
+   def internal_error(error):
+      # Gets the page the user was on prior to error
+      back = request.referrer
+      if back is None:
+         back = url_for('main.index')
+      return render_template('500.html', heading = 'Server Error', back = back), 500
    
    return app
