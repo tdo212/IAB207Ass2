@@ -76,3 +76,7 @@ body {
     line-height: 0px;
     margin: 0px 8px;
 }
+
+.error-image {
+    transform: translateY(2rem);
+}
