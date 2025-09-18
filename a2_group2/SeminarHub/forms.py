@@ -11,8 +11,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log In', render_kw={'class': 'mt-4 btn btn-primary login-button btn-lg'})
 
 class RegisterForm(FlaskForm):
-    uppercase_characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
     first_name = StringField('First name', validators=[InputRequired(message='Please enter a first name.')], render_kw={'class': 'auth-form-control'})
     last_name = StringField('Last name', validators=[InputRequired(message='Please enter a last name.')], render_kw={'class': 'auth-form-control'})
     email = StringField('Email address', validators=[InputRequired(message='Please enter an email address.'), Email(message='Enter a valid email address.')], render_kw={'class': 'auth-form-control'})
