@@ -5,12 +5,9 @@ from ..models import User
 from ..forms import LoginForm, RegisterForm
 from .. import db
 
-# Create a blueprint - make sure all BPs have unique names
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
-# this is a hint for a login function
 @auth_bp.route('/login', methods=['GET', 'POST'])
-# view function
 def login():
     """Attempts to log the user in when the LoginForm is submitted. This function will automatically search for an entry in the application database that matches the credentials provided.
 
@@ -59,10 +56,11 @@ def login():
 
     return render_template('login.html', form = login_form, heading = 'Login', logo_message = 'Log in to')
 
+
 @auth_bp.route('/logout')
 @login_required
 def logout():
-    """Logs the user out of their account."""
+    """Logs the user out of their account using the inbuilt method from flask_login."""
     
     # Development information
     print('Logout requested for user {}'. format(current_user))
@@ -70,6 +68,7 @@ def logout():
     logout_user()
 
     return redirect(url_for('main.index'))
+
 
 @auth_bp.route('/signup', methods = ['GET', 'POST'])
 def signup():
