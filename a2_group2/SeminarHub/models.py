@@ -15,7 +15,8 @@ class User(db.Model, UserMixin):
     # TODO: Implement database for this to work
     # User model inputs into database columns
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, index=True)
+    first_name = db.Column(db.String(64), index=True)
+    last_name = db.Column(db.String(64), index=True)
     email = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(256), nullable=False)
     number = db.Column(db.String(64), nullable=False)
