@@ -4,15 +4,15 @@
 {% block content %}
 <div class="container text-center mt-5 pt-5">
     <div>
-        <!-- https://sora.chatgpt.com/g/gen_01k5ay1f8wf1cav84wyxx52zpf -->
-        <img src="{{ url_for('static', filename='img/sora_404_transparent.png') }}" alt="" class="" style="transform: translateY(2rem);">
+        <!-- Taken from: https://www.freepik.com/icon/404-error_7046213#fromView=search&page=1&position=2&uuid=bfb3d5eb-a0f2-4f40-8f69-5a8582f56353 -->
+        <img src="{{ url_for('static', filename='img/404-error_1_256.png') }}" alt="Generic 404 page not found image" class="mb-5">
     </div>
     <div class="">
         <h2 class="display-4 fw-bold mb-3">This page could not be found</h2>
         <p class="fs-5 text-muted mb-4">The page you were looking for may have been moved or does not exist</p>
         <div class="d-grid gap-2 d-md-block">
-            <a href="{{back}}"><button class="btn btn-primary btn-lg me-2 mb-2">Back</button></a>
-            <a href="{{url_for('main.index')}}"><button class="btn btn-dark btn-lg me-2 mb-2">Home</button></a>
+            <a href="{{back}}"><button class="btn btn-secondary btn-lg me-2 mb-2">Back</button></a>
+            <a href="{{url_for('main.index')}}"><button class="btn btn-primary btn-lg me-2 mb-2">Home</button></a>
         </div>
     </div>
 </div>

@@ -4,15 +4,15 @@
 {% block content %}
 <div class="container text-center mt-5 pt-5">
     <div>
-        <!-- https://sora.chatgpt.com/g/gen_01k5azznsjfv9vhpmarbecsgwq -->
-        <img src="{{ url_for('static', filename='img/sora_500_transparent.png') }}" alt="" class="" style="transform: translateY(2rem);">
+        <!-- Taken from: https://www.freepik.com/icon/alert_6621409#fromView=search&page=1&position=15&uuid=93361c97-ff4c-4ae9-b138-6c1360438d0b -->
+        <img src="{{ url_for('static', filename='img/500_alert_256.png') }}" alt="Generic error 500 server error image" class="">
     </div>
     <div class="">
         <h2 class="display-4 fw-bold mb-3">Oops. Something went wrong</h2>
         <p class="fs-5 text-muted mb-4">There seems to be a problem on our end. We'll work to get it fixed as soon as possible.</p>
         <div class="d-grid gap-2 d-md-block">
-            <a href="{{ back }}"><button class="btn btn-primary btn-lg me-2 mb-2">Back</button></a>
-            <a href="{{url_for('main.index')}}"><button class="btn btn-dark btn-lg me-2 mb-2">Home</button></a>
+            <a href="{{ back }}"><button class="btn btn-secondary btn-lg me-2 mb-2">Back</button></a>
+            <a href="{{url_for('main.index')}}"><button class="btn btn-primary btn-lg me-2 mb-2">Home</button></a>
         </div>
     </div>
 </div>
