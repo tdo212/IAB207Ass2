@@ -1,4 +1,6 @@
 from wtforms.validators import ValidationError
+from .. import db
+from ..models import User
 
 def password_validator():
     """Checks the password entered by a user in a form to make sure that it contains an uppercase letter, a lower case letter, a special character and that it is at least 6 characters long.
@@ -52,3 +54,21 @@ def phone_number_validator():
             raise ValidationError(message)
         
     return _phone_number_validator
+
+
+def email_validator():
+    """Checks the email entered by the user in the sign up form to make sure that it is unique within the database.
+
+    If the email address already exists it will throw a ValidationError and display a message in the form.
+    """
+    message = "An account with that email already exists."
+
+    def _email_validator(form, field):
+        email = field.data
+
+        # Check for a user that already exists in the database with that email
+        check_existing_user = db.session.scalar(db.select(User).where(User.email == email))
+        if check_existing_user:
+            raise ValidationError(message)
+        
+    return _email_validator

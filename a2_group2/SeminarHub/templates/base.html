@@ -12,10 +12,9 @@
     <!-- Header -->
     <header>
 
-        <!-- Navbar -->
-        <nav>
-            <!-- Your navbar should go here -->
-        </nav>
+        <!-- Navbar. Draws from the _navigation.html template -->
+        {% include("_navigation.html") %}
+        
         <!-- Code for using Flask flash -->
         <div class="container-fluid">
             {% with messages = get_flashed_messages() %}

@@ -17,7 +17,7 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     first_name = StringField('First name', validators=[InputRequired(message='Please enter a first name.')], render_kw={'class': 'auth-form-control'})
     last_name = StringField('Last name', validators=[InputRequired(message='Please enter a last name.')], render_kw={'class': 'auth-form-control'})
-    email = StringField('Email address', validators=[InputRequired(message='Please enter an email address.'), Email(message='Enter a valid email address.')], render_kw={'class': 'auth-form-control'})
+    email = StringField('Email address', validators=[InputRequired(message='Please enter an email address.'), Email(message='Enter a valid email address.'), auth_validators.email_validator()], render_kw={'class': 'auth-form-control'})
     password = PasswordField('Password', validators=[InputRequired(), auth_validators.password_validator()], render_kw={'class': 'auth-form-control'})
     confirm_password = PasswordField('Confirm password', validators=[EqualTo('password', message='Passwords must match.')], render_kw={'class': 'auth-form-control'})
     number = TelField('Phone number', validators=[InputRequired(message='Please enter your number.'), auth_validators.phone_number_validator()], render_kw={'class': 'auth-form-control'})
