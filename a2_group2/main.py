@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
 ''' 
 # this can be used later to initialise our database!
-from seminarhub import create_app, db
+from SeminarHub import create_app, db
 from create_db import create_database
 
 app = create_app()
