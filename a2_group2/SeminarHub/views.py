@@ -35,7 +35,7 @@ def create():
         db.session.commit()
         print('Successfully created new seminar', 'success')
         return redirect(url_for('main.create'))
-    return render_template('create.html', form = form, title = 'Create a Seminar | ')
+    return render_template('create.html', form = form, heading = 'Create a Seminar | ')
 
 def check_upload_file(form):
     # Form file data
