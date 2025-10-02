@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for
 from .forms import CreateForm
 import os
 from werkzeug.utils import secure_filename
+from flask_login import login_required
 
 main_bp = Blueprint('main', __name__)
 
@@ -11,6 +12,7 @@ def index():
 
 
 @main_bp.route('/create', methods=['GET', 'POST'])
+@login_required
 def create():
     form = CreateForm()
     if form.validate_on_submit():
@@ -43,5 +45,6 @@ def check_upload_file(form):
     return db_upload_path
 
 @main_bp.route('/bookings')
+@login_required
 def booking():
     return render_template('bookings.html')
