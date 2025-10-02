@@ -49,7 +49,7 @@ def create_app():
       back = request.referrer
       if back is None:
          back = url_for('main.index')
-      return render_template('404.html', heading = 'Page Missing', back = back), 404
+      return render_template('404.html', heading = 'Page Missing | ', back = back), 404
 
    @app.errorhandler(500)
    def internal_error(error):
@@ -57,6 +57,6 @@ def create_app():
       back = request.referrer
       if back is None:
          back = url_for('main.index')
-      return render_template('500.html', heading = 'Server Error', back = back), 500
+      return render_template('500.html', heading = 'Server Error | ', back = back), 500
    
    return app
