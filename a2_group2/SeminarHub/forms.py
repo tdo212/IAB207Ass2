@@ -39,19 +39,3 @@ class CreateForm(FlaskForm):
     image = FileField('Seminar Image', validators=[FileRequired(message='Please select an image to upload.'), FileAllowed(ALLOWED_FILE, message='Uploaded image must be a PNG, JPG or JPEG.')])
     accept_toc = accept_toc = BooleanField('I confirm that I have the rights to organize this event and agree to the ', validators=[InputRequired(message="You must accept the terms and conditions to continue.")])
     submit = SubmitField('Create Seminar', render_kw={'class': 'mt-4 btn btn-primary login-button btn-lg'})
-
-class CommentForm(FlaskForm):
-    text = TextAreaField(
-        'Add your comment',
-        validators=[InputRequired(message='Please write a comment.')]
-    )
-    submit = SubmitField('Post Comment')
-
-class TicketForm(FlaskForm):
-    quantity = SelectField(
-        'Number of tickets',
-        coerce=int,
-        choices=[(i, f'{i} ticket' if i == 1 else f'{i} tickets') for i in range(1, 6)],
-        validators=[InputRequired(), NumberRange(min=1, max=5)]
-    )
-    submit = SubmitField('Register Now')
