@@ -92,3 +92,32 @@ class Order(db.Model):
 
     def __repr__(self):
         return f"<Order {self.id} x{self.quantity} event={self.event_id}>"
+
+# Booking model
+class Booking(db.Model):
+    """
+    Represents a Booking in the application.
+
+    Stores the Booking information in seperate columns within the database using an incrementing ID as the primary key.
+
+    Uses Event ID and User ID as foreign keys for this table.
+    """
+
+    tablename = 'bookings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    booking_number = db.Column(db.String(32), index=True, unique=True)
+    # This is duplicated in both Order and Booking. Might need to remove one and make it a relational entry once 'Details' view is completed
+    quantity = db.Column(db.Integer, index=True, nullable=False) 
+    booking_date = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(32), default="Confirmed")
+
+    # Foreign keys
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
+
+    def repr(self):
+        """
+        String representation of the Booking model for development purposes.
+        """
+        return '<Booking ID: {}, Booking Number: {}, Quantity: {}, Booking Date: {}, Status: {}>'.format(self.id, self.booking_number, self.quantity, self.booking_date, self.status) 

@@ -1,216 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bookings - SeminarHub</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary: #3a506b;
-            --secondary: #5bc0be;
-            --light: #f8f9fa;
-            --dark: #1c2541;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-        }
-        
-        .navbar {
-            background-color: var(--primary);
-        }
-        
-        .booking-card {
-            border-left: 4px solid var(--primary);
-            transition: transform 0.2s;
-        }
-        
-        .booking-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation (same as other pages) -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">
-                <i class="bi bi-mortarboard-fill me-2"></i>SeminarHub
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url_for('main.index')}}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{url_for('main.create')}}">Create Seminar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{url_for('main.booking')}}">My Bookings</a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <a href="#" class="btn btn-outline-light me-2">Login</a>
-                    <a href="#" class="btn btn-light">Register</a>
-                </div>
-            </div>
-        </div>
+{% extends 'base.html' %}
+{% block title %}{{heading}}{% endblock title %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Bookings</li>
+        </ol>
     </nav>
 
-    <!-- Page Content -->
-    <div class="container mt-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">My Bookings</li>
-            </ol>
-        </nav>
+    <h2 class="mb-5">My Seminar Bookings</h2>
+    
+    {% if bookings|length > 0 %}
+    <div class="row">
+        <!-- Upcoming Bookings -->
+        <div class="col-lg-6">
+            <h4 class="border-bottom pb-2">Upcoming Seminars</h4>
 
-        <h2 class="mb-4">My Seminar Bookings</h2>
-        
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> Please log in to view your bookings. This is a demonstration page.
-        </div>
-        
-        <div class="row">
-            <!-- Upcoming Bookings -->
-            <div class="col-lg-6">
-                <h4 class="border-bottom pb-2">Upcoming Seminars</h4>
-                
-                <div class="card booking-card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Future of Artificial Intelligence</h5>
-                            <span class="badge bg-success">Confirmed</span>
-                        </div>
-                        <h6 class="card-subtitle mb-2 text-muted">Booking #SH789456</h6>
-                        <p class="card-text"><i class="bi bi-calendar-event me-2"></i>October 15, 2023 | 2:00 PM</p>
-                        <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Main Auditorium</p>
-                        <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>2 tickets</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Booked on: September 28, 2023</small>
-                            <button class="btn btn-sm btn-outline-danger">Cancel Booking</button>
-                        </div>
+            {% for booking in bookings %}
+            {% if booking.status == "Confirmed" %}
+            <div class="card booking-card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{booking.event.title}}</h5>
+                        <span class="badge bg-success py-2">{{booking.status}}</span>
                     </div>
-                </div>
-                
-                <div class="card booking-card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Digital Marketing Strategies</h5>
-                            <span class="badge bg-success">Confirmed</span>
-                        </div>
-                        <h6 class="card-subtitle mb-2 text-muted">Booking #SH123987</h6>
-                        <p class="card-text"><i class="bi bi-calendar-event me-2"></i>October 20, 2023 | 10:00 AM</p>
-                        <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Business Building Room 304</p>
-                        <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>1 ticket</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Booked on: September 25, 2023</small>
-                            <button class="btn btn-sm btn-outline-danger">Cancel Booking</button>
-                        </div>
+                    <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
+                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</p>
+                    <p class="card-text"><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
+                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} tickets</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
+                        <button class="btn btn-sm btn-outline-danger">Cancel Booking</button>
                     </div>
                 </div>
             </div>
+        </div>
+
+        {% elif booking.status == "Completed" %}
+        <!-- Past Bookings -->
+        <div class="col-lg-6">
+            <h4 class="border-bottom pb-2">Past Seminars</h4>
             
-            <!-- Past Bookings -->
-            <div class="col-lg-6">
-                <h4 class="border-bottom pb-2">Past Seminars</h4>
-                
-                <div class="card booking-card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Leadership in Tech Industries</h5>
-                            <span class="badge bg-secondary">Completed</span>
-                        </div>
-                        <h6 class="card-subtitle mb-2 text-muted">Booking #SH456123</h6>
-                        <p class="card-text"><i class="bi bi-calendar-event me-2"></i>September 30, 2023 | 9:00 AM</p>
-                        <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Conference Hall B</p>
-                        <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>1 ticket</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Booked on: September 15, 2023</small>
-                            <button class="btn btn-sm btn-outline-primary">View Materials</button>
-                        </div>
+            <div class="card booking-card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{booking.event.title}}</h5>
+                        <span class="badge bg-secondary py-2">{{booking.status}}</span>
                     </div>
-                </div>
-                
-                <div class="card booking-card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title">Renewable Energy Forum</h5>
-                            <span class="badge bg-secondary">Completed</span>
-                        </div>
-                        <h6 class="card-subtitle mb-2 text-muted">Booking #SH987654</h6>
-                        <p class="card-text"><i class="bi bi-calendar-event me-2"></i>September 10, 2023 | 1:30 PM</p>
-                        <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Engineering Building Atrium</p>
-                        <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>3 tickets</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Booked on: August 28, 2023</small>
-                            <button class="btn btn-sm btn-outline-primary">View Materials</button>
-                        </div>
+                    <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
+                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</p>
+                    <p class="card-text"><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
+                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} tickets</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
+                        <button class="btn btn-sm btn-outline-primary">View Materials</button>
                     </div>
                 </div>
             </div>
         </div>
+        {% endif %}
+        {% endfor %}
+        
     </div>
-
-    <!-- Footer (same as other pages) -->
-    <footer class="mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>SeminarHub</h5>
-                    <p>Connecting academics and professionals with valuable learning opportunities through seminars and workshops.</p>
-                </div>
-                <div class="col-md-2">
-                    <h5>Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="index.html" class="text-light">Home</a></li>
-                        <li><a href="create.html" class="text-light">Create</a></li>
-                        <li><a href="bookings.html" class="text-light">Bookings</a></li>
-                        <li><a href="#" class="text-light">Login</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Categories</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-light">Computer Science</a></li>
-                        <li><a href="#" class="text-light">Business</a></li>
-                        <li><a href="#" class="text-light">Engineering</a></li>
-                        <li><a href="#" class="text-light">View All</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Contact Us</h5>
-                    <address class="text-light">
-                        <i class="bi bi-envelope me-2"></i> info@seminarhub.edu<br>
-                        <i class="bi bi-telephone me-2"></i> (123) 456-7890<br>
-                        <i class="bi bi-building me-2"></i> University Campus, Education City
-                    </address>
-                </div>
-            </div>
-            <hr class="bg-light">
-            <div class="text-center">
-                <p class="mb-0">© 2023 SeminarHub. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Your custom JS -->
-    <script src="js/script.js"></script>
-</body>
-</html>
+    {% endif %}
+</div>
+{% endblock %}
