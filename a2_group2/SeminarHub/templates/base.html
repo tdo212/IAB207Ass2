@@ -8,21 +8,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/stylesheet.css') }}">
 </head>
+
 <body>
+    <!-- Header -->
+    <header>
 
-  <!-- Header -->
-  <header>
-    <!-- Navbar partial -->
-    {% include "_navigation.html" %}
-
-    <!-- Flash messages (shared across pages) -->
-    <div class="container mt-3">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <!-- Navbar. Draws from the _navigation.html template -->
+        {% include("_navigation.html") %}
+        
+        <!-- Code for using Flask flash -->
+        <div class="container-fluid">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">x</button>
+                {{message}}
             </div>
           {% endfor %}
         {% endif %}
@@ -80,4 +81,5 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
