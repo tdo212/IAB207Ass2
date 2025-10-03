@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, url_for
+from flask import Blueprint, render_template, redirect, request, url_for, flash
 from .forms import CreateForm
 import os
 from werkzeug.utils import secure_filename
@@ -33,7 +33,9 @@ def create():
 
         # Commit to database
         db.session.commit()
-        print('Successfully created new seminar', 'success')
+
+        flash('Successfully created new seminar', 'success')
+        
         return redirect(url_for('main.create'))
     return render_template('create.html', form = form, heading = 'Create a Seminar | ')
 
