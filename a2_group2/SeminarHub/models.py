@@ -19,6 +19,9 @@ class User(db.Model, UserMixin):
     number = db.Column(db.String(64), nullable=False)
     address = db.Column(db.String(256), nullable=False)
 
+    # Relationships
+    bookings = db.relationship("Booking", backref="user")
+
     def __repr__(self):
         """
         String representation of the User model for development purposes.
@@ -49,6 +52,7 @@ class Event(db.Model):
     # relationships
     comments = db.relationship("Comment", back_populates="event", cascade="all, delete-orphan")
     orders = db.relationship("Order", back_populates="event", cascade="all, delete-orphan")
+    bookings = db.relationship("Booking", backref = "event")
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -70,7 +74,7 @@ class Comment(db.Model):
     def __repr__(self):
         return f"<Comment {self.id} on Event {self.event_id}>"
 
-# class Order(db.Model):
+# Order model
 class Order(db.Model):
     __tablename__ = "orders"
 

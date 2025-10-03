@@ -4,8 +4,8 @@ import os
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
 from . import db
-from .models import Event
-from datetime import datetime as dt
+from .models import Event, Booking
+from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
@@ -22,8 +22,8 @@ def create():
         db_file_path = check_upload_file(form)
 
         # Compile individual dates and times into datetime objects
-        start_datetime = dt.combine(form.date.data, form.start_time.data)
-        end_datetime = dt.combine(form.date.data, form.end_time.data)
+        start_datetime = datetime.combine(form.date.data, form.start_time.data)
+        end_datetime = datetime.combine(form.date.data, form.end_time.data)
 
         # Create seminar object
         seminar = Event(title = form.title.data, description = form.description.data, category = form.category.data, location = form.location.data, capacity = form.capacity.data, start_dt = start_datetime, end_dt = end_datetime, image_url = db_file_path, speaker = form.speaker.data, speaker_bio = form.speaker_bio.data, owner_user_id = current_user.id )
