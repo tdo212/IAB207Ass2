@@ -54,7 +54,7 @@ def login():
         else:
             flash(error)
 
-    return render_template('login.html', form = login_form, heading = 'Login', logo_message = 'Log in to', title = 'Login | ')
+    return render_template('login.html', form = login_form, heading = 'Login | ', logo_message = 'Log in to')
 
 
 @auth_bp.route('/logout')

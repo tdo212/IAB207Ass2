@@ -152,3 +152,12 @@ footer {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+
+.booking-card {
+    border-left: 4px solid var(--primary);
+    transition: transform 0.2s;
+}
+
+.booking-card:hover {
+    transform: translateY(-3px);
+}
