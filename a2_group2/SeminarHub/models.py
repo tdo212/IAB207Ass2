@@ -8,11 +8,8 @@ class User(db.Model, UserMixin):
 
     Stores the user information in seperate columns within the database using an incrementing ID as the primary key.
     """
+    __tablename__ = 'users' 
 
-    # TODO: Add table name when database integrated into app
-    __tablename__ = 'TABLE NAME HERE' 
-
-    # TODO: Implement database for this to work
     # User model inputs into database columns
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(64), index=True)

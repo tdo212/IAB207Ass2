@@ -1,112 +1,92 @@
-<!-- Uncomment this when base.html has been created and add back in %% -->
-<!-- {  extends 'base.html' } -->
+{%  extends 'base.html' %}
+{% block title %}{{heading}}{% endblock title %}
 
-<!-- Remove below section when base.html has been created -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Seminar - SeminarHub</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/stylesheet.css') }}">
-</head>
-<body>
-    {% include("_navigation.html") %}
+{% block content %}
+<!-- Page Content -->
+<div class="container mt-4">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create Seminar</li>
+    </ol>
+</nav>
 
-<!-- Uncomment this when base.html has been created and add back in % % -->
-<!-- { block content } -->
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="form-section">
+            <h2 class="mb-4">Create a New Seminar</h2>
+            
+            <form action="" method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
 
-    <!-- Page Content -->
-    <div class="container mt-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Seminar</li>
-            </ol>
-        </nav>
-
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="form-section">
-                    <h2 class="mb-4">Create a New Seminar</h2>
-                    
-                    <form action="" method="post">
-                    {{ form.hidden_tag() }}
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{form.title.label}}
-                                {{form.title (class="form-control", placeholder="Enter seminar title")}}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{form.category.label}}
-                                {{form.category (class="form-select", placeholder="Select a category")}}
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{form.description.label}}
-                            {{form.description (class="form-control", placeholder="Describe your seminar in detail...", rows="4")}}
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{form.date.label}}
-                                {{form.date (class="form-control")}}
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                {{form.start_time.label}}
-                                {{form.start_time (class="form-control")}}
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                {{form.end_time.label}}
-                                {{form.end_time (class="form-control")}}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{form.location.label}}
-                                {{form.location (class="form-control", placeholder="e.g., Main Auditorium")}}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{form.capacity.label}}
-                                {{form.capacity (class="form-control", placeholder="Maximum attendees")}}
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{form.speaker.label}}
-                            {{form.speaker (class="form-control", placeholder="Enter speaker's name")}}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{form.speaker_bio.label}}
-                            {{form.speaker_bio (class="form-control", placeholder="Brief background about the speaker...", rows="3")}}
-                        </div>
-                        
-                        <div class="mb-4">
-                            {{form.image.label}}
-                            {{form.image (class="form-control")}}
-                            <div class="form-text">Upload an image that represents your seminar. Max size 5MB.</div>
-                        </div>
-                        
-                        <div class="mb-5">
-                            {{form.accept_toc() }} {{form.accept_toc.label()}}<a href="" class="ms-1">Terms and Conditions</a>
-                        </div>
-                        
-                        <div class="d-grid gap-2 d-md-flex justify-content-md mb-4">
-                            {{ form.submit(class="btn btn-primary login-button btn-lg") }}
-                        </div>
-
-<!-- Uncomment this when base.html has been created and add back in %% -->
-<!-- { endblock } -->
-
-<!-- Remove below when base.html has been created -->
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{form.title.label}}
+                        {{form.title (class="form-control", placeholder="Enter seminar title")}}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{form.category.label}}
+                        {{form.category (class="form-select", placeholder="Select a category")}}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    {{form.description.label}}
+                    {{form.description (class="form-control", placeholder="Describe your seminar in detail...", rows="4")}}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{form.date.label}}
+                        {{form.date (class="form-control")}}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{form.start_time.label}}
+                        {{form.start_time (class="form-control")}}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{form.end_time.label}}
+                        {{form.end_time (class="form-control")}}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{form.location.label}}
+                        {{form.location (class="form-control", placeholder="e.g., Main Auditorium")}}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{form.capacity.label}}
+                        {{form.capacity (class="form-control", placeholder="Maximum attendees")}}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    {{form.speaker.label}}
+                    {{form.speaker (class="form-control", placeholder="Enter speaker's name")}}
+                </div>
+                
+                <div class="mb-3">
+                    {{form.speaker_bio.label}}
+                    {{form.speaker_bio (class="form-control", placeholder="Brief background about the speaker...", rows="3")}}
+                </div>
+                
+                <div class="mb-4">
+                    {{form.image.label}}
+                    {{form.image (class="form-control")}}
+                    <div class="form-text">Upload an image that represents your seminar. Max size 5MB.</div>
+                </div>
+                
+                <div class="mb-5">
+                    {{form.accept_toc() }} {{form.accept_toc.label()}}<a href="" class="ms-1">Terms and Conditions</a>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md mb-4">
+                    {{ form.submit(class="btn btn-primary login-button btn-lg") }}
+                </div>
+            </form> 
+        </div>
+    </div>
+</div>
+{% endblock %}
 

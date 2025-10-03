@@ -1,3 +1,11 @@
+# Placeholder database for testing purposes until we create all the models needed then we can use mock database creation below
+from SeminarHub import db, create_app
+app = create_app()
+ctx = app.app_context()
+ctx.push()
+db.create_all()
+
+
 # this is where we will create our database
 
 '''

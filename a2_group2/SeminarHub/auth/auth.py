@@ -47,14 +47,14 @@ def login():
             login_user(user)
             nextp = request.args.get('next') # this gives the url from where the login page was accessed
             print(nextp)
-            if next is None or not nextp.startswith('/'):
+            if nextp is None or not nextp.startswith('/'):
                 flash('Successfully logged in.')
                 return redirect(url_for('main.index'))
             return redirect(nextp)
         else:
             flash(error)
 
-    return render_template('login.html', form = login_form, heading = 'Login', logo_message = 'Log in to')
+    return render_template('login.html', form = login_form, heading = 'Login', logo_message = 'Log in to', title = 'Login | ')
 
 
 @auth_bp.route('/logout')
@@ -98,4 +98,4 @@ def signup():
         flash('Your account has been created.')
 
         return redirect(url_for('main.index'))
-    return render_template('signup.html', heading = 'Sign Up', logo_message = 'Become a member of', form = signup_form)
+    return render_template('signup.html', heading = 'Sign Up', logo_message = 'Become a member of', form = signup_form, title = 'Sign up | ')

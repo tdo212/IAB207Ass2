@@ -1,10 +1,11 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IAB207 Assignment 3</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}SeminarHub - Academic Event Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/stylesheet.css') }}">
 </head>
 
@@ -24,24 +25,61 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="close">x</button>
                 {{message}}
             </div>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+  </header>
+
+  <!-- Main page content -->
+  <main class="">
+    {% block content %}{% endblock %}
+  </main>
+
+<!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>SeminarHub</h5>
+                    <p>Connecting academics and professionals with valuable learning opportunities through seminars and workshops.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('main.index') }}" class="text-light">Home</a></li>
+                        <li><a href="{{ url_for('main.create') }}" class="text-light">Create</a></li>
+                        <li><a href="{{url_for('main.booking')}}" class="text-light">Bookings</a></li>
+                        <li><a href="#" class="text-light">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Categories</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Computer Science</a></li>
+                        <li><a href="#" class="text-light">Business</a></li>
+                        <li><a href="#" class="text-light">Engineering</a></li>
+                        <li><a href="#" class="text-light">View All</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <address class="text-light">
+                        <i class="bi bi-envelope me-2"></i> info@seminarhub.edu<br>
+                        <i class="bi bi-telephone me-2"></i> (123) 456-7890<br>
+                        <i class="bi bi-building me-2"></i> University Campus, Education City
+                    </address>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2025 SeminarHub. All rights reserved.</p>
+            </div>
         </div>
-        {% block header %}
-
-        {% endblock %}
-
-    </header>
-
-    {% block content %}
-
-    {% endblock %}
-
-    <footer class="footer">
-        <!-- Your footer should go here -->
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
