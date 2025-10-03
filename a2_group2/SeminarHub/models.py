@@ -103,7 +103,7 @@ class Booking(db.Model):
     Uses Event ID and User ID as foreign keys for this table.
     """
 
-    tablename = 'bookings'
+    __tablename__ = 'bookings'
 
     id = db.Column(db.Integer, primary_key=True)
     booking_number = db.Column(db.String(32), index=True, unique=True)
