@@ -42,6 +42,9 @@ def create_app():
    from .auth import auth
    app.register_blueprint(auth.auth_bp)
 
+   from .user import user
+   app.register_blueprint(user.user_bp)
+
    # Error handling for errors 404 and 500
    @app.errorhandler(404)
    def page_not_found(error):

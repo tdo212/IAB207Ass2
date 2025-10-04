@@ -161,3 +161,9 @@ footer {
 .booking-card:hover {
     transform: translateY(-3px);
 }
+
+.horizontal-card-img {
+    object-fit: cover; 
+    height: 120px;
+    width: 120px;
+}

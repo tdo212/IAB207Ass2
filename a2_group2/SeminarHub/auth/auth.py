@@ -87,8 +87,7 @@ def signup():
         # Hash password and format full name for entry into database
         hashed_password = generate_password_hash(signup_form.password.data)
 
-        # TODO: Needs database to be created and integrated into app to work.
-        # Create User object and store in database
+        # Create User object
         user = User(first_name = signup_form.first_name.data, last_name = signup_form.last_name.data, email = signup_form.email.data, password_hash = hashed_password, number = signup_form.number.data, address = signup_form.address.data)
 
         # Add to database
