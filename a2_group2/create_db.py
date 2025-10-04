@@ -10,10 +10,16 @@ db.create_all()
 
 '''
 from SeminarHub import create_app, db
-from SeminarHub.models import User, Event, Comment, Order
+from SeminarHub.models import User, Event, Comment, Order, Booking
 from datetime import datetime, date, time
 from flask_bcrypt import generate_password_hash
 import os
+import random
+import string
+
+def generate_booking_number():
+    """generate a unique booking number."""
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
 
 def create_database(app):
     with app.app_context():
@@ -31,32 +37,36 @@ def create_database(app):
             # create some users.
             users = [
                 User(
-                    name="John Doe",
+                    first_name="John",
+                    last_name="Doe",
                     email="john.doe@example.edu",
                     password_hash=generate_password_hash("password123").decode('utf-8'),
-                    contact_number="0412345678",
-                    address="123 University Ave, Brisbane"
+                    number="0412345678",
+                    address="123 University Ave"
                 ),
                 User(
-                    name="Jane Doe",
+                    first_name="Jane",
+                    last_name="Doe",
                     email="jane.doe@example.com",
                     password_hash=generate_password_hash("password123").decode('utf-8'),
-                    contact_number="0423456789",
-                    address="456 College St, Brisbane"
+                    number="0423456789",
+                    address="456 College St"
                 ),
                 User(
-                    name="Jim Doe",
+                    first_name="Jim",
+                    last_name="Doe",
                     email="jim.doe@example.com.au",
                     password_hash=generate_password_hash("password123").decode('utf-8'),
-                    contact_number="0434567890",
-                    address="789 Academic Lane, Brisbane"
+                    number="0434567890",
+                    address="789 Academic Lane"
                 ),
                 User(
-                    name="Jenny Doe",
+                    first_name="Jenny",
+                    last_name="Doe",
                     email="jenny.doe@university.edu",
                     password_hash=generate_password_hash("password123").decode('utf-8'),
-                    contact_number="0445678901",
-                    address="321 Campus Road, Brisbane"
+                    number="0445678901",
+                    address="321 Campus Road"
                 )
             ]
             
@@ -73,109 +83,90 @@ def create_database(app):
                     description="This seminar will explore the cutting-edge developments in artificial intelligence and machine learning. Our expert panel will discuss the ethical implications, future applications, and potential impacts of AI on various industries.",
                     category="Computer Science",
                     speaker="Dr. Guy",
-                    date=date(2025, 10, 15),
-                    start_time=time(14, 0),
-                    end_time=time(16, 30),
-                    venue="Main Auditorium",
-                    venue_address="University Campus, Education City",
+                    location="Main Auditorium, University Campus, Education City",
                     capacity=60,
-                    tickets_available=47,
-                    # free seminar.
-                    price=0.0,  
+                    status="Open",
+                    start_dt=datetime(2025, 10, 15, 14, 0, 0),
+                    end_dt=datetime(2025, 10, 15, 16, 30, 0),
                     image_url="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    user_id=1  
+                    speaker_bio="Expert in AI and machine learning with 15 years of experience.",
+                    owner_user_id=1  
                 ),
                 Event(
                     title="Digital Marketing Strategies",
                     description="Learn how to leverage digital platforms for business growth. This seminar covers social media marketing, SEO, content strategy, and data analytics for modern businesses.",
                     category="Business",
                     speaker="Professor Man",
-                    date=date(2026, 10, 20),
-                    start_time=time(10, 0),
-                    end_time=time(12, 0),
-                    venue="Business Building Room 304",
-                    venue_address="Business Faculty, University Campus",
+                    location="Business Building Room 304, Business Faculty, University Campus",
                     capacity=40,
-                    tickets_available=12,
-                    price=25.0,
+                    status="Open",
+                    start_dt=datetime(2026, 10, 20, 10, 0, 0),
+                    end_dt=datetime(2026, 10, 20, 12, 0, 0),
                     image_url="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                    user_id=4
+                    speaker_bio="Digital marketing strategist and business consultant.",
+                    owner_user_id=4
                 ),
                 Event(
                     title="Advances in Neuroscience",
                     description="Cutting-edge research and developments in brain science. Explore the latest discoveries in neural pathways, cognitive function, and therapeutic applications.",
                     category="Medicine",
                     speaker="Dr. Coops",
-                    date=date(2024, 10, 22),
-                    start_time=time(15, 30),
-                    end_time=time(18, 0),
-                    venue="Medical Sciences Building",
-                    venue_address="Health Sciences Campus",
+                    location="Medical Sciences Building, Health Sciences Campus",
                     capacity=30,
-                     # sold out.
-                    tickets_available=0, 
-                    price=15.0,
+                    status="Sold Out",
+                    start_dt=datetime(2024, 10, 22, 15, 30, 0),
+                    end_dt=datetime(2024, 10, 22, 18, 0, 0),
                     image_url="https://images.unsplash.com/photo-1576091160399-112ba8d25d15?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                    user_id=1
+                    speaker_bio="Neuroscience researcher and medical practitioner.",
+                    owner_user_id=1
                 ),
                 Event(
                     title="Renewable Energy Solutions",
                     description="Innovations in sustainable energy and green technology. This seminar discusses solar, wind, and hydroelectric power advancements for a sustainable future.",
                     category="Engineering",
                     speaker="Dr. Cooper B",
-                    date=date(2027, 10, 25),
-                    start_time=time(11, 0),
-                    end_time=time(13, 0),
-                    venue="Engineering Building Atrium",
-                    venue_address="Engineering Faculty, University Campus",
+                    location="Engineering Building Atrium, Engineering Faculty, University Campus",
                     capacity=50,
-                    tickets_available=35,
-                    price=0.0,
+                    status="Open",
+                    start_dt=datetime(2027, 10, 25, 11, 0, 0),
+                    end_dt=datetime(2027, 10, 25, 13, 0, 0),
                     image_url="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                    user_id=4
+                    speaker_bio="Renewable energy engineer and researcher.",
+                    owner_user_id=4
                 ),
                 Event(
                     title="Global Economic Trends",
                     description="Analysis of current economic patterns and future predictions. Understand global markets, trade relationships, and economic indicators shaping our world.",
                     category="Social Sciences",
                     speaker="Dr. Khai",
-                    date=date(2028, 11, 5),
-                    start_time=time(13, 30),
-                    end_time=time(15, 30),
-                    venue="Social Sciences Lecture Hall",
-                    venue_address="Social Sciences Building",
+                    location="Social Sciences Lecture Hall, Social Sciences Building",
                     capacity=45,
-                    tickets_available=28,
-                    price=10.0,
+                    status="Open",
+                    start_dt=datetime(2028, 11, 5, 13, 30, 0),
+                    end_dt=datetime(2028, 11, 5, 15, 30, 0),
                     image_url="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                    user_id=1
+                    speaker_bio="Economist and global trends analyst.",
+                    owner_user_id=1
                 ),
                 Event(
                     title="Leadership in Tech Industries",
                     description="Strategies for effective leadership in technology companies. Learn from successful tech leaders about team management, innovation, and driving growth in fast-paced environments.",
                     category="Business",
                     speaker="Dr. Ash",
-                    date=date(2024, 9, 30),
-                    start_time=time(9, 0),
-                    end_time=time(11, 0),
-                    venue="Conference Hall B",
-                    venue_address="Business Faculty, University Campus",
+                    location="Conference Hall B, Business Faculty, University Campus",
                     capacity=35,
-                    tickets_available=0,
-                    price=20.0,
+                    status="Sold Out",
+                    start_dt=datetime(2024, 9, 30, 9, 0, 0),
+                    end_dt=datetime(2024, 9, 30, 11, 0, 0),
                     image_url="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                    user_id=4
+                    speaker_bio="Tech industry executive and leadership coach.",
+                    owner_user_id=4
                 )
             ]
             
             db.session.add_all(events)
             db.session.commit()
             print("Added dummy events!")
-            
-            # update event statuses.
-            for event in events:
-                event.update_status()
-            db.session.commit()
         
         # check if comments already exist.
         if Comment.query.count() == 0:
@@ -260,6 +251,40 @@ def create_database(app):
             db.session.add_all(orders)
             db.session.commit()
             print("Added dummy orders!")
+        
+        # check if bookings already exist.
+        if Booking.query.count() == 0:
+            # create some bookings.
+            bookings = [
+                Booking(
+                    booking_number=generate_booking_number(),
+                    quantity=2,
+                    booking_date=datetime(2025, 10, 1, 10, 30, 0),
+                    status="Confirmed",
+                    user_id=2,
+                    event_id=1
+                ),
+                Booking(
+                    booking_number=generate_booking_number(),
+                    quantity=1,
+                    booking_date=datetime(2025, 9, 28, 14, 15, 0),
+                    status="Confirmed",
+                    user_id=3,
+                    event_id=2
+                ),
+                Booking(
+                    booking_number=generate_booking_number(),
+                    quantity=3,
+                    booking_date=datetime(2025, 10, 13, 11, 45, 0),
+                    status="Confirmed",
+                    user_id=2,
+                    event_id=5
+                )
+            ]
+            
+            db.session.add_all(bookings)
+            db.session.commit()
+            print("Added dummy bookings!")
         
         print("Database setup complete!")
 
