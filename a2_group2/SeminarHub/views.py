@@ -11,7 +11,14 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    return render_template('index.html')
+    events = Event.query.all()  # This will now return 6 events
+    print(f"Found {len(events)} events")  # Should print "Found 6 events"
+    return render_template('index.html', events=events)
+
+@main_bp.route('/event/<int:event_id>')
+def event_details(event_id):
+    event = Event.query.get_or_404(event_id)
+    return render_template('details.html', event=event, heading='Event Details | ')
 
 
 @main_bp.route('/create', methods=['GET', 'POST'])
