@@ -6,6 +6,12 @@
     --accent: #e07a5f;
 }
 
+html, body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f7fa;
@@ -160,4 +166,14 @@ footer {
 
 .booking-card:hover {
     transform: translateY(-3px);
+}
+
+.horizontal-card-img {
+    object-fit: cover;
+    height: 120px;
+    width: 120px;
+}
+
+.dropdown-item:hover {
+    background-color: #cecece;
 }

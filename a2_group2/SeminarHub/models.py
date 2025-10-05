@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
         """
         String representation of the User model for development purposes.
         """
-        return '<User: {}>'.format(self.name)
+        return '<User first name: {}, Last name: {}, Email: {}>'.format(self.first_name, self.last_name, self.email)
 
 # Event model
 class Event(db.Model):
