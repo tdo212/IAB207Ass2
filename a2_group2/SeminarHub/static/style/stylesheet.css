@@ -22,6 +22,14 @@ body {
     background-color: var(--primary);
 }
 
+.badge-consistent {
+    min-width: 130px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Login form */
 .login-form {
     width: 60%;
@@ -122,6 +130,10 @@ footer {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
+}
+
+.card-text {
+    min-height: 72px; /* Adjust based on your needs */
 }
 
 .card:hover {
