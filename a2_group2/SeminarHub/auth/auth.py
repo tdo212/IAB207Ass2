@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Blueprint, flash, render_template, request, url_for, redirect, session
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models import User
@@ -38,17 +38,22 @@ def login():
         
         # If no user email
         if user is None:
-            error = 'Incorrect email'
+            error = 'Incorrect email', 'error'
         # If correct email but incorrect password
         elif not check_password_hash(user.password_hash, password): # takes the hash and cleartext password
-            error = 'Incorrect password'
+            error = 'Incorrect password', 'error'
         # If all credentials correct
         if error is None:
-            login_user(user)
+            # Check for remember me checkbox
+            if login_form.remember_me.data:
+                login_user(user, remember=True)
+            else:
+                login_user(user)
+
             nextp = request.args.get('next') # this gives the url from where the login page was accessed
             print(nextp)
             if nextp is None or not nextp.startswith('/'):
-                flash('Successfully logged in.')
+                flash('Successfully logged in.', 'success')
                 return redirect(url_for('main.index'))
             return redirect(nextp)
         else:
@@ -65,8 +70,9 @@ def logout():
     # Development information
     print('Logout requested for user {}'. format(current_user))
 
+    session.clear()
     logout_user()
-
+    flash('Logged out.', 'success')
     return redirect(url_for('main.index'))
 
 
@@ -94,7 +100,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
 
-        flash('Your account has been created.')
+        flash('Your account has been created.', 'success')
 
         return redirect(url_for('main.index'))
     return render_template('signup.html', heading = 'Sign Up', logo_message = 'Become a member of', form = signup_form, title = 'Sign up | ')
