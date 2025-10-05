@@ -1,14 +1,4 @@
-# Placeholder database for testing purposes until we create all the models needed then we can use mock database creation below
-from SeminarHub import db, create_app
-app = create_app()
-ctx = app.app_context()
-ctx.push()
-db.create_all()
-
-
 # this is where we will create our database
-
-'''
 from SeminarHub import create_app, db
 from SeminarHub.models import User, Event, Comment, Order, Booking
 from datetime import datetime, date, time
@@ -292,4 +282,3 @@ if __name__ == "__main__":
     app = create_app()
     create_database(app)
     print("Database setup complete!")
-'''
