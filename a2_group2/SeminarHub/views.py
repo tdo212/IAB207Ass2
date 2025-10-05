@@ -23,7 +23,18 @@ def index():
 @main_bp.route('/event/<int:event_id>')
 def event_details(event_id):
     event = Event.query.get_or_404(event_id)
-    return render_template('details.html', event=event, heading='Event Details | ')
+
+    remaining = max(0, event.capacity or 0)
+
+    comments = getattr(event, "comments", [])
+
+    return render_template(
+        'details.html',
+        event=event,
+        remaining=remaining,
+        comments=comments,
+        heading='Event Details | '
+    )
 
 
 @main_bp.route('/create', methods=['GET', 'POST'])
@@ -65,6 +76,26 @@ def check_upload_file(form):
     fp.save(upload_path)
 
     return db_upload_path
+
+@main_bp.route('/event/<int:event_id>/register', methods=['POST'])
+@login_required
+def register_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    qty = int(request.form.get('quantity', 1))
+
+    booking = Booking(
+        quantity=qty,
+        booking_date=datetime.utcnow(),
+        status="Confirmed",
+        user_id=current_user.id,
+        event_id=event.id
+    )
+    db.session.add(booking)
+    db.session.commit()
+
+    flash(f'Registered for "{event.title}" (x{qty}).', 'success')
+    return redirect(url_for('main.event_details', event_id=event.id))
 
 @main_bp.route('/bookings')
 @login_required
