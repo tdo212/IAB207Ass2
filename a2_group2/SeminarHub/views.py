@@ -11,6 +11,11 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
+    """  Added for testing purposes only - adds a mock event to the database (to see if it displays on index.html)
+     new_event = Event(title = 'Test', description = 'Exploring the latest advancements in AI and machine learning technologies.', category = 'cs', location = 'Main Auditorium', capacity = 20, start_dt = datetime(2025, 10, 15, 14, 0, 0), end_dt = datetime(2025, 10, 15, 14, 0, 0), image_url = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', speaker = 'Ash', owner_user_id = 1)
+     db.session.add(new_event)
+     db.session.commit() """
+
     events = Event.query.all()  # This will now return 6 events
     print(f"Found {len(events)} events")  # Should print "Found 6 events"
     return render_template('index.html', events=events)
