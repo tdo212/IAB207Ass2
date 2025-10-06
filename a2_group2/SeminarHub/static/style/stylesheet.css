@@ -125,6 +125,16 @@ footer {
     margin-bottom: 2rem;
 }
 
+/* Image formatting for detail page */
+.detail-hero{
+  height: 400px;          
+  width: 100%;
+  object-fit: cover;     
+  object-position: center;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
 .card {
     border: none;
     border-radius: 10px;
