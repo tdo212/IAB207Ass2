@@ -53,6 +53,11 @@
                     <a class="nav-link" href="{{url_for('main.booking')}}">My Bookings</a>
                 </li>
             </ul>
+            <!-- Temporary search bar for testing -->
+            <form class="form d-flex mx-auto" action="{{ url_for('main.search') }}" method="GET" >
+                <input class="form-control" name="search" type="search" placeholder="Search" aria-label="Search" style="min-width: 300px;">
+                <button class="btn btn-outline-warning " type="submit">Search</button>
+            </form>
             {% if current_user.is_authenticated %}
             <div class="d-none">
                 <a href="{{url_for('auth.login')}}" class="btn btn-outline-light me-2">Login</a>
