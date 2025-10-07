@@ -177,3 +177,14 @@ footer {
 .dropdown-item:hover {
     background-color: #cecece;
 }
+
+.search-card-img {
+    object-fit: cover; 
+    height: 180px;
+    width: 100%;
+}
+
+/* Make cards pop on hover over */
+.search-card:hover {
+    transform: scale(1.01); 
+}
