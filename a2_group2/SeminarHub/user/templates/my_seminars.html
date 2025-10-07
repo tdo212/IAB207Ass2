@@ -17,6 +17,8 @@
 {% if seminars|length > 0 %}
 {% for seminar in seminars %}
 <div class="list-group border border-2 rounded mb-2">
+    <!-- Update link to details when merged -->
+    <a href="#" class="text-decoration-none text-reset">
     <div class="d-flex w-100 justify-content-between align-items-center">
         <img src="{{seminar.image_url}}" class="ms-2 me-4 p-2 horizontal-card-img" alt="Seminar image">
         <h6 class="position-absolute top-0 start-1 pt-2 m-1"><span class="badge text-bg-success">Open</span></h6>
@@ -26,10 +28,11 @@
             <small class="fw-semibold">{{seminar.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</small>
         </div>
         <div class="d-flex flex-md-row flex-column align-items-end align-items-md-center gap-2 row-gap-2 me-3 me-md-5"> 
-            <a href="#"class="btn btn-secondary text-nowrap" role="button">View Details</a>
-            <a href="{{ url_for('user.edit_seminar', seminar_id=seminar.id )}}" class="btn btn-danger text-nowrap" role="button">Edit Seminar</a>
+            <a href="{{ url_for('user.edit_seminar', seminar_id=seminar.id )}}" class="btn btn-secondary text-nowrap" role="button">Edit Seminar</a>
+            <a href="{{ url_for('user.cancel', seminar_id=seminar.id )}}"class="btn btn-danger text-nowrap" role="button">Cancel Seminar</a>
         </div>
     </div>
+    </a>
 </div>
 {% endfor %}
 {% endif %}

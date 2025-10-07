@@ -38,10 +38,10 @@ def login():
         
         # If no user email
         if user is None:
-            error = 'Incorrect email', 'error'
+            error = 'Incorrect email'
         # If correct email but incorrect password
         elif not check_password_hash(user.password_hash, password): # takes the hash and cleartext password
-            error = 'Incorrect password', 'error'
+            error = 'Incorrect password'
         # If all credentials correct
         if error is None:
             # Check for remember me checkbox
@@ -57,7 +57,7 @@ def login():
                 return redirect(url_for('main.index'))
             return redirect(nextp)
         else:
-            flash(error)
+            flash(error, 'error')
 
     return render_template('login.html', form = login_form, heading = 'Login | ', logo_message = 'Log in to')
 
