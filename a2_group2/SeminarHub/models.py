@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
     address = db.Column(db.String(256), nullable=False)
 
     # Relationships
-    bookings = db.relationship("Booking", backref="user")
+    bookings = db.relationship("Booking", back_populates="user")
 
     def __repr__(self):
         """
@@ -52,7 +52,7 @@ class Event(db.Model):
     # relationships
     comments = db.relationship("Comment", back_populates="event", cascade="all, delete-orphan")
     orders = db.relationship("Order", back_populates="event", cascade="all, delete-orphan")
-    bookings = db.relationship("Booking", backref = "event")
+    bookings = db.relationship("Booking", back_populates = "event")
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -115,6 +115,10 @@ class Booking(db.Model):
     # Foreign keys
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
+
+    # Relationships
+    user = db.relationship("User", back_populates="bookings")
+    event = db.relationship("Event", back_populates="bookings")
 
     def repr(self):
         """
