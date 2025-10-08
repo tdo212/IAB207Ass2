@@ -1,42 +1,88 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash
 from .forms import CreateForm
-import os
+import os, random, string
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-from .models import Comment
 from . import db
-from .models import Event, Booking
+from .models import Event, Booking, Comment
 from datetime import datetime
 from .search_functions import *
 
 main_bp = Blueprint('main', __name__)
 
+# ---------- helpers ----------
+
+def generate_booking_number(length: int = 8) -> str:
+    """Generate a unique booking number (A–Z, 0–9)."""
+    chars = string.ascii_uppercase + string.digits
+    code = ''.join(random.choices(chars, k=length))
+    # In the unlikely case of a collision, regenerate
+    while Booking.query.filter_by(booking_number=code).first():
+        code = ''.join(random.choices(chars, k=length))
+    return code
+
+def remaining_for(event: Event) -> int:
+    """
+    Get remaining capacity using whichever API the model provides:
+    - teammate: event.tickets_remaining
+    - yours: event.remaining_capacity()
+    - fallback: event.capacity
+    """
+    if hasattr(event, "tickets_remaining"):
+        return max(0, int(event.tickets_remaining or 0))
+    if hasattr(event, "remaining_capacity"):
+        try:
+            return max(0, int(event.remaining_capacity() or 0))
+        except TypeError:
+            pass
+    return max(0, int(event.capacity or 0))
+
+def maybe_refresh_status(event: Event) -> None:
+    """
+    If your model has ensure_fresh_status(), use it. Otherwise noop.
+    This lets status auto-update when viewing/booking.
+    """
+    if hasattr(event, "ensure_fresh_status"):
+        try:
+            if event.ensure_fresh_status():
+                db.session.commit()
+        except Exception:
+            pass
+
+def check_upload_file(form) -> str:
+    """Save uploaded image and return the DB path (served from /static/img/...)."""
+    fp = form.image.data
+    filename = secure_filename(fp.filename)
+    base_path = os.path.dirname(__file__)
+    upload_path = os.path.join(base_path, 'static', 'img', filename)
+    # DB path should be web-served path
+    db_upload_path = f'/static/img/{filename}'
+    fp.save(upload_path)
+    return db_upload_path
+
+# ---------- routes ----------
+
 @main_bp.route('/')
 def index():
-    """  Added for testing purposes only - adds a mock event to the database (to see if it displays on index.html)
-     new_event = Event(title = 'Test', description = 'Exploring the latest advancements in AI and machine learning technologies.', category = 'cs', location = 'Main Auditorium', capacity = 20, start_dt = datetime(2025, 10, 15, 14, 0, 0), end_dt = datetime(2025, 10, 15, 14, 0, 0), image_url = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', speaker = 'Ash', owner_user_id = 1)
-     db.session.add(new_event)
-     db.session.commit() """
-
-    events = Event.query.all()  # This will now return 6 events
-    print(f"Found {len(events)} events")  # Should print "Found 6 events"
+    events = Event.query.all()
     any_changed = False
     for e in events:
-        if e.ensure_fresh_status():
-            any_changed = True
+        if hasattr(e, "ensure_fresh_status"):
+            try:
+                if e.ensure_fresh_status():
+                    any_changed = True
+            except Exception:
+                pass
     if any_changed:
         db.session.commit()
     return render_template('index.html', events=events)
-
-
 
 @main_bp.route('/event/<int:event_id>')
 def event_details(event_id):
     event = Event.query.get_or_404(event_id)
 
-    remaining = event.remaining_capacity()
-    if event.ensure_fresh_status():
-        db.session.commit()
+    remaining = remaining_for(event)
+    maybe_refresh_status(event)
 
     comments = getattr(event, "comments", [])
 
@@ -47,7 +93,6 @@ def event_details(event_id):
         comments=comments,
         heading='Event Details | '
     )
-
 
 @main_bp.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -60,44 +105,50 @@ def create():
         start_datetime = datetime.combine(form.date.data, form.start_time.data)
         end_datetime = datetime.combine(form.date.data, form.end_time.data)
 
-        # Create seminar object
-        seminar = Event(title = form.title.data, description = form.description.data, category = form.category.data, location = form.location.data, capacity = form.capacity.data, start_dt = start_datetime, end_dt = end_datetime, image_url = db_file_path, speaker = form.speaker.data, speaker_bio = form.speaker_bio.data, owner_user_id = current_user.id )
+        seminar = Event(
+            title=form.title.data,
+            description=form.description.data,
+            category=form.category.data,
+            location=form.location.data,
+            capacity=form.capacity.data,
+            start_dt=start_datetime,
+            end_dt=end_datetime,
+            image_url=db_file_path,
+            speaker=form.speaker.data,
+            speaker_bio=form.speaker_bio.data,
+            owner_user_id=current_user.id
+        )
 
-        # Add object to database
         db.session.add(seminar)
-
-        # Commit to database
         db.session.commit()
 
         flash('Successfully created new seminar', 'success')
-        
         return redirect(url_for('main.create'))
-    return render_template('create.html', form = form, heading = 'Create a Seminar | ')
 
-def check_upload_file(form):
-    # Form file data
-    fp = form.image.data
-    filename = fp.filename
-    # Gets relative current path of the module file 
-    BASE_PATH = os.path.dirname(__file__)
-    # Upload path = static/img
-    upload_path = os.path.join(BASE_PATH, 'static/img', secure_filename(filename))
-    # Store relative upload path into DB as image location
-    db_upload_path = 'static/img' + secure_filename(filename)
-    # Save file and return db path
-    fp.save(upload_path)
-
-    return db_upload_path
-
+    return render_template('create.html', form=form, heading='Create a Seminar | ')
 
 @main_bp.route('/event/<int:event_id>/register', methods=['POST'])
 @login_required
 def register_event(event_id):
     event = Event.query.get_or_404(event_id)
+    is_sold_out = getattr(event, "is_sold_out", None)
+    if callable(is_sold_out):
+        if event.is_sold_out():
+            flash('Sorry, this event is sold out!', 'danger')
+            return redirect(url_for('main.event_details', event_id=event.id))
+    elif hasattr(event, "is_sold_out"):
+        if event.is_sold_out:
+            flash('Sorry, this event is sold out!', 'danger')
+            return redirect(url_for('main.event_details', event_id=event.id))
 
     qty = int(request.form.get('quantity', 1))
+    remaining = remaining_for(event)
+    if qty > remaining:
+        flash(f'Only {remaining} tickets remaining!', 'warning')
+        return redirect(url_for('main.event_details', event_id=event.id))
 
     booking = Booking(
+        booking_number=generate_booking_number(),
         quantity=qty,
         booking_date=datetime.utcnow(),
         status="Confirmed",
@@ -107,42 +158,64 @@ def register_event(event_id):
     db.session.add(booking)
     db.session.commit()
 
-    if event.ensure_fresh_status():
-        db.session.commit()
+    maybe_refresh_status(event)
 
-    flash(f'Registered for "{event.title}" (x{qty}).', 'success')
+    flash('Booking confirmed!', 'success')
     return redirect(url_for('main.event_details', event_id=event.id))
 
 @main_bp.route('/bookings')
 @login_required
 def booking():
-    """
-    Takes the user to the bookings template. 
-    
-    This template contains all the confirmed and completed booked seminars that belong to a users account retrieved from the applications database and loads them into the bookings template.
+    """User’s bookings, split by status."""
+    confirmed_bookings = Booking.query.filter(
+        Booking.status == "Confirmed",
+        Booking.user_id == current_user.id
+    ).all()
 
-    """
+    completed_bookings = Booking.query.filter(
+        Booking.status == "Completed",
+        Booking.user_id == current_user.id
+    ).all()
 
-    # Get completed and confirmed bookings from database
-    confirmed_bookings = Booking.query.filter(Booking.status == "Confirmed", Booking.user_id == current_user.id).all()
-    completed_bookings = Booking.query.filter(Booking.status == 'Completed', Booking.user_id == current_user.id).all()
+    cancelled_bookings = Booking.query.filter(
+        Booking.status == "Cancelled",
+        Booking.user_id == current_user.id
+    ).all()
 
-    return render_template('bookings.html', confirmed_bookings=confirmed_bookings, completed_bookings=completed_bookings, heading = 'My Bookings | ')
+    return render_template(
+        'bookings.html',
+        confirmed_bookings=confirmed_bookings,
+        completed_bookings=completed_bookings,
+        cancelled_bookings=cancelled_bookings,
+        heading='My Bookings | '
+    )
 
-@main_bp.route('/search')
-def search():
-    query = request.args.get('search').lower()
-    
-    # Get all possible results from page, seminars, comments, bookings and feed the data into the template
-    return render_template('search.html', query=query, page_results = get_page_results(query), seminar_results = get_seminar_results(query), comment_results = get_comment_results(query), booking_results = get_booking_results(query))
-    
-    # Edit / Cancel routes from details.html
+@main_bp.route('/booking/<int:booking_id>/cancel', methods=['POST'])
+@login_required
+def cancel_booking(booking_id):
+    """Cancel a booking (only if you own it and it’s Confirmed)."""
+    booking = Booking.query.get_or_404(booking_id)
+
+    if booking.user_id != current_user.id:
+        flash('You can only cancel your own bookings.', 'danger')
+        return redirect(url_for('main.booking'))
+
+    if booking.status != 'Confirmed':
+        flash('This booking cannot be cancelled.', 'warning')
+        return redirect(url_for('main.booking'))
+
+    booking.status = 'Cancelled'
+    db.session.commit()
+    flash(f'Booking {booking.booking_number} has been cancelled.', 'success')
+    return redirect(url_for('main.booking'))
+
+# ----- Owner actions for events -----
+
 @main_bp.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_event(event_id):
     event = Event.query.get_or_404(event_id)
 
-    # Only the owner can edit
     if event.owner_user_id != current_user.id:
         flash('You are not authorised to edit this event.', 'danger')
         return redirect(url_for('main.event_details', event_id=event.id))
@@ -161,10 +234,8 @@ def edit_event(event_id):
     if form.validate_on_submit():
         # Keep current image unless a new one is uploaded
         if getattr(form, "image", None) and getattr(form.image, "data", None) and getattr(form.image.data, "filename", ""):
-            new_path = check_upload_file(form)  
-            event.image_url = new_path
+            event.image_url = check_upload_file(form)
 
-        # Update basic fields
         event.title = form.title.data
         event.description = form.description.data
         event.category = form.category.data
@@ -173,25 +244,22 @@ def edit_event(event_id):
         event.speaker = form.speaker.data
         event.speaker_bio = form.speaker_bio.data
 
-        # Update schedule
         if form.date.data and form.start_time.data and form.end_time.data:
             event.start_dt = datetime.combine(form.date.data, form.start_time.data)
             event.end_dt = datetime.combine(form.date.data, form.end_time.data)
 
         db.session.commit()
+        maybe_refresh_status(event)
         flash('Event updated successfully!', 'success')
         return redirect(url_for('main.event_details', event_id=event.id))
 
-    
     return render_template('edit_seminar.html', form=form, seminar=event, heading='Edit Seminar | ')
-
 
 @main_bp.route('/event/<int:event_id>/cancel', methods=['POST'])
 @login_required
 def cancel_event(event_id):
     event = Event.query.get_or_404(event_id)
 
-    # Only the owner can cancel
     if event.owner_user_id != current_user.id:
         flash('You are not authorised to cancel this event.', 'danger')
         return redirect(url_for('main.event_details', event_id=event.id))
@@ -201,17 +269,17 @@ def cancel_event(event_id):
     flash('Event has been cancelled.', 'info')
     return redirect(url_for('main.event_details', event_id=event.id))
 
+# ----- Comments -----
+
 @main_bp.route('/event/<int:event_id>/comment', methods=['POST'])
 @login_required
 def add_comment(event_id):
     event = Event.query.get_or_404(event_id)
 
     text = (request.form.get('text') or '').strip()
-
     if not text:
         flash('Please enter a comment before posting.', 'warning')
         return redirect(url_for('main.event_details', event_id=event.id))
-
     if len(text) > 1000:
         flash('Comment is too long (max 1000 characters).', 'warning')
         return redirect(url_for('main.event_details', event_id=event.id))
@@ -222,3 +290,18 @@ def add_comment(event_id):
 
     flash('Comment posted!', 'success')
     return redirect(url_for('main.event_details', event_id=event.id))
+
+# ----- Search -----
+
+@main_bp.route('/search')
+def search():
+    query = (request.args.get('search') or '').lower()
+    return render_template(
+        'search.html',
+        query=query,
+        page_results=get_page_results(query),
+        seminar_results=get_seminar_results(query),
+        comment_results=get_comment_results(query),
+        booking_results=get_booking_results(query),
+    )
+
