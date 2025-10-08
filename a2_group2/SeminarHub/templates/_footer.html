@@ -1,0 +1,44 @@
+<footer class="mt-auto">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h5>SeminarHub</h5>
+        <p>Connecting academics and professionals with valuable learning opportunities through seminars and workshops.</p>
+      </div>
+
+      <div class="col-md-2">
+        <h5>Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ url_for('main.index') }}" class="text-light">Home</a></li>
+          <li><a href="{{ url_for('main.create') }}" class="text-light">Create</a></li>
+          <li><a href="{{ url_for('main.booking') }}" class="text-light">Bookings</a></li>
+          <li><a href="#" class="text-light">Login</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3">
+        <h5>Categories</h5>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light">Computer Science</a></li>
+          <li><a href="#" class="text-light">Business</a></li>
+          <li><a href="#" class="text-light">Engineering</a></li>
+          <li><a href="#" class="text-light">View All</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3">
+        <h5>Contact Us</h5>
+        <address class="text-light mb-0">
+          <i class="bi bi-envelope me-2"></i> info@seminarhub.edu<br>
+          <i class="bi bi-telephone me-2"></i> (123) 456-7890<br>
+          <i class="bi bi-building me-2"></i> University Campus, Education City
+        </address>
+      </div>
+    </div>
+
+    <hr class="bg-light">
+    <div class="text-center">
+      <p class="mb-0">© {{ current_year or 2025 }} SeminarHub. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
