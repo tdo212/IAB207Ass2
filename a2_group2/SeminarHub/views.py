@@ -3,6 +3,7 @@ from .forms import CreateForm
 import os
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
+from .models import Comment
 from . import db
 from .models import Event, Booking
 from datetime import datetime
@@ -123,8 +124,7 @@ def search():
     # Get all possible results from page, seminars, comments, bookings and feed the data into the template
     return render_template('search.html', query=query, page_results = get_page_results(query), seminar_results = get_seminar_results(query), comment_results = get_comment_results(query), booking_results = get_booking_results(query))
     
-# Edit / Cancel routes from details.html
-
+    # Edit / Cancel routes from details.html
 @main_bp.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_event(event_id):
@@ -188,4 +188,27 @@ def cancel_event(event_id):
     db.session.commit()
     flash('Event has been cancelled.', 'info')
     return redirect(url_for('main.event_details', event_id=event.id))
+
+@main_bp.route('/event/<int:event_id>/comment', methods=['POST'])
+@login_required
+def add_comment(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    text = (request.form.get('text') or '').strip()
+
+    if not text:
+        flash('Please enter a comment before posting.', 'warning')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    if len(text) > 1000:
+        flash('Comment is too long (max 1000 characters).', 'warning')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    comment = Comment(text=text, user_id=current_user.id, event_id=event.id)
+    db.session.add(comment)
+    db.session.commit()
+
+    flash('Comment posted!', 'success')
+    return redirect(url_for('main.event_details', event_id=event.id))
+
 
