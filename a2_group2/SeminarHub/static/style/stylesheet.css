@@ -170,8 +170,8 @@ footer {
 
 .horizontal-card-img {
     object-fit: cover; 
-    height: 120px;
-    width: 120px;
+    height: 180px;
+    width: 180px;
 }
 
 .dropdown-item:hover {

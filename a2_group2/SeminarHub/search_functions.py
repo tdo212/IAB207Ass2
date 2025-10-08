@@ -37,7 +37,7 @@ def get_page_results(search_query):
 
     # Page dictionaries
     bookings = {'name': 'My Bookings', 'link':'main.booking', 'searchable_words':['book', 'booking', 'my booking', 'my bookings', 'bookings']}
-    user = {'name': 'Profile', 'link':'user.seminars', 'searchable_words':['profile', 'my profile', 'my account', 'account', 'my seminars']}
+    user = {'name': 'Profile', 'link':'seminar.seminars', 'searchable_words':['profile', 'my profile', 'my account', 'account', 'my seminars']}
     create = {'name': 'Create Seminar', 'link': 'main.create', 'searchable_words':['create', 'create seminar']}
 
     page_results = []
