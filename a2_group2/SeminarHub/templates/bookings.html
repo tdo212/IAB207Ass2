@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{heading}}{% endblock title %}
+{% block title %}{{heading}}{% endblock %}
 
 {% block content %}
 <!-- Page Content -->
@@ -13,13 +13,14 @@
 
     <h2 class="mb-5">My Seminar Bookings</h2>
     
-    {% if bookings|length > 0 %}
+    {% if confirmed_bookings or completed_bookings %}
     <div class="row">
+        {% if confirmed_bookings %}
         <!-- Upcoming Bookings -->
         <div class="col-lg-6">
             <h4 class="border-bottom pb-2">Upcoming Seminars</h4>
 
-            {% for booking in bookings %}
+            {% for booking in confirmed_bookings %}
             {% if booking.status == "Confirmed" %}
             <div class="card booking-card mb-3">
                 <div class="card-body">
@@ -37,13 +38,18 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% endfor %}
         </div>
+        {% endif %}
 
-        {% elif booking.status == "Completed" %}
+        {% if completed_bookings %}
         <!-- Past Bookings -->
         <div class="col-lg-6">
             <h4 class="border-bottom pb-2">Past Seminars</h4>
-            
+
+            {% for booking in completed_bookings %}
+            {% if booking.status == "Completed" %}
             <div class="card booking-card mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -60,11 +66,15 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% endfor %}
         </div>
         {% endif %}
-        {% endfor %}
         
     </div>
+    {% else %}
+    <h4 class="p-5 text-center">No Bookings Currently</h4>
+    <div class="vh-100"></div>
     {% endif %}
 </div>
 {% endblock %}

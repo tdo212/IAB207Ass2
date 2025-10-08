@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{heading}}{% endblock title %}
+{% block title %}{{heading}}{% endblock %}
 
     {% block content %}
     <!-- Page Content -->
@@ -26,107 +26,48 @@
         <h2 class="mb-4" id="seminar-list">Upcoming Seminars</h2>
         
         <div class="row g-4">
-            <!-- Seminar Card 1 -->
+        
+            <!-- Status badges -->
+             
+             {% for event in events %}
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100">
-                    <span class="status-badge badge bg-success">Open</span>
-                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="seminar-image" alt="AI Seminar">
-                    <div class="card-body">
-                        <h5 class="card-title">Future of Artificial Intelligence</h5>
-                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>Oct 15, 2025 | 2:00 PM</p>
-                        <p class="card-text">Exploring the latest advancements in AI and machine learning technologies.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-primary">Computer Science</span>
-                            <a href="details.html" class="btn btn-sm btn-outline-primary">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Seminar Card 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <span class="status-badge badge bg-warning text-dark">Limited</span>
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="seminar-image" alt="Business Seminar">
-                    <div class="card-body">
-                        <h5 class="card-title">Digital Marketing Strategies</h5>
-                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>Oct 20, 2026 | 10:00 AM</p>
-                        <p class="card-text">Learn how to leverage digital platforms for business growth.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-info text-dark">Business</span>
-                            <a href="details.html" class="btn btn-sm btn-outline-primary">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Seminar Card 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <span class="status-badge badge bg-danger">Sold Out</span>
-                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d15?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="seminar-image" alt="Medical Seminar">
-                    <div class="card-body">
-                        <h5 class="card-title">Advances in Neuroscience</h5>
-                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>Oct 22, 2024 | 3:30 PM</p>
-                        <p class="card-text">Cutting-edge research and developments in brain science.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-success">Medicine</span>
-                            <a href="details.html" class="btn btn-sm btn-outline-primary">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <span class="status-badge badge 
+                    {% if event.status == 'Open' %}bg-success
+                    {% elif event.status == 'Limited' %}bg-warning text-dark
+                    {% elif event.status == 'Sold Out' %}bg-danger
+                    {% else %}bg-secondary{% endif %}">
+                    {{ event.status }}
+                    </span>
 
-            <!-- Seminar Card 4 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <span class="status-badge badge bg-success">Open</span>
-                    <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="seminar-image" alt="Engineering Seminar">
+                    <img src="{{event.image_url}}" class="seminar-image" alt="{{ event.title }}">
                     <div class="card-body">
-                        <h5 class="card-title">Renewable Energy Solutions</h5>
-                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>Oct 25, 2027 | 11:00 AM</p>
-                        <p class="card-text">Innovations in sustainable energy and green technology.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-warning text-dark">Engineering</span>
-                            <a href="details.html" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{ event.start_dt.strftime('%b %d, %Y') }} | {{ event.start_dt.strftime('%I:%M %p') }}</p>
+                        <p class="card-text">{{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="badge badge-consistent
+                                {% if event.category == 'Computer Science' %}bg-primary
+                                {% elif event.category == 'Business' %}bg-info text-dark
+                                {% elif event.category == 'Medicine' %}bg-success
+                                {% elif event.category == 'Engineering' %}bg-warning text-dark
+                                {% elif event.category == 'Social Sciences' %}bg-danger
+                                {% else %}bg-secondary{% endif %}">
+                                {{ event.category or 'General' }}
+                            </span>
+                            <a href="{{ url_for('main.event_details', event_id=event.id) }}" class="btn btn-sm btn-outline-primary align-items-right">View Details</a>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Seminar Card 5 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <span class="status-badge badge bg-secondary">Inactive</span>
-                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="seminar-image" alt="Business Seminar">
-                    <div class="card-body">
-                        <h5 class="card-title">Leadership in Tech Industries</h5>
-                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>Sep 30, 2027 | 9:00 AM</p>
-                        <p class="card-text">Strategies for effective leadership in technology companies.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-info text-dark">Business</span>
-                            <a href="details.html" class="btn btn-sm btn-outline-primary">View Details</a>
-                        </div>
-                    </div>
+            {% else %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <h4>No upcoming seminars found</h4>
+                    <p class="text-muted">Check back later for new events</p>
                 </div>
             </div>
-
-            <!-- Seminar Card 6 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <span class="status-badge badge bg-success">Open</span>
-                    <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="seminar-image" alt="Social Sciences Seminar">
-                    <div class="card-body">
-                        <h5 class="card-title">Global Economic Trends</h5>
-                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>Nov 5, 2028 | 1:30 PM</p>
-                        <p class="card-text">Analysis of current economic patterns and future predictions.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-danger">Social Sciences</span>
-                            <a href="details.html" class="btn btn-sm btn-outline-primary">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
     {% endblock %}
