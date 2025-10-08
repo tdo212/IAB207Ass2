@@ -20,14 +20,23 @@ def index():
 
     events = Event.query.all()  # This will now return 6 events
     print(f"Found {len(events)} events")  # Should print "Found 6 events"
+    any_changed = False
+    for e in events:
+        if e.ensure_fresh_status():
+            any_changed = True
+    if any_changed:
+        db.session.commit()
     return render_template('index.html', events=events)
+
 
 
 @main_bp.route('/event/<int:event_id>')
 def event_details(event_id):
     event = Event.query.get_or_404(event_id)
 
-    remaining = max(0, event.capacity or 0)
+    remaining = event.remaining_capacity()
+    if event.ensure_fresh_status():
+        db.session.commit()
 
     comments = getattr(event, "comments", [])
 
@@ -97,6 +106,9 @@ def register_event(event_id):
     )
     db.session.add(booking)
     db.session.commit()
+
+    if event.ensure_fresh_status():
+        db.session.commit()
 
     flash(f'Registered for "{event.title}" (x{qty}).', 'success')
     return redirect(url_for('main.event_details', event_id=event.id))
@@ -210,5 +222,3 @@ def add_comment(event_id):
 
     flash('Comment posted!', 'success')
     return redirect(url_for('main.event_details', event_id=event.id))
-
-
