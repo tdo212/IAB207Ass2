@@ -1,3 +1,4 @@
+# this is where we will create our database
 from SeminarHub import create_app, db
 from SeminarHub.models import User, Event, Comment, Order, Booking
 from datetime import datetime, date, time
@@ -105,7 +106,7 @@ def create_database(app):
                     status="Sold Out",
                     start_dt=datetime(2024, 10, 22, 15, 30, 0),
                     end_dt=datetime(2024, 10, 22, 18, 0, 0),
-                    image_url="https://images.unsplash.com/photo-1576091160399-112ba8d25d15?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    image_url="https://images.unsplash.com/photo-1566669419640-ae09e20a18d8?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                     speaker_bio="Neuroscience researcher and medical practitioner.",
                     owner_user_id=1
                 ),
