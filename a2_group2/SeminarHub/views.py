@@ -3,6 +3,7 @@ from .forms import CreateForm
 import os, random, string
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
+from .models import Comment
 from . import db
 from .models import Event, Booking, Comment
 from datetime import datetime
@@ -19,15 +20,30 @@ def index():
     events = Event.query.all()
     print(f"Found {len(events)} events")
 
+    any_changed = False
+    for e in events:
+        if e.ensure_fresh_status():
+            any_changed = True
+    if any_changed:
+        db.session.commit()
     return render_template('index.html', events=events)
+
 
 
 @main_bp.route('/event/<int:event_id>')
 def event_details(event_id):
     event = Event.query.get_or_404(event_id)
 
+    # TODO: CHANGES HERE BY BOTH COOPERS
+    
+    # COOPS CODE
     # calculate remaining tickets dynamically.
     remaining = event.tickets_remaining
+
+    # COOPER'S CODE
+    remaining = event.remaining_capacity()
+    if event.ensure_fresh_status():
+        db.session.commit()
 
     comments = getattr(event, "comments", [])
 
@@ -127,6 +143,9 @@ def register_event(event_id):
     db.session.add(booking)
     db.session.commit()
 
+    if event.ensure_fresh_status():
+        db.session.commit()
+
     flash(f'Booking confirmed! Your booking number is: {booking_number}', 'success')
     return redirect(url_for('main.event_details', event_id=event.id))
 
@@ -192,4 +211,89 @@ def cancel_booking(booking_id):
     
     flash(f'Booking {booking.booking_number} has been cancelled successfully.', 'success')
     return redirect(url_for('main.booking'))
+    # Edit / Cancel routes from details.html
+@main_bp.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_event(event_id):
+    event = Event.query.get_or_404(event_id)
 
+    # Only the owner can edit
+    if event.owner_user_id != current_user.id:
+        flash('You are not authorised to edit this event.', 'danger')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    form = CreateForm(obj=event)
+
+    # Pre-fill date/time fields on first load
+    if request.method == 'GET' and event.start_dt and event.end_dt:
+        try:
+            form.date.data = event.start_dt.date()
+            form.start_time.data = event.start_dt.time()
+            form.end_time.data = event.end_dt.time()
+        except Exception:
+            pass
+
+    if form.validate_on_submit():
+        # Keep current image unless a new one is uploaded
+        if getattr(form, "image", None) and getattr(form.image, "data", None) and getattr(form.image.data, "filename", ""):
+            new_path = check_upload_file(form)  
+            event.image_url = new_path
+
+        # Update basic fields
+        event.title = form.title.data
+        event.description = form.description.data
+        event.category = form.category.data
+        event.location = form.location.data
+        event.capacity = form.capacity.data
+        event.speaker = form.speaker.data
+        event.speaker_bio = form.speaker_bio.data
+
+        # Update schedule
+        if form.date.data and form.start_time.data and form.end_time.data:
+            event.start_dt = datetime.combine(form.date.data, form.start_time.data)
+            event.end_dt = datetime.combine(form.date.data, form.end_time.data)
+
+        db.session.commit()
+        flash('Event updated successfully!', 'success')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    
+    return render_template('edit_seminar.html', form=form, seminar=event, heading='Edit Seminar | ')
+
+
+@main_bp.route('/event/<int:event_id>/cancel', methods=['POST'])
+@login_required
+def cancel_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    # Only the owner can cancel
+    if event.owner_user_id != current_user.id:
+        flash('You are not authorised to cancel this event.', 'danger')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    event.status = 'Cancelled'
+    db.session.commit()
+    flash('Event has been cancelled.', 'info')
+    return redirect(url_for('main.event_details', event_id=event.id))
+
+@main_bp.route('/event/<int:event_id>/comment', methods=['POST'])
+@login_required
+def add_comment(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    text = (request.form.get('text') or '').strip()
+
+    if not text:
+        flash('Please enter a comment before posting.', 'warning')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    if len(text) > 1000:
+        flash('Comment is too long (max 1000 characters).', 'warning')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    comment = Comment(text=text, user_id=current_user.id, event_id=event.id)
+    db.session.add(comment)
+    db.session.commit()
+
+    flash('Comment posted!', 'success')
+    return redirect(url_for('main.event_details', event_id=event.id))

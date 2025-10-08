@@ -30,6 +30,7 @@ class User(db.Model, UserMixin):
         """
         return '<User first name: {}, Last name: {}, Email: {}>'.format(self.first_name, self.last_name, self.email)
 
+
 # Event model
 class Event(db.Model):
     __tablename__ = "events"
@@ -40,7 +41,7 @@ class Event(db.Model):
     category = db.Column(db.String(64))
     location = db.Column(db.String(120))
     capacity = db.Column(db.Integer, default=0)
-    status = db.Column(db.String(16), default="Open")  
+    status = db.Column(db.String(16), default="Open")
     start_dt = db.Column(db.DateTime, nullable=False)
     end_dt = db.Column(db.DateTime, nullable=False)
     image_url = db.Column(db.String(255))
@@ -52,12 +53,9 @@ class Event(db.Model):
     owner = db.relationship("User", back_populates="owned_events")
 
     # relationships
-    comments = db.relationship("Comment", back_populates="event", cascade="all, delete-orphan")
+    comments = db.relationship("Comment", back_populates="event", cascade="all, delete-orphan", order_by="desc(Comment.created_at)")
     bookings = db.relationship("Booking", back_populates="event", cascade="all, delete-orphan")
 
-    def __repr__(self):
-        return f"<Event {self.title}>"
-    
     @property
     def tickets_remaining(self):
         """calculate remaining tickets dynamically."""
@@ -68,6 +66,38 @@ class Event(db.Model):
     def is_sold_out(self):
         """check if event is sold out."""
         return self.tickets_remaining <= 0
+    
+    from datetime import datetime
+    def seats_taken(self) -> int:
+        """Confirmed seats taken."""
+        return sum(b.quantity or 0 for b in self.bookings if (b.status or "").lower() == "confirmed")
+
+    def remaining_capacity(self) -> int:
+        cap = self.capacity or 0
+        return max(0, cap - self.seats_taken())
+
+    def compute_status(self) -> str:
+        """Return what the status *should* be right now."""
+        if (self.status or "").lower() == "cancelled":
+            return "Cancelled"
+        now = datetime.utcnow()
+        if self.end_dt and now >= self.end_dt:
+            return "Inactive"         
+        if self.remaining_capacity() == 0:
+            return "Sold Out"
+        return "Open"
+
+    def ensure_fresh_status(self) -> bool:
+        """Update self.status if out of date. Return True if changed."""
+        new_status = self.compute_status()
+        if new_status != (self.status or "Open"):
+            self.status = new_status
+            return True
+        return False
+
+    def __repr__(self):
+        return f"<Event {self.title}>"
+
 
 # Comment model
 class Comment(db.Model):
@@ -101,7 +131,7 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking_number = db.Column(db.String(32), index=True, unique=True)
     quantity = db.Column(db.Integer, index=True, nullable=False) 
-    booking_date = db.Column(db.DateTime, nullable=False)
+    booking_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # NEW: default now
     status = db.Column(db.String(32), default="Confirmed")
 
     # Foreign keys
@@ -112,8 +142,8 @@ class Booking(db.Model):
     user = db.relationship("User", back_populates="bookings")
     event = db.relationship("Event", back_populates="bookings")
 
-    def __repr__(self):
-        """
-        String representation of the Booking model for development purposes.
-        """
-        return '<Booking ID: {}, Booking Number: {}, Quantity: {}, Booking Date: {}, Status: {}>'.format(self.id, self.booking_number, self.quantity, self.booking_date, self.status) 
+    def __repr__(self): 
+        return '<Booking ID: {}, Booking Number: {}, Quantity: {}, Booking Date: {}, Status: {}>'.format(
+            self.id, self.booking_number, self.quantity, self.booking_date, self.status
+        )
+
