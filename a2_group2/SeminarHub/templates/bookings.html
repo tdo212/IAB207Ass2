@@ -2,26 +2,25 @@
 {% block title %}{{heading}}{% endblock %}
 
 {% block content %}
-<!-- Page Content -->
+<!-- page content. -->
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">My Bookings</li>
         </ol>
     </nav>
 
     <h2 class="mb-5">My Seminar Bookings</h2>
     
-    {% if confirmed_bookings or completed_bookings %}
+    {% if confirmed_bookings or completed_bookings or cancelled_bookings %}
     <div class="row">
         {% if confirmed_bookings %}
-        <!-- Upcoming Bookings -->
+        <!-- upcoming bookings. -->
         <div class="col-lg-6">
             <h4 class="border-bottom pb-2">Upcoming Seminars</h4>
 
             {% for booking in confirmed_bookings %}
-            {% if booking.status == "Confirmed" %}
             <div class="card booking-card mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -29,27 +28,27 @@
                         <span class="badge bg-success py-2">{{booking.status}}</span>
                     </div>
                     <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
-                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</p>
+                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%M %p")}}</p>
                     <p class="card-text"><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
-                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} tickets</p>
+                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} ticket{% if booking.quantity > 1 %}s{% endif %}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
-                        <button class="btn btn-sm btn-outline-danger">Cancel Booking</button>
+                        <form method="POST" action="{{ url_for('main.cancel_booking', booking_id=booking.id) }}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Booking</button>
+                        </form>
                     </div>
                 </div>
             </div>
-            {% endif %}
             {% endfor %}
         </div>
         {% endif %}
 
         {% if completed_bookings %}
-        <!-- Past Bookings -->
+        <!-- past bookings. -->
         <div class="col-lg-6">
             <h4 class="border-bottom pb-2">Past Seminars</h4>
 
             {% for booking in completed_bookings %}
-            {% if booking.status == "Completed" %}
             <div class="card booking-card mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -57,23 +56,52 @@
                         <span class="badge bg-secondary py-2">{{booking.status}}</span>
                     </div>
                     <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
-                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</p>
+                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%M %p")}}</p>
                     <p class="card-text"><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
-                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} tickets</p>
+                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} ticket{% if booking.quantity > 1 %}s{% endif %}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
                         <button class="btn btn-sm btn-outline-primary">View Materials</button>
                     </div>
                 </div>
             </div>
-            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if cancelled_bookings %}
+        <!-- cancelled bookings. -->
+        <div class="col-lg-6">
+            <h4 class="border-bottom pb-2">Cancelled Bookings</h4>
+
+            {% for booking in cancelled_bookings %}
+            <div class="card booking-card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{booking.event.title}}</h5>
+                        <span class="badge bg-danger py-2">{{booking.status}}</span>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
+                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%M %p")}}</p>
+                    <p class="card-text"><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
+                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} ticket{% if booking.quantity > 1 %}s{% endif %}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
+                        <small class="text-muted">Cancelled</small>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
         
     </div>
     {% else %}
-    <h4 class="p-5 text-center">No Bookings Currently</h4>
+    <div class="text-center py-5">
+        <h4 class="p-5 text-center">No Bookings Currently</h4>
+        <p class="text-muted">You haven't made any bookings yet.</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Browse Seminars</a>
+    </div>
     <div class="vh-100"></div>
     {% endif %}
 </div>
