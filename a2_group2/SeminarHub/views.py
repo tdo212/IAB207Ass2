@@ -123,4 +123,69 @@ def search():
     # Get all possible results from page, seminars, comments, bookings and feed the data into the template
     return render_template('search.html', query=query, page_results = get_page_results(query), seminar_results = get_seminar_results(query), comment_results = get_comment_results(query), booking_results = get_booking_results(query))
     
+# Edit / Cancel routes from details.html
+
+@main_bp.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    # Only the owner can edit
+    if event.owner_user_id != current_user.id:
+        flash('You are not authorised to edit this event.', 'danger')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    form = CreateForm(obj=event)
+
+    # Pre-fill date/time fields on first load
+    if request.method == 'GET' and event.start_dt and event.end_dt:
+        try:
+            form.date.data = event.start_dt.date()
+            form.start_time.data = event.start_dt.time()
+            form.end_time.data = event.end_dt.time()
+        except Exception:
+            pass
+
+    if form.validate_on_submit():
+        # Keep current image unless a new one is uploaded
+        if getattr(form, "image", None) and getattr(form.image, "data", None) and getattr(form.image.data, "filename", ""):
+            new_path = check_upload_file(form)  
+            event.image_url = new_path
+
+        # Update basic fields
+        event.title = form.title.data
+        event.description = form.description.data
+        event.category = form.category.data
+        event.location = form.location.data
+        event.capacity = form.capacity.data
+        event.speaker = form.speaker.data
+        event.speaker_bio = form.speaker_bio.data
+
+        # Update schedule
+        if form.date.data and form.start_time.data and form.end_time.data:
+            event.start_dt = datetime.combine(form.date.data, form.start_time.data)
+            event.end_dt = datetime.combine(form.date.data, form.end_time.data)
+
+        db.session.commit()
+        flash('Event updated successfully!', 'success')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    
+    return render_template('edit_seminar.html', form=form, seminar=event, heading='Edit Seminar | ')
+
+
+@main_bp.route('/event/<int:event_id>/cancel', methods=['POST'])
+@login_required
+def cancel_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    # Only the owner can cancel
+    if event.owner_user_id != current_user.id:
+        flash('You are not authorised to cancel this event.', 'danger')
+        return redirect(url_for('main.event_details', event_id=event.id))
+
+    event.status = 'Cancelled'
+    db.session.commit()
+    flash('Event has been cancelled.', 'info')
+    return redirect(url_for('main.event_details', event_id=event.id))
 
