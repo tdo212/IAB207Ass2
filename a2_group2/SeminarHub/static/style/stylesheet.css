@@ -141,23 +141,23 @@ footer {
 
 /* Image formatting for detail page */
 .detail-hero{
-  height: 400px;          
-  width: 100%;
-  object-fit: cover;     
-  object-position: center;
-  border-radius: 10px;
-  margin-bottom: 2rem;
+    height: 400px;          
+    width: 100%;
+    object-fit: cover;     
+    object-position: center;
+    border-radius: 10px;
+    margin-bottom: 2rem;
     margin-bottom: 2rem;
 }
 
 /* Image formatting for detail page */
 .detail-hero{
-  height: 400px;          
-  width: 100%;
-  object-fit: cover;     
-  object-position: center;
-  border-radius: 10px;
-  margin-bottom: 2rem;
+    height: 400px;          
+    width: 100%;
+    object-fit: cover;     
+    object-position: center;
+    border-radius: 10px;
+    margin-bottom: 2rem;
 }
 
 .card {
@@ -223,6 +223,10 @@ footer {
     object-fit: cover;
     height: 180px;
     width: 180px;
+}
+
+.list-group-item:hover {
+    transform: scale(1.01); 
 }
 
 .dropdown-item:hover {

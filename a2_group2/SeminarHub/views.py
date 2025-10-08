@@ -21,29 +21,6 @@ def index():
     print(f"Found {len(events)} events")  # Should print "Found 6 events"
     return render_template('index.html', events=events)
 
-@main_bp.route('/event/<int:event_id>')
-def event_details(event_id):
-    event = Event.query.get_or_404(event_id)
-
-    remaining = max(0, event.capacity or 0)
-
-    comments = getattr(event, "comments", [])
-
-    return render_template(
-        'details.html',
-        event=event,
-        remaining=remaining,
-        comments=comments,
-        heading='Event Details | '
-    )
-    """  Added for testing purposes only - adds a mock event to the database (to see if it displays on index.html)
-     new_event = Event(title = 'Test', description = 'Exploring the latest advancements in AI and machine learning technologies.', category = 'cs', location = 'Main Auditorium', capacity = 20, start_dt = datetime(2025, 10, 15, 14, 0, 0), end_dt = datetime(2025, 10, 15, 14, 0, 0), image_url = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80', speaker = 'Ash', owner_user_id = 1)
-     db.session.add(new_event)
-     db.session.commit() """
-
-    events = Event.query.all()  # This will now return 6 events
-    print(f"Found {len(events)} events")  # Should print "Found 6 events"
-    return render_template('index.html', events=events)
 
 @main_bp.route('/event/<int:event_id>')
 def event_details(event_id):
@@ -102,25 +79,6 @@ def check_upload_file(form):
 
     return db_upload_path
 
-@main_bp.route('/event/<int:event_id>/register', methods=['POST'])
-@login_required
-def register_event(event_id):
-    event = Event.query.get_or_404(event_id)
-
-    qty = int(request.form.get('quantity', 1))
-
-    booking = Booking(
-        quantity=qty,
-        booking_date=datetime.utcnow(),
-        status="Confirmed",
-        user_id=current_user.id,
-        event_id=event.id
-    )
-    db.session.add(booking)
-    db.session.commit()
-
-    flash(f'Registered for "{event.title}" (x{qty}).', 'success')
-    return redirect(url_for('main.event_details', event_id=event.id))
 
 @main_bp.route('/event/<int:event_id>/register', methods=['POST'])
 @login_required
