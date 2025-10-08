@@ -1,6 +1,5 @@
-# this is where we will create our database
 from SeminarHub import create_app, db
-from SeminarHub.models import User, Event, Comment, Order, Booking
+from SeminarHub.models import User, Event, Comment, Booking
 from datetime import datetime, date, time
 from flask_bcrypt import generate_password_hash
 import os
@@ -191,56 +190,6 @@ def create_database(app):
             db.session.add_all(comments)
             db.session.commit()
             print("Added dummy comments!")
-        
-        # check if orders already exist.
-        if Order.query.count() == 0:
-            # create some orders.
-            orders = [
-                Order(
-                    quantity=2,
-                    total_price=0.0,
-                    ticket_type="General Admission",
-                    user_id=2,  
-                    event_id=1,  
-                    order_date=datetime(2025, 10, 1, 10, 30, 0)
-                ),
-                Order(
-                    quantity=1,
-                    total_price=25.0,
-                    ticket_type="General Admission",
-                    user_id=3,  
-                    event_id=2,  
-                    order_date=datetime(2025, 9, 28, 14, 15, 0)
-                ),
-                Order(
-                    quantity=3,
-                    total_price=30.0,
-                    ticket_type="General Admission",
-                    user_id=2,  
-                    event_id=5,  
-                    order_date=datetime(2025, 10, 13, 11, 45, 0)
-                ),
-                Order(
-                    quantity=2,
-                    total_price=40.0,
-                    ticket_type="VIP",
-                    user_id=3,  
-                    event_id=6,  
-                    order_date=datetime(2024, 9, 10, 9, 30, 0)
-                ),
-                Order(
-                    quantity=1,
-                    total_price=7.5,
-                    ticket_type="Student",
-                    user_id=2,  
-                    event_id=3,  
-                    order_date=datetime(2024, 9, 20, 16, 0, 0)
-                )
-            ]
-            
-            db.session.add_all(orders)
-            db.session.commit()
-            print("Added dummy orders!")
         
         # check if bookings already exist.
         if Booking.query.count() == 0:
