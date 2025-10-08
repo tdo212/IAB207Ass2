@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container mt-5">
+
+
+    <h2 class="mb-3">Search results</h2>
+    {% if page_results or seminar_results or comment_results or booking_results %}
+    <h5 class="mb-5">Showing results for: <span class="text-danger">{{query}}</span></h5>
+
+    {% if page_results %}
+    <div class="my-5">
+        <!-- Pages -->
+        <h4 class="pb-2">Were you looking for one of these pages?</h4>
+        <hr class="pb-1">
+
+        {% for page in page_results %}
+        <a href="{{url_for(page.link)}}" class="fs-5">{{page.name}}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if seminar_results %}
+    <div class="my-5">
+        <!-- Seminars -->
+        <h4 class="">Seminars</h4>
+        <hr class="pb-1">
+
+        {% for seminar in seminar_results %}
+        <!-- Fix link to details when merged -->
+        <a href="" class="text-decoration-none text-reset">
+            <div class="card mb-3 search-card">
+                <div class="row g-0">
+                    <div class="col-md-2 me-3">
+                        <img src="{{seminar.image_url}}" class="img-fluid rounded-start search-card-img" alt="">
+                        <span class="position-absolute top-0 start-0 m-2"><span class="badge {% if seminar.category == 'cs' %}bg-primary{% elif seminar.category == 'Business' %}bg-info{% elif seminar.category == 'Engineering' %}bg-warning{% elif seminar.category == 'Medicine' %}bg-success{% elif seminar.category == 'Social Sciences' %}bg-danger{% elif seminar.category == 'Other' %}bg-secondary{% endif %}">{{seminar.category}}</span></span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{seminar.title}}</h5>
+                            <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p>
+                            <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%m %p")}}</small>
+                            <p class="card-text mt-2">{{seminar.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if comment_results %}
+    <div class="my-5">
+        <!-- Comments -->
+        <h4 class="">Comments</h4>
+        <hr class="pb-1">
+
+        {% for comment in comment_results %}
+        <!-- Fix link to comment in details view when merged -->
+        <a href="#" class="text-decoration-none text-reset">
+        <div class="comment">
+            <div class="d-flex justify-content-between">
+                <h6>{{comment.user.first_name}} {{comment.user.last_name}}</h6>
+                <small class="text-muted">{{comment.created_at.strftime("%B %d, %Y")}}</small>
+            </div>
+            <p>{{comment.text}}</p>
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if booking_results %}
+    <div class="my-5">
+        <!-- Booking -->
+        <h4 class="">Bookings</h4>
+        <hr class="pb-1">
+
+        {% for booking in booking_results %}
+        <a href="{{url_for('main.booking')}}" class="text-decoration-none text-reset">
+            <div class="card booking-card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{booking.event.title}}</h5>
+                        <span class="badge bg-success py-2">{{booking.status}}</span>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
+                    <p class="card-text"><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</p>
+                    <p class="card-text"><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
+                    <p class="card-text"><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} tickets</p>
+                    <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    No results found.
+    {% endif %}
+    
+</div>
+{% endblock %}

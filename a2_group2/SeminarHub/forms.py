@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, BooleanField, TelField, SelectField, DateField, TimeField, IntegerField
-from wtforms.validators import InputRequired, Email, EqualTo, NumberRange
+from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, BooleanField, TelField, SelectField, DateField, TimeField, IntegerField, SearchField
+from wtforms.validators import InputRequired, Email, EqualTo, NumberRange, Optional
 from flask_wtf.file import FileRequired, FileField, FileAllowed
 # Custom validators for password and phone number checks
 from .auth import auth_validators
@@ -39,3 +39,12 @@ class CreateForm(FlaskForm):
     image = FileField('Seminar Image', validators=[FileRequired(message='Please select an image to upload.'), FileAllowed(ALLOWED_FILE, message='Uploaded image must be a PNG, JPG or JPEG.')])
     accept_toc = BooleanField('I confirm that I have the rights to organize this event and agree to the ', validators=[InputRequired(message="You must accept the terms and conditions to continue.")])
     submit = SubmitField('Create Seminar', render_kw={'class': 'mt-4 btn btn-primary login-button btn-lg'})
+
+# Change some fields of CreateForm using polymorphism + inheritance
+class EditForm(CreateForm):
+    image = FileField('Seminar Image', validators=[Optional(), FileAllowed(ALLOWED_FILE, message='Uploaded image must be a PNG, JPG or JPEG.')])
+    submit = SubmitField('Save', render_kw={'class': 'mt-4 btn btn-primary login-button btn-lg'})
+
+class SearchForm(FlaskForm):
+    search = SearchField('Search', validators=[InputRequired()])
+    submit = SubmitField('Search', render_kw={'class': 'btn btn-block'})

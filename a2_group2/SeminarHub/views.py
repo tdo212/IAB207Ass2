@@ -6,6 +6,7 @@ from flask_login import login_required, current_user
 from . import db
 from .models import Event, Booking
 from datetime import datetime
+from .search_functions import *
 
 main_bp = Blueprint('main', __name__)
 
@@ -95,3 +96,12 @@ def booking():
 
 
     return render_template('bookings.html', bookings = bookings, heading = 'My Bookings | ')
+
+@main_bp.route('/search')
+def search():
+    query = request.args.get('search').lower()
+    
+    # Get all possible results from page, seminars, comments, bookings and feed the data into the template
+    return render_template('search.html', query=query, page_results = get_page_results(query), seminar_results = get_seminar_results(query), comment_results = get_comment_results(query), booking_results = get_booking_results(query))
+    
+
