@@ -110,9 +110,14 @@
             <div class="mb-3">
               <label for="ticketCount" class="form-label">Number of tickets</label>
               <select class="form-select" id="ticketCount" name="quantity">
-                {% for n in range(1,6) %}
-                  <option value="{{ n }}">{{ n }} ticket{{ '' if n==1 else 's' }}</option>
-                {% endfor %}
+                {% if remaining > 0 %}
+                  {% set max_tickets = [remaining, 5]|min %}
+                  {% for n in range(1, max_tickets + 1) %}
+                    <option value="{{ n }}">{{ n }} ticket{{ '' if n==1 else 's' }}</option>
+                  {% endfor %}
+                {% else %}
+                  <option value="0" disabled>No tickets available</option>
+                {% endif %}
               </select>
             </div>
 
@@ -145,6 +150,12 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <span><i class="bi bi-people me-2"></i>Capacity</span>
               <span>{{ event.capacity or 0 }} attendees</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-ticket-perforated me-2"></i>Available</span>
+              <span class="badge {% if remaining > 10 %}bg-success{% elif remaining > 0 %}bg-warning{% else %}bg-danger{% endif %}">
+                {{ remaining }} tickets
+              </span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <span><i class="bi bi-tag me-2"></i>Category</span>
