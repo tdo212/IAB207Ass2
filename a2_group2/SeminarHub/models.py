@@ -70,6 +70,35 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event {self.title}>"
+    from datetime import datetime
+    def seats_taken(self) -> int:
+        """Confirmed seats taken."""
+        return sum(b.quantity or 0 for b in self.bookings if (b.status or "").lower() == "confirmed")
+
+    def remaining_capacity(self) -> int:
+        cap = self.capacity or 0
+        return max(0, cap - self.seats_taken())
+
+    def compute_status(self) -> str:
+        """Return what the status *should* be right now."""
+        if (self.status or "").lower() == "cancelled":
+            return "Cancelled"
+        now = datetime.utcnow()
+        if self.end_dt and now >= self.end_dt:
+            return "Inactive"         
+        if self.remaining_capacity() == 0:
+            return "Sold Out"
+        return "Open"
+
+    def ensure_fresh_status(self) -> bool:
+        """Update self.status if out of date. Return True if changed."""
+        new_status = self.compute_status()
+        if new_status != (self.status or "Open"):
+            self.status = new_status
+            return True
+        return False
+
+
 
 
 # Comment model
