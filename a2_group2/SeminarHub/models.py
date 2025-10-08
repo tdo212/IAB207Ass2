@@ -21,6 +21,8 @@ class User(db.Model, UserMixin):
 
     # Relationships
     bookings = db.relationship("Booking", back_populates="user")
+    comments = db.relationship("Comment", back_populates="user")
+    owned_events = db.relationship("Event", back_populates="owner")
 
     def __repr__(self):
         """
@@ -45,17 +47,27 @@ class Event(db.Model):
     speaker = db.Column(db.String(120))
     speaker_bio = db.Column(db.Text)
 
-    # who created/owns the event 
+    # who created/owns the event.
     owner_user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    owner = db.relationship("User", backref="owned_events")
+    owner = db.relationship("User", back_populates="owned_events")
 
     # relationships
     comments = db.relationship("Comment", back_populates="event", cascade="all, delete-orphan")
-    orders = db.relationship("Order", back_populates="event", cascade="all, delete-orphan")
-    bookings = db.relationship("Booking", back_populates = "event")
+    bookings = db.relationship("Booking", back_populates="event", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Event {self.title}>"
+    
+    @property
+    def tickets_remaining(self):
+        """calculate remaining tickets dynamically."""
+        total_booked = sum(booking.quantity for booking in self.bookings if booking.status != "Cancelled")
+        return max(0, self.capacity - total_booked)
+    
+    @property
+    def is_sold_out(self):
+        """check if event is sold out."""
+        return self.tickets_remaining <= 0
 
 # Comment model
 class Comment(db.Model):
@@ -63,35 +75,16 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
 
-    user = db.relationship("User", backref="comments")
+    user = db.relationship("User", back_populates="comments")
     event = db.relationship("Event", back_populates="comments")
 
     def __repr__(self):
         return f"<Comment {self.id} on Event {self.event_id}>"
-
-# Order model
-class Order(db.Model):
-    __tablename__ = "orders"
-
-    id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer, nullable=False, default=1)
-    ticket_type = db.Column(db.String(64), default="General Admission")
-    total_price = db.Column(db.Float, default=0.0)
-    order_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-
-    user = db.relationship("User", backref="orders")
-    event = db.relationship("Event", back_populates="orders")
-
-    def __repr__(self):
-        return f"<Order {self.id} x{self.quantity} event={self.event_id}>"
 
 # Booking model
 class Booking(db.Model):
@@ -107,7 +100,6 @@ class Booking(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     booking_number = db.Column(db.String(32), index=True, unique=True)
-    # This is duplicated in both Order and Booking. Might need to remove one and make it a relational entry once 'Details' view is completed
     quantity = db.Column(db.Integer, index=True, nullable=False) 
     booking_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(32), default="Confirmed")
@@ -120,7 +112,7 @@ class Booking(db.Model):
     user = db.relationship("User", back_populates="bookings")
     event = db.relationship("Event", back_populates="bookings")
 
-    def repr(self):
+    def __repr__(self):
         """
         String representation of the Booking model for development purposes.
         """
