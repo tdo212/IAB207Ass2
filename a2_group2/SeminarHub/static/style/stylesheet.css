@@ -12,6 +12,12 @@ html, body {
     padding: 0;
 }
 
+html, body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f7fa;
@@ -20,6 +26,14 @@ body {
 
 .navbar {
     background-color: var(--primary);
+}
+
+.badge-consistent {
+    min-width: 130px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .badge-consistent {
@@ -133,6 +147,17 @@ footer {
   object-position: center;
   border-radius: 10px;
   margin-bottom: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Image formatting for detail page */
+.detail-hero{
+  height: 400px;          
+  width: 100%;
+  object-fit: cover;     
+  object-position: center;
+  border-radius: 10px;
+  margin-bottom: 2rem;
 }
 
 .card {
@@ -140,6 +165,10 @@ footer {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
+}
+
+.card-text {
+    min-height: 72px; /* Adjust based on your needs */
 }
 
 .card-text {
@@ -192,10 +221,21 @@ footer {
 
 .horizontal-card-img {
     object-fit: cover;
-    height: 120px;
-    width: 120px;
+    height: 180px;
+    width: 180px;
 }
 
 .dropdown-item:hover {
     background-color: #cecece;
+}
+
+.search-card-img {
+    object-fit: cover; 
+    height: 180px;
+    width: 100%;
+}
+
+/* Make cards pop on hover over */
+.search-card:hover {
+    transform: scale(1.01); 
 }

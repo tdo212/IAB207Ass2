@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Blueprint, flash, render_template, request, url_for, redirect, session
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models import User
@@ -44,15 +44,20 @@ def login():
             error = 'Incorrect password'
         # If all credentials correct
         if error is None:
-            login_user(user)
+            # Check for remember me checkbox
+            if login_form.remember_me.data:
+                login_user(user, remember=True)
+            else:
+                login_user(user)
+
             nextp = request.args.get('next') # this gives the url from where the login page was accessed
             print(nextp)
             if nextp is None or not nextp.startswith('/'):
-                flash('Successfully logged in.')
+                flash('Successfully logged in.', 'success')
                 return redirect(url_for('main.index'))
             return redirect(nextp)
         else:
-            flash(error)
+            flash(error, 'error')
 
     return render_template('login.html', form = login_form, heading = 'Login | ', logo_message = 'Log in to')
 
@@ -65,8 +70,9 @@ def logout():
     # Development information
     print('Logout requested for user {}'. format(current_user))
 
+    session.clear()
     logout_user()
-
+    flash('Logged out.', 'success')
     return redirect(url_for('main.index'))
 
 
@@ -87,15 +93,14 @@ def signup():
         # Hash password and format full name for entry into database
         hashed_password = generate_password_hash(signup_form.password.data)
 
-        # TODO: Needs database to be created and integrated into app to work.
-        # Create User object and store in database
+        # Create User object
         user = User(first_name = signup_form.first_name.data, last_name = signup_form.last_name.data, email = signup_form.email.data, password_hash = hashed_password, number = signup_form.number.data, address = signup_form.address.data)
 
         # Add to database
         db.session.add(user)
         db.session.commit()
 
-        flash('Your account has been created.')
+        flash('Your account has been created.', 'success')
 
         return redirect(url_for('main.index'))
     return render_template('signup.html', heading = 'Sign Up', logo_message = 'Become a member of', form = signup_form, title = 'Sign up | ')

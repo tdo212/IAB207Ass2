@@ -7,14 +7,14 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ url_for('main.index' )}}">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Create Seminar</li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Seminar</li>
     </ol>
 </nav>
 
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="form-section">
-            <h2 class="mb-4">Create a New Seminar</h2>
+            <h2 class="mb-4">Edit Seminar</h2>
             
             <form action="" method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
@@ -72,9 +72,10 @@
                 </div>
                 
                 <div class="mb-4">
-                    {{form.image.label}}
+                    {{form.image.label(value='Current Image')}}
+                    <div><img src="{{ seminar.image_url }}" alt="Current seminar image" class="mb-3" width="200px"></div>
                     {{form.image (class="form-control")}}
-                    <div class="form-text">Upload an image that represents your seminar. Max size 5MB.</div>
+                    <div class="form-text">Upload a new seminar image. Max size 5MB.</div>
                 </div>
                 
                 <div class="mb-5">
@@ -82,7 +83,7 @@
                 </div>
                 
                 <div class="d-grid gap-2 d-md-flex justify-content-md mb-4">
-                    {{ form.submit(class="btn btn-primary login-button btn-lg") }}
+                    {{ form.submit(value='Save Seminar', class="btn btn-primary login-button btn-lg") }}
                 </div>
             </form> 
         </div>

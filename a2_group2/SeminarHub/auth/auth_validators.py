@@ -12,7 +12,7 @@ def password_validator():
     length_message = "Password must be at least 6 characters long to be valid."
 
     def _password_validator(form, field):
-        special_characters = "!@#$%^&*()_+[]{}|;:,.<>?/-"
+        special_characters = "!@#$%^&*()_+[]{}|;:,.<>?/\`~=-"
         password = field.data
 
         if len(password) < 6:
