@@ -16,23 +16,27 @@
 
     {% if seminars|length > 0 %}
     {% for seminar in seminars %}
-
-        <div class="list-group-item border border-2 rounded mb-2">
-            <div class="d-flex w-100 justify-content-between align-items-center">
-                <img src="{{seminar.image_url}}" class="ms-2 me-3 p-2 horizontal-card-img" alt="Seminar image">
-                <div class="me-auto">
-                    <!-- Update link to details when merged -->
-                    <h5 class="mb-1 fw-bold"><a href="#" class="stretched-link text-decoration-none text-reset z-2"></a>{{seminar.title}}</h5>
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-3">
+                <img src="{{seminar.image_url}}" class="img-fluid rounded-start horizontal-card-img" alt="">
+                <span class="position-absolute top-0 start-0 m-2"><span class="badge {% if seminar.category == 'Computer Science' %}bg-primary{% elif seminar.category == 'Business' %}bg-info{% elif seminar.category == 'Engineering' %}bg-warning{% elif seminar.category == 'Medicine' %}bg-success{% elif seminar.category == 'Social Sciences' %}bg-danger{% elif seminar.category == 'Other' %}bg-secondary{% endif %}">{{seminar.category}}</span></span>
+            </div>
+            <div class="col-md-5">
+                <div class="card-body mt-lg-4">
+                    <h5 class="card-title"><a href="{{url_for('main.event_details', event_id=seminar.id)}}" class="stretched-link text-decoration-none text-reset z-2">{{seminar.title}}</a></h5>
                     <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p>
-                    <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</small>
+                    <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%m %p")}}</small>
                 </div>
-                <div class="d-flex flex-lg-row flex-column gap-2 row-gap-2 me-3 me-md-5"> 
+            </div>
+            <div class="col-md-4 d-flex justify-content-center align-items-center mt-lg-2 mb-3">
+                <div class="d-flex flex-md-column flex-row flex-lg-row gap-2"> 
                     <a href="{{ url_for('seminar.edit_seminar', seminar_id=seminar.id )}}" class="btn btn-secondary text-nowrap z-1" role="button">Edit Seminar</a>
                     <a href="{{ url_for('seminar.cancel', seminar_id=seminar.id )}}"class="btn btn-danger text-nowrap z-1" role="button">Cancel Seminar</a>
                 </div>
             </div>
         </div>
-
+    </div>
     {% endfor %}
     {% endif %}
 </div>

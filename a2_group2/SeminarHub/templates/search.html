@@ -28,13 +28,12 @@
         <hr class="pb-1">
 
         {% for seminar in seminar_results %}
-        <!-- Fix link to details when merged -->
-        <a href="" class="text-decoration-none text-reset">
+        <a href="{{url_for('main.event_details', event_id = seminar.id)}}" class="text-decoration-none text-reset">
             <div class="card mb-3 search-card">
                 <div class="row g-0">
-                    <div class="col-md-2 me-3">
+                    <div class="col-md-3 me-3">
                         <img src="{{seminar.image_url}}" class="img-fluid rounded-start search-card-img" alt="">
-                        <span class="position-absolute top-0 start-0 m-2"><span class="badge {% if seminar.category == 'cs' %}bg-primary{% elif seminar.category == 'Business' %}bg-info{% elif seminar.category == 'Engineering' %}bg-warning{% elif seminar.category == 'Medicine' %}bg-success{% elif seminar.category == 'Social Sciences' %}bg-danger{% elif seminar.category == 'Other' %}bg-secondary{% endif %}">{{seminar.category}}</span></span>
+                        <span class="position-absolute top-0 start-0 m-2"><span class="badge {% if seminar.category == 'Computer Science' %}bg-primary{% elif seminar.category == 'Business' %}bg-info{% elif seminar.category == 'Engineering' %}bg-warning{% elif seminar.category == 'Medicine' %}bg-success{% elif seminar.category == 'Social Sciences' %}bg-danger{% elif seminar.category == 'Other' %}bg-secondary{% endif %}">{{seminar.category}}</span></span>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -58,9 +57,8 @@
         <hr class="pb-1">
 
         {% for comment in comment_results %}
-        <!-- Fix link to comment in details view when merged -->
-        <a href="#" class="text-decoration-none text-reset">
-        <div class="comment">
+        <a href="{{url_for('main.event_details', event_id=comment.event_id)}}" class="text-decoration-none text-reset">
+        <div class="comment search-comment">
             <div class="d-flex justify-content-between">
                 <h6>{{comment.user.first_name}} {{comment.user.last_name}}</h6>
                 <small class="text-muted">{{comment.created_at.strftime("%B %d, %Y")}}</small>
