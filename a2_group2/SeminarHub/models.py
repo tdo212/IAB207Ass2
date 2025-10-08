@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
         """
         return '<User first name: {}, Last name: {}, Email: {}>'.format(self.first_name, self.last_name, self.email)
 
+
 # Event model
 class Event(db.Model):
     __tablename__ = "events"
@@ -38,7 +39,7 @@ class Event(db.Model):
     category = db.Column(db.String(64))
     location = db.Column(db.String(120))
     capacity = db.Column(db.Integer, default=0)
-    status = db.Column(db.String(16), default="Open")  
+    status = db.Column(db.String(16), default="Open")
     start_dt = db.Column(db.DateTime, nullable=False)
     end_dt = db.Column(db.DateTime, nullable=False)
     image_url = db.Column(db.String(255))
@@ -50,12 +51,26 @@ class Event(db.Model):
     owner = db.relationship("User", backref="owned_events")
 
     # relationships
-    comments = db.relationship("Comment", back_populates="event", cascade="all, delete-orphan")
-    orders = db.relationship("Order", back_populates="event", cascade="all, delete-orphan")
-    bookings = db.relationship("Booking", back_populates = "event")
+    comments = db.relationship(
+        "Comment",
+        back_populates="event",
+        cascade="all, delete-orphan",
+        order_by="desc(Comment.created_at)"  
+    )
+    orders = db.relationship(
+        "Order",
+        back_populates="event",
+        cascade="all, delete-orphan"
+    )
+    bookings = db.relationship(
+        "Booking",
+        back_populates="event",
+        cascade="all, delete-orphan"        
+    )
 
     def __repr__(self):
         return f"<Event {self.title}>"
+
 
 # Comment model
 class Comment(db.Model):
@@ -73,6 +88,7 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f"<Comment {self.id} on Event {self.event_id}>"
+
 
 # Order model
 class Order(db.Model):
@@ -93,6 +109,7 @@ class Order(db.Model):
     def __repr__(self):
         return f"<Order {self.id} x{self.quantity} event={self.event_id}>"
 
+
 # Booking model
 class Booking(db.Model):
     """
@@ -109,7 +126,7 @@ class Booking(db.Model):
     booking_number = db.Column(db.String(32), index=True, unique=True)
     # This is duplicated in both Order and Booking. Might need to remove one and make it a relational entry once 'Details' view is completed
     quantity = db.Column(db.Integer, index=True, nullable=False) 
-    booking_date = db.Column(db.DateTime, nullable=False)
+    booking_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # NEW: default now
     status = db.Column(db.String(32), default="Confirmed")
 
     # Foreign keys
@@ -120,8 +137,8 @@ class Booking(db.Model):
     user = db.relationship("User", back_populates="bookings")
     event = db.relationship("Event", back_populates="bookings")
 
-    def repr(self):
-        """
-        String representation of the Booking model for development purposes.
-        """
-        return '<Booking ID: {}, Booking Number: {}, Quantity: {}, Booking Date: {}, Status: {}>'.format(self.id, self.booking_number, self.quantity, self.booking_date, self.status) 
+    def __repr__(self): 
+        return '<Booking ID: {}, Booking Number: {}, Quantity: {}, Booking Date: {}, Status: {}>'.format(
+            self.id, self.booking_number, self.quantity, self.booking_date, self.status
+        )
+
