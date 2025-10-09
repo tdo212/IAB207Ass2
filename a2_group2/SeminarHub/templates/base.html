@@ -23,12 +23,12 @@
       {% with messages = get_flashed_messages(with_categories=True) %}
       {% if messages %}
       {% for category, message in messages %}
-      <div class="alert alert-dismissible fade show d-flex align-items-center gap-4 shadow rounded-pill flash {% if category == 'success' %} border-success {% elif category == 'danger' or category == 'error' %} border-danger {% elif category == 'info' %} border-primary {% else %} border-warning {% endif %}" role="alert">
+      <div class="alert alert-dismissible fade show d-flex align-items-center gap-4 shadow rounded-pill border-2 flash alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' or category == 'danger' else 'primary' if category == 'primary' else 'warning' }}" role="alert">
         <div class="ms-3">
-          {% if category == 'success' %} <i class="bi bi-check-circle-fill text-success h3"></i> {% elif category == 'danger' or category == 'error' %}<i class="bi bi-exclamation-circle-fill text-danger h3"></i>{% elif category == 'info' %}<i class="bi bi-info-circle-fill text-primary h3"></i>{% else %}<i class="bi bi-question-circle-fill text-warning h3"></i>{% endif %}
+          {% if category == 'success' %} <i class="bi bi-check-circle-fill text-success h3"></i> {% elif category == 'danger' or category == 'error' %}<i class="bi bi-exclamation-circle-fill text-danger h3"></i>{% elif category == 'primary' %}<i class="bi bi-info-circle-fill text-primary h3"></i>{% else %}<i class="bi bi-question-circle-fill text-warning h3"></i>{% endif %}
         </div>
         <div class="">
-          <div class="text-success fw-semibold fs-5 mb-0 pb-0">{% if category == 'success' %} Success! {% elif category == 'danger' or category == 'error' %} Error! {% elif category == 'info' %} Info! {% endif %}</div>
+          <div class="text-{{ 'success' if category == 'success' else 'danger' if category == 'error' or category == 'danger' else 'primary' if category == 'primary' else 'warning' }} fw-semibold fs-5 mb-0 pb-0">{% if category == 'success' %} Success! {% elif category == 'danger' or category == 'error' %} Error! {% elif category == 'primary' %} Info: {% endif %}</div>
           <div class="">{{ message }}</div>
         </div>
         <button type="button" class="btn-close position-absolute top-50 start-100 translate-middle flash-button" data-bs-dismiss="alert" aria-label="Close"></button>
