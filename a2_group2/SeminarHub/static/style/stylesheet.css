@@ -260,3 +260,13 @@ footer {
 .search-comment:hover {
     transform: scale(1.01); 
 }
+
+.flash {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.flash-button {
+    translate: -40px 0px;
+    
+}

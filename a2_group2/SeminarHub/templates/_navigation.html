@@ -25,7 +25,7 @@
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <a href="{{ url_for('seminar.seminars', user_id=current_user.id) }}" class="dropdown-item mt-2">Hosted Seminars</a>
+                        <a href="{{ url_for('user.events', user_id=current_user.id) }}" class="dropdown-item mt-2">Hosted Seminars</a>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
@@ -47,10 +47,10 @@
                     <a class="nav-link active" href="{{ url_for('main.index') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('main.create')}}">Create Seminar</a>
+                    <a class="nav-link" href="{{url_for('event.create')}}">Create Seminar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('main.booking')}}">My Bookings</a>
+                    <a class="nav-link" href="{{url_for('booking.booking')}}">My Bookings</a>
                 </li>
             </ul>
             <!-- Temporary search bar for testing -->

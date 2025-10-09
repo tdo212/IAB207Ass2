@@ -72,7 +72,7 @@
         {% endif %}
 
         {% if current_user.is_authenticated %}
-        <form class="mt-4" method="POST" action="{{ url_for('main.add_comment', event_id=event.id) }}">
+        <form class="mt-4" method="POST" action="{{ url_for('event.add_comment', event_id=event.id) }}">
           {% if comment_form %}
             {{ comment_form.hidden_tag() }}
             <div class="mb-3">
@@ -106,7 +106,7 @@
           </p>
           <hr>
 
-          <form method="POST" action="{{ url_for('main.register_event', event_id=event.id) }}">
+          <form method="POST" action="{{ url_for('event.register_event', event_id=event.id) }}">
             <div class="mb-3">
               <label for="ticketCount" class="form-label">Number of tickets</label>
               <select class="form-select" id="ticketCount" name="quantity">
@@ -122,10 +122,10 @@
             </div>
 
             <div class="d-grid gap-2">
-              <button class="btn btn-primary btn-lg" type="submit" {% if remaining == 0 %}disabled{% endif %}>
+              <button class="btn btn-primary btn-lg" type="submit" {% if remaining == 0 or event.status == 'Cancelled' or event.status == 'Inactive' %}disabled{% endif %}>
                 {% if remaining == 0 %}Sold Out{% else %}Register Now{% endif %}
               </button>
-              <a class="btn btn-outline-secondary" href="#"><i class="bi bi-bookmark me-2"></i>Save for Later</a>
+              <a class="btn btn-outline-secondary {% if event.status == 'Cancelled' or event.status == 'Inactive' %}disabled{% endif %}" href="#"><i class="bi bi-bookmark me-2"></i>Save for Later</a>
             </div>
           </form>
         </div>
@@ -170,16 +170,16 @@
         <div class="card-body">
           <h6 class="card-title mb-3">Manage Event</h6>
           <div class="d-grid gap-2">
-            <a class="btn btn-primary btn-lg w-100"
-               href="{{ url_for('main.edit_event', event_id=event.id) }}">
+            <a class="btn btn-primary btn-lg w-100 {% if event.status == 'Cancelled' or event.status == 'Inactive' %}disabled{% endif %}"
+               href="{{ url_for('event.edit_event', event_id=event.id) }}" >
               <i class="bi bi-pencil-square me-2"></i>Edit Event
             </a>
 
             <form method="POST"
-                  action="{{ url_for('main.cancel_event', event_id=event.id) }}"
+                  action="{{ url_for('event.cancel_event', event_id=event.id) }}"
                   onsubmit="return confirm('Cancel this event? Attendees will no longer be able to register.');"
                   class="w-100">
-              <button type="submit" class="btn btn-outline-danger btn-lg w-100">
+              <button type="submit" class="btn btn-outline-danger btn-lg w-100" {% if event.status == 'Cancelled' or event.status == 'Inactive' %}disabled{% endif %}>
                 <i class="bi bi-x-circle me-2"></i>Cancel Event
               </button>
             </form>

@@ -55,7 +55,7 @@
                                 {% else %}bg-secondary{% endif %}">
                                 {{ event.category or 'General' }}
                             </span>
-                            <a href="{{ url_for('main.event_details', event_id=event.id) }}" class="btn btn-sm btn-outline-primary align-items-right">View Details</a>
+                            <a href="{{ url_for('event.event_details', event_id=event.id) }}" class="btn btn-sm btn-outline-primary align-items-right">View Details</a>
                         </div>
                     </div>
                 </div>
