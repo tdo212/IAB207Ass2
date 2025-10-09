@@ -24,15 +24,15 @@
             </div>
             <div class="col-md-5">
                 <div class="card-body mt-lg-4">
-                    <h5 class="card-title"><a href="{{url_for('main.event_details', event_id=seminar.id)}}" class="stretched-link text-decoration-none text-reset z-2">{{seminar.title}}</a></h5>
+                    <h5 class="card-title"><a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="stretched-link text-decoration-none text-reset z-2">{{seminar.title}}</a></h5>
                     <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p>
                     <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%m %p")}}</small>
                 </div>
             </div>
             <div class="col-md-4 d-flex justify-content-center align-items-center mt-lg-2 mb-3">
                 <div class="d-flex flex-md-column flex-row flex-lg-row gap-2"> 
-                    <a href="{{ url_for('seminar.edit_seminar', seminar_id=seminar.id )}}" class="btn btn-secondary text-nowrap z-1" role="button">Edit Seminar</a>
-                    <a href="{{ url_for('seminar.cancel', seminar_id=seminar.id )}}"class="btn btn-danger text-nowrap z-1" role="button">Cancel Seminar</a>
+                    <a href="{{ url_for('event.edit_event', event_id=seminar.id )}}" class="btn btn-secondary text-nowrap z-1" role="button">Edit Seminar</a>
+                    <a href="{{ url_for('event.cancel_event', event_id=seminar.id )}}"class="btn btn-danger text-nowrap z-1" role="button">Cancel Seminar</a>
                 </div>
             </div>
         </div>

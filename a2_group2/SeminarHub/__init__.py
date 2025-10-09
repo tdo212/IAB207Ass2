@@ -42,8 +42,14 @@ def create_app():
    from .auth import auth
    app.register_blueprint(auth.auth_bp)
 
-   from .seminar import seminar
-   app.register_blueprint(seminar.seminar_bp)
+   from .event import event
+   app.register_blueprint(event.event_bp)
+
+   from .booking import booking
+   app.register_blueprint(booking.booking_bp)
+
+   from .user import user
+   app.register_blueprint(user.user_bp)
 
    # Error handling for errors 404 and 500
    @app.errorhandler(404)
