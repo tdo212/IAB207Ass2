@@ -65,6 +65,7 @@ def check_upload_file(form) -> str:
 @main_bp.route('/')
 def index():
     events = Event.query.all()
+    selected_category = request.args.get('category', None)
     any_changed = False
     for e in events:
         if hasattr(e, "ensure_fresh_status"):
@@ -75,7 +76,17 @@ def index():
                 pass
     if any_changed:
         db.session.commit()
-    return render_template('index.html', events=events)
+    if selected_category:
+        events = Event.query.filter_by(category=selected_category).all()
+    else:
+        events = Event.query.all()
+
+
+    categories = db.session.query(Event.category).distinct().all()
+    categories = [category[0] for category in categories]
+
+
+    return render_template('index.html', events=events, categories = categories, selected_category=selected_category)
 
 
 # ----- Search -----
