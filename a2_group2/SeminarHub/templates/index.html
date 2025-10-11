@@ -8,18 +8,24 @@
             <div class="container">
                 <h1 class="display-4 fw-bold">Find Your Next Learning Opportunity</h1>
                 <p class="lead">Discover and register for academic seminars across various disciplines</p>
+                <form method="GET" action="{{ url_for('main.search') }}" class="input-group mb-3 mx-auto" style="max-width: 600px;">
+                    <input type="text" class="form-control form-control-lg" placeholder="Search seminars, speakers and venues..." name="search" value="{{ search_query }}">
+                    <button class="btn btn-light" type="submit">
+                        <i class="bi bi-search"></i> SEARCH
+                    </button>
+                </form>
                 <a href="#seminar-list" class="btn btn-lg btn-light mt-3">Browse Seminars</a>
             </div>
         </div>
 
         <div class="category-nav">
             <div class="d-flex flex-wrap justify-content-center">
-                <a href="{{url_for('main.index')}}" class="btn btn-sm btn-outline-primary m-1 active">All Categories</a>
-                <a href="{{url_for('main.index', category='Computer Science')}}" class="btn btn-sm btn-outline-primary m-1 {% if selected_category == 'Computer Science' %}active{% endif %}">Computer Science</a>
-                <a href="{{url_for('main.index', category='Business')}}" class="btn btn-sm btn-outline-primary m-1 {% if selected_category == 'Business' %}active{% endif %}">Business</a>
-                <a href="{{url_for('main.index', category='Engineering')}}" class="btn btn-sm btn-outline-primary m-1 {% if selected_category == 'Engineering' %}active{% endif %}">Engineering</a>
-                <a href="{{url_for('main.index', category='Medicine')}}" class="btn btn-sm btn-outline-primary m-1 {% if selected_category == 'Medicine' %}active{% endif %}">Medicine</a>
-                <a href="{{url_for('main.index', category='Social Sciences')}}" class="btn btn-sm btn-outline-primary m-1 {% if selected_category == 'Social Sciences' %}active{% endif %}">Social Sciences</a>
+                <a href="{{url_for('main.index')}}" class="btn btn-light btn-outline-primary m-1 active">All Categories</a>
+                <a href="{{url_for('main.index', category='Computer Science')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Computer Science' %}active{% endif %}">Computer Science</a>
+                <a href="{{url_for('main.index', category='Business')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Business' %}active{% endif %}">Business</a>
+                <a href="{{url_for('main.index', category='Engineering')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Engineering' %}active{% endif %}">Engineering</a>
+                <a href="{{url_for('main.index', category='Medicine')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Medicine' %}active{% endif %}">Medicine</a>
+                <a href="{{url_for('main.index', category='Social Sciences')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Social Sciences' %}active{% endif %}">Social Sciences</a>
             </div>
         </div>
 
