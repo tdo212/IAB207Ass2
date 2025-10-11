@@ -74,6 +74,53 @@
                 </div>
             </div>
             {% endfor %}
+
         </div>
+        <!-- recently added events section heading. -->
+        <h2 class="section-title mt-5 mb-4">Recently Added</h2>
+            <div class="row g-4">
+        
+            <!-- Status badges -->
+             
+            {% for event in recently_added %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <span class="status-badge badge 
+                    {% if event.status == 'Open' %}bg-success
+                    {% elif event.status == 'Limited' %}bg-warning text-dark
+                    {% elif event.status == 'Sold Out' %}bg-danger
+                    {% else %}bg-secondary{% endif %}">
+                    {{ event.status }}
+                    </span>
+
+                    <img src="{{event.image_url}}" class="seminar-image" alt="{{ event.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{ event.start_dt.strftime('%b %d, %Y') }} | {{ event.start_dt.strftime('%I:%M %p') }}</p>
+                        <p class="card-text">{{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="badge badge-consistent
+                                {% if event.category == 'Computer Science' %}bg-primary
+                                {% elif event.category == 'Business' %}bg-info text-dark
+                                {% elif event.category == 'Medicine' %}bg-success
+                                {% elif event.category == 'Engineering' %}bg-warning text-dark
+                                {% elif event.category == 'Social Sciences' %}bg-danger
+                                {% else %}bg-secondary{% endif %}">
+                                {{ event.category or 'General' }}
+                            </span>
+                            <a href="{{ url_for('event.event_details', event_id=event.id) }}" class="btn btn-sm btn-outline-primary align-items-right">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <h4>No upcoming seminars found</h4>
+                    <p class="text-muted">Check back later for new events</p>
+                </div>
+            </div>
+            {% endfor %}
+
     </div>
     {% endblock %}

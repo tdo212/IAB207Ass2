@@ -1,5 +1,5 @@
 from . import db
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_login import UserMixin
 
 # User ---------------------------
@@ -38,7 +38,7 @@ class Event(db.Model):
     image_url   = db.Column(db.String(255))
     speaker     = db.Column(db.String(120))
     speaker_bio = db.Column(db.Text)
-
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
     # Owner
     owner_user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     owner         = db.relationship("User", back_populates="owned_events")

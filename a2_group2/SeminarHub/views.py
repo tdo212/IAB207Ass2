@@ -80,13 +80,14 @@ def index():
         events = Event.query.filter_by(category=selected_category).all()
     else:
         events = Event.query.all()
-
+    recent_cutoff = datetime.now().date()
+    recently_added = [event for event in events if (recent_cutoff - event.date_added.date()).days <= 7]
 
     categories = db.session.query(Event.category).distinct().all()
     categories = [category[0] for category in categories]
 
 
-    return render_template('index.html', events=events, categories = categories, selected_category=selected_category)
+    return render_template('index.html', events=events, categories = categories, selected_category=selected_category, recently_added=recently_added)
 
 
 # ----- Search -----

@@ -79,7 +79,8 @@ def create_database(app):
                     end_dt=datetime(2025, 10, 15, 16, 30, 0),
                     image_url="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                     speaker_bio="Expert in AI and machine learning with 15 years of experience.",
-                    owner_user_id=1  
+                    owner_user_id=1,
+                    date_added = datetime(2025, 10, 1, 14, 0, 0)  # manually set
                 ),
                 Event(
                     title="Digital Marketing Strategies",
@@ -93,7 +94,8 @@ def create_database(app):
                     end_dt=datetime(2026, 10, 20, 12, 0, 0),
                     image_url="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                     speaker_bio="Digital marketing strategist and business consultant.",
-                    owner_user_id=4
+                    owner_user_id=4,
+                    date_added = datetime(2025, 10, 1, 14, 0, 0)  # manually set
                 ),
                 Event(
                     title="Advances in Neuroscience",
@@ -107,7 +109,8 @@ def create_database(app):
                     end_dt=datetime(2024, 10, 22, 18, 0, 0),
                     image_url="https://images.unsplash.com/photo-1566669419640-ae09e20a18d8?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                     speaker_bio="Neuroscience researcher and medical practitioner.",
-                    owner_user_id=1
+                    owner_user_id=1,
+                    date_added = datetime(2025, 10, 1, 14, 0, 0)  # manually set
                 ),
                 Event(
                     title="Renewable Energy Solutions",
@@ -121,7 +124,8 @@ def create_database(app):
                     end_dt=datetime(2027, 10, 25, 13, 0, 0),
                     image_url="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                     speaker_bio="Renewable energy engineer and researcher.",
-                    owner_user_id=4
+                    owner_user_id=4,
+                    date_added = datetime(2025, 10, 1, 14, 0, 0)  # manually set
                 ),
                 Event(
                     title="Global Economic Trends",
@@ -135,7 +139,8 @@ def create_database(app):
                     end_dt=datetime(2028, 11, 5, 15, 30, 0),
                     image_url="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                     speaker_bio="Economist and global trends analyst.",
-                    owner_user_id=1
+                    owner_user_id=1,
+                    date_added = datetime(2025, 10, 1, 14, 0, 0)  # manually set
                 ),
                 Event(
                     title="Leadership in Tech Industries",
@@ -149,7 +154,8 @@ def create_database(app):
                     end_dt=datetime(2024, 9, 30, 11, 0, 0),
                     image_url="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                     speaker_bio="Tech industry executive and leadership coach.",
-                    owner_user_id=4
+                    owner_user_id=4,
+                    date_added = datetime(2025, 10, 1, 14, 0, 0)  # manually set
                 )
             ]
             
