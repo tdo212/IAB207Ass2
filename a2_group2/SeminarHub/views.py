@@ -82,9 +82,21 @@ def index():
 
 @main_bp.route('/search')
 def search():
-    query = (request.args.get('search') or '').lower()
+    # For displaying the exact user input in the HTML template
+    raw_query = (request.args.get('search') or '').strip()
+    query = raw_query.lower()
+
+    # Search for date
+    if query:
+        query = date_search(query)
+
+    # Search for time next
+        if ':' in query:
+            query = time_search(query)
+
     return render_template(
         'search.html',
+        raw_query = raw_query,
         query=query,
         page_results=get_page_results(query),
         seminar_results=get_seminar_results(query),

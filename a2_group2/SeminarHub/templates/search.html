@@ -7,7 +7,7 @@
 
     <h2 class="mb-3">Search results</h2>
     {% if page_results or seminar_results or comment_results or booking_results %}
-    <h5 class="mb-5">Showing results for: <span class="text-danger">{{query}}</span></h5>
+    <h5 class="mb-5">Showing results for: <span class="text-danger">{{raw_query}}</span></h5>
 
     {% if page_results %}
     <div class="my-5">
@@ -39,7 +39,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{seminar.title}}</h5>
                             <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p>
-                            <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%m %p")}}</small>
+                            <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%M %p")}} - {{seminar.end_dt.strftime("%I:%M %p")}}</small>
                             <p class="card-text mt-2">{{seminar.description}}</p>
                         </div>
                     </div>
@@ -58,10 +58,10 @@
 
         {% for comment in comment_results %}
         <a href="{{url_for('event.event_details', event_id=comment.event_id)}}" class="text-decoration-none text-reset">
-        <div class="comment search-comment">
+        <div class="comment search-comment mb-4">
             <div class="d-flex justify-content-between">
                 <h6>{{comment.user.first_name}} {{comment.user.last_name}}</h6>
-                <small class="text-muted">{{comment.created_at.strftime("%B %d, %Y")}}</small>
+                <small class="text-muted">{{comment.created_at.strftime("%B %d, %Y | %I:%M %p")}}</small>
             </div>
             <p>{{comment.text}}</p>
         </div>
@@ -85,7 +85,7 @@
                         <span class="badge bg-success py-2">{{booking.status}}</span>
                     </div>
                     <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
-                    <p class=""><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%m %p")}}</p>
+                    <p class=""><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%M %p")}}</p>
                     <p class=""><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
                     <p class=""><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} tickets</p>
                     <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
