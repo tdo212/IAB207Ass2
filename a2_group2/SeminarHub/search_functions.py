@@ -1,30 +1,47 @@
 """
 This file contains helper functions that enable the search bar to work.
 """
-
 from .models import Event, Booking, Comment, User
-from flask_login import login_required, current_user
-from sqlalchemy import or_
+from flask_login import current_user
+from sqlalchemy import or_, cast, String
+from datetime import datetime
 
 def search_table(model, columns, search_query):
     """
     Parses through each column of a given database table using pythons built in getattr() method, attempts to match a case insensitive (ilike) query and then returns all rows that match that query from the table.
 
-    Taken and modified from: https://stackoverflow.com/a/57192587
+    If a column is type datetime, first cast it into a string and then complete the search as datetime is the only type that does not work with the original search functionality.
 
-    Explanation:
+    Taken and modified from: https://stackoverflow.com/a/57192587 and https://stackoverflow.com/a/42780340
+
+    Original search: or_(*[getattr(model, col).ilike(f'%{search_query}%') for col in columns])
+    Explanation for my benefit:
+
     getattr(object, attribute) = where the object is the table name and the attribute is the column name. Returns the value of a name attribute of an object (e.g. returns the value of Event.title).
 
     or_ = Essentially an SQL OR statement.
 
     * = Unpacks a List and passes each element in the list as seperate arguments into the or_ statment.
     """
-    sql_queries = or_(*[getattr(model, col).ilike(f'%{search_query}%') for col in columns])
+    sql_queries = []
 
-    final_list = model.query.filter(sql_queries).all()
+    for col in columns:
+        col_object = getattr(model, col)
+
+        if col_object.type.python_type == datetime:
+            if type(search_query) is list:
+                for query in search_query:
+                    sql_queries.append(cast(col_object, String).ilike(f'%{query}%'))
+                    # sql_queries = or_(*[cast(getattr(model, col), String).ilike(f'%{search}%') for col in columns])
+            else:
+                sql_queries.append(cast(col_object, String).ilike(f'%{search_query}%'))
+                # sql_queries = or_(*[cast(getattr(model, col), String).ilike(f'%{search_query}%') for col in columns])
+        else:
+            # sql_queries = or_(*[getattr(model, col).ilike(f'%{search_query}%') for col in columns])
+            sql_queries.append(col_object.ilike(f'%{search_query}%'))
+
     
-    return final_list
-
+    return model.query.filter(or_(*sql_queries)).all()
 
 def get_page_results(search_query):
     """
@@ -61,13 +78,15 @@ def get_seminar_results(search_query):
 
     If no results found, returns an empty list.
     """
-    # Next check for seminars in database
     seminar_columns = [
         "title",
         "description",
         "category",
         "location",
+        "capacity",
         "status",
+        "start_dt",
+        "end_dt",
         "speaker",
         "speaker_bio"
     ]
@@ -79,26 +98,26 @@ def get_seminar_results(search_query):
 
 def get_comment_results(search_query):
     """
-    Uses the search_table() function to query each column within the Comment and User table and return results as a list if they match the search query.
+    Handles searches for comments.
 
-    Handles searches for comment text and users names.
+    Uses the search_table() function to query columns within the Comment table and the User table and return results as a list if they match the search query.
 
     If no results found, returns an empty list.
     """
     comment_columns = [
-        "text"
+        "text",
+        "created_at"
     ]
     user_columns = [
         "first_name",
         "last_name"
     ]
 
-    # Get users based on first or last name only if searched for
+    # Get users based on first or last name only. Avoid sensitive information.
     user_results = search_table(User, user_columns, search_query)
-    # Get comments based on comment text
+
     comments = search_table(Comment, comment_columns, search_query)
 
-    # Initialise empty list
     related_comments = []
 
     if user_results:
@@ -106,7 +125,7 @@ def get_comment_results(search_query):
             # Get comments that are made by the user if a specific user was searched for
             related_comments = Comment.query.filter_by(user_id = user.id).all()
 
-    # Removes duplicates if there are any from combining the two lists together
+    # Removes duplicates if there are any from combining the two lists together. Taken and modified from: https://stackoverflow.com/a/7961425
     comment_results = list(dict.fromkeys(comments + related_comments))
 
     return comment_results
@@ -114,17 +133,102 @@ def get_comment_results(search_query):
 
 def get_booking_results(search_query):
     """
-    Handles search queries for a booking number.
+    Handles search queries for bookings.
     
-    Only displays results if the user is logged in and if their ID matches the foreign key user_id in the Booking table.
+    Only displays results if the user is logged in and the booking belongs to their user ID.
 
     If no results found, returns an empty list.
     """
+    booking_columns = [
+        "booking_number",
+        "quantity",
+        "booking_date"
+    ]
+
+    filtered_events = []
     booking_results = []
 
-    # If user is logged in retrieve their bookings if searched for
+    # Make sure user can only see the bookings if 1. They're logged in and 2. They booking belongs to their user id
     if current_user.is_authenticated:
+        bookings = search_table(Booking, booking_columns, search_query)
+        events = get_seminar_results(search_query)
 
-        booking_results = Booking.query.filter(Booking.user_id == current_user.id, Booking.booking_number.ilike(f'%{search_query}%')).all()
+        # From all events that match the query, filter it down to those with the same event_id as the booking, and then further filter it for only the users bookings
+        if events:
+            for event in events:
+                filtered_events = Booking.query.filter_by(event_id = event.id, user_id = current_user.id).all()
+                booking_results.extend(filtered_events)
+
+        if bookings:
+            for booking in bookings:
+                if booking.user_id == current_user.id:
+                    booking_results.append(booking)
+
+        # Remove duplicates
+        booking_results = list(dict.fromkeys(filtered_events + booking_results))
         
     return booking_results
+
+def date_search(search_query):
+    months = {'january': '01', 'february': '02', 'march': '03', 'april':'04', 'may':'05', 'june':'06', 'july':'07', 'august':'08', 'september':'09', 'october':'10', 'november':'11', 'december':'12'}
+    month = None
+    day = None
+    original_query = search_query
+
+    # TODO: Find a way to do this for the year as well
+    # Split query into list and iterate it to see if there's potentially a day that goes with the month
+    split_query = search_query.split()
+
+    for word in split_query:
+        for key, val in months.items():
+                # If word is months key (e.g. spelt out month)
+                if key.startswith(word):
+                    month = val
+                    search_query = val
+                    break
+        if len(split_query) > 1:
+            # If word is a digit and between 1 and 31, maybe a day
+            if word.isdigit():
+                day = int(word)
+    
+    # If both present send through as query, else just keep the month, and if nothing return the original search query
+    if month and day:
+        if 1 <= day <= 31:
+            search_query = f"-{month}-{day}"
+        else:
+            search_query = original_query
+
+    return search_query
+
+def time_search(search_query):
+    # Dfficult strptime formats to iterate through e.g. 1:30 pm/am
+    am_pm_format = ["%I:%M %p",  "%-I:%M %p", "%I:%M%p", "%-I:%M %p"]
+    parse_time = None
+
+    time_queries = []
+
+    # First search am/pm formats because they are definitive times
+    for format in am_pm_format:
+        try:
+            parse_time = datetime.strptime(search_query, format).time()
+            time_queries.append(parse_time.strftime("%H:%M"))
+        except ValueError:
+            # If error, put into 24 hour time format and get the opposite 12 hour time
+            try:
+                parse_time = datetime.strptime(search_query, "%H:%M").time()
+                time_queries.append(parse_time)
+
+                if parse_time.hour < 12:
+                    alternate_time = f"{parse_time.hour + 12}:{parse_time.minute:02}"
+                    time_queries.append(alternate_time)
+                elif parse_time.hour > 12:
+                    alternate_time = f"{parse_time.hour - 12:02}:{parse_time.minute:02}"
+                    time_queries.append(alternate_time)
+            except:
+                pass
+
+    if time_queries:
+        # Remove duplicates
+        search_query = list(dict.fromkeys(time_queries))
+
+    return search_query
