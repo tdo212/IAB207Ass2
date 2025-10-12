@@ -3,21 +3,21 @@
 
     {% block content %}
     <!-- Page Content -->
-    <div class="container">
-        <div class="hero-section text-center rounded mb-4">
-            <div class="container">
-                <h1 class="display-4 fw-bold">Find Your Next Learning Opportunity</h1>
-                <p class="lead">Discover and register for academic seminars across various disciplines</p>
-                <form method="GET" action="{{ url_for('main.search') }}" class="input-group mb-3 mx-auto" style="max-width: 600px;">
-                    <input type="text" class="form-control form-control-lg" placeholder="Search seminars, speakers and venues..." name="search" value="{{ search_query }}">
-                    <button class="btn btn-light" type="submit">
-                        <i class="bi bi-search"></i> SEARCH
-                    </button>
-                </form>
-                <a href="#seminar-list" class="btn btn-lg btn-light mt-3">Browse Seminars</a>
-            </div>
+    <div class="hero-section text-center rounded mb-4">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Find Your Next Learning Opportunity</h1>
+            <p class="lead">Discover and register for academic seminars across various disciplines</p>
+            <form method="GET" action="{{ url_for('main.search') }}" class="input-group mb-3 mx-auto" style="max-width: 600px;">
+                <input type="text" class="form-control form-control-lg" placeholder="Search seminars, speakers and venues..." name="search" value="{{ search_query }}">
+                <button class="btn btn-light" type="submit">
+                    <i class="bi bi-search"></i> SEARCH
+                </button>
+            </form>
+            <a href="#seminar-list" class="btn btn-lg btn-light mt-3">Browse Seminars</a>
         </div>
-
+    </div>
+    
+    <div class="container">
         <div class="category-nav">
             <div class="d-flex flex-wrap justify-content-center">
                 <a href="{{url_for('main.index')}}" class="btn btn-light btn-outline-primary m-1 active">All Categories</a>
