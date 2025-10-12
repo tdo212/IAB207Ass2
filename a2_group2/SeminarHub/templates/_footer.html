@@ -19,10 +19,10 @@
       <div class="col-md-3">
         <h5>Categories</h5>
         <ul class="list-unstyled">
-          <li><a href="#" class="text-light">Computer Science</a></li>
-          <li><a href="#" class="text-light">Business</a></li>
-          <li><a href="#" class="text-light">Engineering</a></li>
-          <li><a href="#" class="text-light">View All</a></li>
+          <li><a href="{{url_for('main.index', category='Computer Science')}}" class="text-light">Computer Science</a></li>
+          <li><a href="{{url_for('main.index', category='Business')}}" class="text-light">Business</a></li>
+          <li><a href="{{url_for('main.index', category='Engineering')}}" class="text-light">Engineering</a></li>
+          <li><a href="{{url_for('main.index')}}" class="text-light">View All</a></li>
         </ul>
       </div>
 
