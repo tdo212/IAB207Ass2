@@ -11,12 +11,12 @@ ALLOWED_FILE = {'PNG', 'JPG', 'JPEG', 'png', 'jpg', 'jpeg'}
 
 # Centralise category choices so Create/Edit stay in sync
 CATEGORY_CHOICES = [
-    ('cs', 'Computer Science'),
-    ('business', 'Business'),
-    ('engineering', 'Engineering'),
-    ('medicine', 'Medicine'),
-    ('social', 'Social Sciences'),
-    ('other', 'Other'),
+    ('Computer Science', 'Computer Science'),
+    ('Business', 'Business'),
+    ('Engineering', 'Engineering'),
+    ('Medicine', 'Medicine'),
+    ('Social Sciences', 'Social Sciences'),
+    ('Other', 'Other'),
 ]
 
 class LoginForm(FlaskForm):
