@@ -3,7 +3,15 @@
 {% block content %}
 <!-- Page Content -->
 <div class="container mt-5">
-
+    <div class="d-flex justify-content-end">    
+        <a href="{{url_for('main.index')}}" class="btn btn-primary btn-lg mb-4"><i class="bi bi-arrow-left-circle me-2"></i>Back to Home</a>
+    </div>
+    <form method="GET" action="{{ url_for('main.search') }}" class="input-group mb-3" style="max-width: 600px;">
+        <input type="text" class="form-control form-control-lg" placeholder="Search seminars, speakers and venues..." name="search" value="{{ search_query }}">
+        <button class="btn btn-primary" type="submit">
+            <i class="bi bi-search"></i> SEARCH
+        </button>
+    </form>
 
     <h2 class="mb-3">Search results</h2>
     {% if page_results or seminar_results or comment_results or booking_results %}
