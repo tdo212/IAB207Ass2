@@ -3,7 +3,7 @@
 
     {% block content %}
     <!-- Page Content -->
-    <div class="hero-section text-center rounded mb-4">
+    <div class="hero-section text-center mb-4">
         <div class="container">
             <h1 class="display-4 fw-bold">Find Your Next Learning Opportunity</h1>
             <p class="lead">Discover and register for academic seminars across various disciplines</p>
@@ -20,7 +20,7 @@
     <div class="container">
         <div class="category-nav">
             <div class="d-flex flex-wrap justify-content-center">
-                <a href="{{url_for('main.index')}}" class="btn btn-light btn-outline-primary m-1 active">All Categories</a>
+                <a href="{{url_for('main.index')}}" class="btn btn-light btn-outline-primary m-1 {% if not selected_category %}active{% endif %}">All Categories</a>
                 <a href="{{url_for('main.index', category='Computer Science')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Computer Science' %}active{% endif %}">Computer Science</a>
                 <a href="{{url_for('main.index', category='Business')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Business' %}active{% endif %}">Business</a>
                 <a href="{{url_for('main.index', category='Engineering')}}" class="btn btn-light btn-outline-primary m-1 {% if selected_category == 'Engineering' %}active{% endif %}">Engineering</a>

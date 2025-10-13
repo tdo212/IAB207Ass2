@@ -135,6 +135,7 @@ footer {
     background-size: cover;
     margin-top: -1.5rem; /* Pulls hero closer to navbar */
     background-position: center;
+    overflow: hidden; /* Ensures background images also follow the curve */
     color: white;
     padding: 5rem 0;
     margin-bottom: 2rem;
