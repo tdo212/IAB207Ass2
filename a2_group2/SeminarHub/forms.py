@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TelField, SelectField, DateField, TimeField, IntegerField, TextAreaField, SubmitField, SearchField, ValidationError
-from wtforms.validators import InputRequired, Email, EqualTo, NumberRange, Optional, DataRequired, Length
+from wtforms.validators import InputRequired, Email, EqualTo, NumberRange, Optional, DataRequired, Length, AnyOf
 from flask_wtf.file import FileRequired, FileField, FileAllowed
+# To embed a link into a form fields label: https://stackoverflow.com/a/79147678
+from markupsafe import Markup
 
 # Custom validators for password and phone number checks
 from .auth import auth_validators
@@ -38,18 +40,18 @@ class RegisterForm(FlaskForm):
 
 
 class CreateForm(FlaskForm):
-    title = StringField('Seminar Title', validators=[InputRequired(message='Please enter a title.')])
-    category = SelectField('Category', choices=CATEGORY_CHOICES, validators=[InputRequired()], coerce=str)
-    description = TextAreaField('Description', validators=[InputRequired(message='Please enter a description of your seminar.')])
+    title = StringField('Seminar Title', validators=[InputRequired(message='Please enter a title.')], render_kw={'placeholder': 'Enter seminar title'})
+    category = SelectField('Category', choices=CATEGORY_CHOICES, validators=[InputRequired(), AnyOf(CATEGORY_CHOICES, message='Please select a category for your seminar')], coerce=str, render_kw={'class': 'form-select'})
+    description = TextAreaField('Description', validators=[InputRequired(message='Please enter a description of your seminar.')], render_kw={'placeholder': 'Describe your seminar in detail...', 'rows':'4'})
     date = DateField('Date', validators=[InputRequired(message='Please enter a valid date.')])
     start_time = TimeField('Start Time', validators=[InputRequired(message='Please enter a valid start time.')])
     end_time = TimeField('End Time', validators=[InputRequired(message='Please enter a valid end time.')])
-    location = StringField('Location', validators=[InputRequired(message='Please enter a location for the seminar.')])
-    capacity = IntegerField('Capacity', validators=[InputRequired(message='Please enter the maximum attendees.'), NumberRange(min=0)])
-    speaker = StringField('Speaker Name', validators=[InputRequired(message="Please enter the speaker's name.")])
-    speaker_bio = TextAreaField('Speaker Bio', validators=[Optional()])
+    location = StringField('Location', validators=[InputRequired(message='Please enter a location for the seminar.')], render_kw={'placeholder': 'e.g. Main Auditorium'})
+    capacity = IntegerField('Capacity', validators=[InputRequired(message='Please enter the maximum attendees.'), NumberRange(min=0)], render_kw={'placeholder': 'Maximum attendees'})
+    speaker = StringField('Speaker Name', validators=[InputRequired(message="Please enter the speaker's name.")], render_kw={'placeholder': "Enter speaker's name"})
+    speaker_bio = TextAreaField('Speaker Bio', validators=[Optional()], render_kw={'placeholder': 'Brief background about the speaker...', 'rows':'3'})
     image = FileField('Seminar Image', validators=[FileRequired(message='Please select an image to upload.'), FileAllowed(ALLOWED_FILE, message='Uploaded image must be a PNG, JPG or JPEG.')])
-    accept_toc = BooleanField('I confirm that I have the rights to organize this event and agree to the ', validators=[InputRequired(message="You must accept the terms and conditions to continue.")])
+    accept_toc = BooleanField(Markup('I confirm that I have the rights to organize this event and agree to the <a href="" class="ms-1">Terms and Conditions</a>'), validators=[InputRequired(message="You must accept the terms and conditions to continue.")])
     submit = SubmitField('Create Seminar', render_kw={'class': 'mt-4 btn btn-primary login-button btn-lg'})
 
     # End time is after start time (on the same date)
@@ -62,7 +64,7 @@ class CreateForm(FlaskForm):
 class EditForm(CreateForm):
     # Make image optional when editing
     image = FileField('Seminar Image', validators=[Optional(), FileAllowed(ALLOWED_FILE, message='Uploaded image must be a PNG, JPG or JPEG.')])
-    accept_toc = BooleanField('I confirm that I have the rights to organize this event and agree to the ', validators=[Optional()])
+    accept_toc = BooleanField(Markup('I confirm that I have the rights to organize this event and agree to the <a href="" class="ms-1">Terms and Conditions</a>'), validators=[Optional()])
     submit = SubmitField('Save Seminar', render_kw={'class': 'mt-4 btn btn-primary login-button btn-lg'})
 
 
@@ -74,3 +76,17 @@ class SearchForm(FlaskForm):
 class CommentForm(FlaskForm):
     text = TextAreaField("Add your comment", validators=[DataRequired(message="Comment can't be empty."), Length(max=1000)])
     submit = SubmitField("Post Comment")
+
+class EditProfileForm(FlaskForm):
+    first_name = StringField('First name', validators=[InputRequired(message='Please enter a first name.')])
+    last_name = StringField('Last name', validators=[InputRequired(message='Please enter a last name.')])
+    email = StringField('Email', validators=[InputRequired(message='Please enter an email address.'), Email(message='Enter a valid email address.')], render_kw={'readonly': 'True', 'class':'unselectable'})
+    number = TelField('Phone number', validators=[InputRequired(message='Please enter your number.'), auth_validators.phone_number_validator()])
+    address = StringField('Address', validators=[InputRequired(message='Please enter your street address.')])
+    submit = SubmitField('Save Changes')
+
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField('Current password', validators=[InputRequired(message='Please enter your current password.')], render_kw={'class': 'auth-form-control'})
+    new_password = PasswordField('New password', validators=[InputRequired(message='Please enter your new password.'), auth_validators.password_validator()], render_kw={'class': 'auth-form-control'})
+    confirm_new_password = PasswordField('Confirm new password', validators=[EqualTo('new_password', message='Passwords must match.')], render_kw={'class': 'auth-form-control'})
+    submit = SubmitField('Save Password', render_kw={'class': 'btn btn-primary'})

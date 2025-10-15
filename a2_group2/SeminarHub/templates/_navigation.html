@@ -1,5 +1,5 @@
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top mb-3">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
         <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}">
             <i class="bi bi-mortarboard-fill me-2"></i>SeminarHub
@@ -19,13 +19,19 @@
                 <small class="d-block text-center text-light">Welcome, <br> {{ current_user.first_name }}</small>
                 <ul class="dropdown-menu dropdown-menu-end text-small">
                     <li class="">
-                        <a href="#" class="dropdown-item">Profile</a>
+                        <a href="{{ url_for('user.profile', user_id=current_user.id)}}" class="dropdown-item">Profile</a>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
                     <li>
                         <a href="{{ url_for('user.events', user_id=current_user.id) }}" class="dropdown-item mt-2">Hosted Seminars</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user.comments', user_id=current_user.id) }}" class="dropdown-item mt-2">My Comments</a>
                     </li>
                     <li>
                         <hr class="dropdown-divider">
