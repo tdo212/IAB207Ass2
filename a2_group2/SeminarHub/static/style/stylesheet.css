@@ -271,6 +271,15 @@ footer {
     translate: -40px 0px;
 }
 
+.alert-container {
+    position: relative;
+}
+
+.alert {
+    position: absolute;
+    width: 100%;
+}
+
 .profile-link :hover {
     color: #e07a5f !important;
 }
