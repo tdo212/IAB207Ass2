@@ -98,7 +98,7 @@ def register_event(event_id):
 
     maybe_refresh_status(event)
 
-    flash('Booking confirmed!', 'success')
+    flash(f'Booking confirmed! Your booking number is: {booking.booking_number}', 'success')
     return redirect(url_for('event.event_details', event_id=event.id))
 
 # ----- Owner actions for events -----
