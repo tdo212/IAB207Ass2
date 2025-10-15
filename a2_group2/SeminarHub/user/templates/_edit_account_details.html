@@ -1,0 +1,47 @@
+{% from 'bootstrap5/form.html' import render_field %}
+{% from "_macro.html" import render_field_with_icon %}
+
+<!-- Account details -->
+<div class="px-4 mb-4">
+    <h3 class="">Account details</h3>
+    <p>Manage and update your personal information.</p>
+</div>
+
+<hr class="text-secondary">
+
+<form method="POST" action="" novalidate>
+    {{ edit_form.hidden_tag() }}
+    <div class="px-4 py-2 mt-4">
+        <!-- First name -->
+        <div class="mb-4 ms-1 pe-4">
+            {{render_field_with_icon(edit_form.first_name, icon='<i class="bi bi-person fs-5 pe-2"></i>')}}
+        </div>
+        <!-- Last name -->
+        <div class="mb-4 ms-1 pe-4">
+            {{render_field_with_icon(edit_form.last_name, icon='<i class="bi bi-person fs-5 pe-2"></i>')}}
+
+        </div>
+        <!-- Email -->
+        <div class="mb-4 ms-1 pe-4">
+            <h5 class="me-4 text-muted mb-2"><i class="bi bi-envelope fs-5 pe-2"></i>{{edit_form.email.label}}</h5>
+            {{edit_form.email (class="form-control unselectable")}}
+        </div>
+        <!-- Number -->
+        <div class="mb-4 ms-1 pe-4">
+            {{render_field_with_icon(edit_form.number, icon='<i class="bi bi-telephone fs-5 pe-2"></i>')}}
+        </div>
+        <!-- Address -->
+        <div class="mb-4 ms-1 pe-4">
+            {{render_field_with_icon(edit_form.address, icon='<i class="bi bi-house fs-5 pe-2"></i>')}}
+
+        </div>
+    </div>
+
+    <hr class="text-secondary">
+
+    <!-- Edit button -->
+    <div class="d-grid px-4 d-md-flex gap-2 mb-1 pt-3 justify-content-md-between">
+        {{edit_form.submit(class="btn btn-primary btn-lg")}}
+        <a href="{{ url_for('user.profile', user_id=current_user.id) }}" class="btn btn-danger btn-lg">Cancel</a>
+    </div>
+</form>

@@ -1,3 +1,4 @@
+{% from 'bootstrap5/form.html' import render_field, render_form_row %}
 {%  extends 'base.html' %}
 {% block title %}{{heading}}{% endblock %}
 
@@ -14,78 +15,57 @@
 <div class="row justify-content-center">
     <div class="col-lg-10">
         <div class="form-section">
-            <h2 class="mb-4">Edit Seminar</h2>
-            
-            <form action="" method="post" enctype="multipart/form-data">
+            <h2 class="mb-4">Create a New Seminar</h2>
+            <!-- Form -->
+            <form action="" method="post" enctype="multipart/form-data" novalidate>
             {{ form.hidden_tag() }}
+                <!-- Title, category row -->
+                {{ render_form_row([form.title, form.category], col_class_default='col-md-6')}}
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        {{form.title.label}}
-                        {{form.title (class="form-control", placeholder="Enter seminar title")}}
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        {{form.category.label}}
-                        {{form.category (class="form-select", placeholder="Select a category")}}
-                    </div>
-                </div>
-                
+                <!-- Description -->
                 <div class="mb-3">
-                    {{form.description.label}}
-                    {{form.description (class="form-control", placeholder="Describe your seminar in detail...", rows="4")}}
+                    {{render_field(form.description)}}
                 </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        {{form.date.label}}
-                        {{form.date (class="form-control")}}
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        {{form.start_time.label}}
-                        {{form.start_time (class="form-control")}}
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        {{form.end_time.label}}
-                        {{form.end_time (class="form-control")}}
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        {{form.location.label}}
-                        {{form.location (class="form-control", placeholder="e.g., Main Auditorium")}}
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        {{form.capacity.label}}
-                        {{form.capacity (class="form-control", placeholder="Maximum attendees")}}
-                    </div>
-                </div>
-                
+
+                <!-- Date, start time, end time row -->
+                {{ render_form_row([form.date, form.start_time, form.end_time], col_class_default='col-md-4')}}
+
+                <!-- Location, capacity row -->
+                {{ render_form_row([form.location, form.capacity], col_class_default='col-md-6')}}
+
+                <!-- Speaker -->
                 <div class="mb-3">
-                    {{form.speaker.label}}
-                    {{form.speaker (class="form-control", placeholder="Enter speaker's name")}}
+                    {{render_field(form.speaker)}}
                 </div>
-                
+
+                <!-- Speaker bio -->
                 <div class="mb-3">
-                    {{form.speaker_bio.label}}
-                    {{form.speaker_bio (class="form-control", placeholder="Brief background about the speaker...", rows="3")}}
+                    {{render_field(form.speaker_bio)}}
                 </div>
+
                 
                 <div class="mb-4">
                     {{form.image.label(value='Current Image')}}
                     <div><img src="{{ event.image_url }}" alt="Current seminar image" class="mb-3" width="200px"></div>
-                    {{form.image (class="form-control")}}
+                    {{render_field(form.image)}}
                     <div class="form-text">Upload a new seminar image. Max size 5MB.</div>
                 </div>
                 
                 <div class="mb-5">
-                    {{form.accept_toc() }} {{form.accept_toc.label()}}<a href="" class="ms-1">Terms and Conditions</a>
+                    {{render_field(form.accept_toc)}}
                 </div>
                 
-                <div class="d-grid gap-2 d-md-flex justify-content-md mb-4">
+                <div class="d-grid gap-2 mb-4">
                     {{ form.submit(value='Save Seminar', class="btn btn-primary login-button btn-lg") }}
+                    <a href="{{ url_for('user.profile', user_id=current_user.id) }}" class=" mt-3 btn btn-danger btn-lg login-button">Cancel</a>
                 </div>
             </form> 
+
+            <!-- New event link -->
+            <div class="text-center mt-5">
+                <p class="">Want to create a new seminar instead? <a href="{{url_for('event.create')}}" type="button" class="text-accent">Create seminar</a></p>
+            </div>
+
         </div>
     </div>
 </div>

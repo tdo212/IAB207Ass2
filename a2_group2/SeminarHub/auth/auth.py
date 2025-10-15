@@ -2,7 +2,7 @@ from flask import Blueprint, flash, render_template, request, url_for, redirect,
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models import User
-from ..forms import LoginForm, RegisterForm
+from ..forms import LoginForm, RegisterForm, ChangePasswordForm
 from .. import db
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
@@ -102,5 +102,36 @@ def signup():
 
         flash('Your account has been created.', 'success')
 
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
+    
     return render_template('signup.html', heading = 'Sign Up', logo_message = 'Become a member of', form = signup_form, title = 'Sign up | ')
+
+@auth_bp.route('/profile/<int:user_id>/change_password', methods = ['GET', 'POST'])
+def change_password(user_id):
+    """Changes the password of the user if the current password entered by the user matches the stored password hash. Utilises BCrypt to generate password hashes and check against the stored hash.
+
+    If the form is valid, it will store the new password in the database, flash a success message and return the user to their profile.
+
+    If invalid, will flash an error message.
+    """
+    user = User.query.filter_by(id = current_user.id).first()
+
+    # Load in change password form
+    change_password_form = ChangePasswordForm()
+
+    if change_password_form.validate_on_submit():
+        # Get current and new password and hash it
+        current_password = change_password_form.current_password.data
+        hashed_new_password = generate_password_hash(change_password_form.new_password.data)
+
+        # Check if current password is the same as database hash using BCrypt
+        if not check_password_hash(user.password_hash, current_password):
+            flash('Current password is incorrect', 'error')
+        else:
+            user.password_hash = hashed_new_password
+            db.session.commit()
+            flash('Password changed successfully', 'success')
+
+            return redirect(url_for('user.profile', user_id=current_user.id))
+
+    return render_template('change_password.html', user_id=current_user.id, form = change_password_form, heading = 'Change password | ')

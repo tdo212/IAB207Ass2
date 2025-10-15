@@ -1,0 +1,25 @@
+<!-- Macro specifically for the edit profile template to have icons inline with form labels.
+
+Feed the icon HTML code into the icon parameter with any relevant classes.
+
+'| safe' keeps the <> tags intact.
+
+Base macro taken and modified from: 
+https://python-web.teclado.com/section14/lectures/07_render_wtform_with_jinja_macros/#style-the-form-using-css -->
+
+{% macro render_field_with_icon(field, icon) %}
+<div class="form_group input_group">
+    {{ icon | safe }}{{ field.label(class="form_label h5 text-muted mb-2") }}
+
+    {% if field.errors %}
+        {{ field(class="form_field form-control auth-form-control mb-3 is-invalid")}}
+        <div class="invalid-feedback">
+            {% for error in field.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ field(class="form_field form-control auth-form-control mb-3")}}
+    {% endif %}
+</div>
+{% endmacro %}

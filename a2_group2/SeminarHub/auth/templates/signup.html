@@ -7,6 +7,8 @@
 <!-- Form -->
 <div class="">
     {{render_form(form, extra_classes='mx-auto login-form')}}
+    <!-- Already got an account link -->
+    <div class="text-center mt-4"><a href="{{url_for('auth.login')}}">Already have an account?</a></div>
 </div>
 
 {% endblock %}
