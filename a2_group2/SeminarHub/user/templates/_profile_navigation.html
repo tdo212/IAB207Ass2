@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}{{heading}}{% endblock %}
+
+{% block content %}
+<!-- Left profile bar -->
+<div class="row g-0">
+    <div class="col-auto">
+        <div class="d-flex flex-column flex-shrink-0 p-0 p-sm-2 py-lg-3 align-items-center align-items-sm-start bg-dark vh-100 profile-sidebar sticky-top">
+            <ul class="nav nav-pills flex-column mb-5 mt-5 px-0 px-sm-1 w-100">
+                <li class="nav-item mb-3">
+                    <a href="{{url_for('main.index')}}" class="nav-link profile-link text-white"><span class="text-nowrap"><i class="bi bi-house-door-fill me-2 fs-4"></i><span class="d-none d-lg-inline">Home</span></span></a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a href="{{url_for('user.profile', user_id=current_user.id)}}" class="nav-link {% if active_page == 'profile' %} active {% else %} profile-link text-white {% endif %}"><span class="text-nowrap"><i class="bi bi-person-circle me-2 fs-4"></i><span class="d-none d-lg-inline">Profile</span></span></a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a href="{{url_for('user.events', user_id=current_user.id)}}" class="nav-link {% if active_page == 'events' %} active {% else %} profile-link text-white {% endif %}"><span class="text-nowrap"><i class="bi bi-book-half me-2 fs-4"></i><span class="d-none d-lg-inline text-nowrap">My Seminars</span></span></a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a href="{{url_for('user.comments', user_id=current_user.id)}}" class="nav-link {% if active_page == 'comments' %} active {% else %} profile-link text-white {% endif %}"><span class="text-nowrap"><i class="bi bi-chat-square-text me-2 fs-4"></i><span class="d-none d-lg-inline">My Comments</span></span></a>
+                </li>
+                <li class="nav-item mb-5">
+                    <a href="#" class="nav-link profile-link text-white"><span><i class="bi bi-gear-fill me-2 fs-4"></i><span class="d-none d-lg-inline">Settings</span></span></a>
+                </li>
+                <hr class="border-white">
+                <li class="nav-item mt-auto">
+                    <a href="{{url_for('auth.logout')}}" class="nav-link profile-link text-white"><span><i class="bi bi-box-arrow-left fs-4 pe-2"></i><span class="d-none d-lg-inline">Logout</span></span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right side content -->
+    <div class="col ps-3">
+    {% block profile_content %}
+    {% endblock %}
+    </div>
+</div>
+{% endblock %}
