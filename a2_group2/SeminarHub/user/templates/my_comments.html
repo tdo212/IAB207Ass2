@@ -1,0 +1,28 @@
+{% extends '_profile_navigation.html' %}
+{% set active_page =  'comments'%}
+{% block title %}{{heading}}{% endblock %}
+
+{% block profile_content %}
+<!-- Page Content -->
+<div class="container mt-4">
+
+    <h2 class="mb-5">My Comments</h2>
+
+    {% if comments|length > 0 %}
+    {% for comment in comments %}
+    <div class="my-5">
+        <a href="{{url_for('event.event_details', event_id=comment.event_id)}}" class="text-decoration-none text-reset">
+        <div class="comment search-comment mb-4">
+            <div class="d-flex justify-content-between">
+                <h6>{{comment.user.first_name}} {{comment.user.last_name}}</h6>
+                <small class="text-muted">{{comment.created_at.strftime("%B %d, %Y | %I:%M %p")}}</small>
+            </div>
+            <p>{{comment.text}}</p>
+        </div>
+        </a>
+    </div>
+    <hr>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

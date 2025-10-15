@@ -1,16 +1,10 @@
-{% extends 'base.html' %}
+{% extends '_profile_navigation.html' %}
+{% set active_page =  'events'%}
 {% block title %}{{heading}}{% endblock %}
 
-{% block content %}
+{% block profile_content %}
 <!-- Page Content -->
 <div class="container mt-4">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url_for('main.index' )}}">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Profile</a></li>
-            <li class="breadcrumb-item active" aria-current="page">My Seminars</li>
-        </ol>
-    </nav>
 
     <h2 class="mb-5">My Hosted Seminars</h2>
 
