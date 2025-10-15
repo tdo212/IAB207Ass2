@@ -22,6 +22,8 @@ def search_table(model, columns, search_query):
     or_ = Essentially an SQL OR statement.
 
     * = Unpacks a List and passes each element in the list as seperate arguments into the or_ statment.
+
+    cast(col, type) = Casts the specific column from whatever it was defined as initially to the type defined. In this case using it to convert DateTime to String as that is how the search_query is read.
     """
     sql_queries = []
 
@@ -170,6 +172,13 @@ def get_booking_results(search_query):
     return booking_results
 
 def date_search(search_query):
+    """Compares the search query against a dictionary of months to see if the input is a spelt out month as opposed to digits. If it is a spelt out month, turns it back into digits for compatibility with the database storage.
+    Detects if the user inputs a month that is spelt out as opposed to just a number as the database stores 
+
+    Also detects if there is a date with the month search query.
+
+    Returns a "MM-DD" query if both are detected, otherwise returns "MM", otherwise returns the original search query.
+    """
     months = {'january': '01', 'february': '02', 'march': '03', 'april':'04', 'may':'05', 'june':'06', 'july':'07', 'august':'08', 'september':'09', 'october':'10', 'november':'11', 'december':'12'}
     month = None
     day = None
@@ -186,8 +195,9 @@ def date_search(search_query):
                     month = val
                     search_query = val
                     break
+        # If the split list is longer than 1, means maybe the date was included with it
         if len(split_query) > 1:
-            # If word is a digit and between 1 and 31, maybe a day
+            # If word is a digit and between 1 and 31, maybe a date
             if word.isdigit():
                 day = int(word)
     
@@ -201,6 +211,15 @@ def date_search(search_query):
     return search_query
 
 def time_search(search_query):
+    """Attempts to match the search query against multiple different formats that the user may input.
+
+    Covers:
+    - AM/PM time: e.g. 01:30 am/pm or 1:30 am/pm
+    - 24hr time: e.g. 13:30 or 01:30
+    - 12hr time: e.g. 01:30 or 1:30
+
+    If matches any of the formats, adds them to a list and returns it.
+    """
     # Dfficult strptime formats to iterate through e.g. 1:30 pm/am
     am_pm_format = ["%I:%M %p",  "%-I:%M %p", "%I:%M%p", "%-I:%M %p"]
     parse_time = None
@@ -213,11 +232,13 @@ def time_search(search_query):
             parse_time = datetime.strptime(search_query, format).time()
             time_queries.append(parse_time.strftime("%H:%M"))
         except ValueError:
-            # If error, put into 24 hour time format and get the opposite 12 hour time
+            # If error that means not am/pm times so put into 24 hour time format and get the opposite 12 hour time as well
             try:
+                # 24 hour time
                 parse_time = datetime.strptime(search_query, "%H:%M").time()
                 time_queries.append(parse_time)
 
+                # 12 hour time
                 if parse_time.hour < 12:
                     alternate_time = f"{parse_time.hour + 12}:{parse_time.minute:02}"
                     time_queries.append(alternate_time)
@@ -225,6 +246,7 @@ def time_search(search_query):
                     alternate_time = f"{parse_time.hour - 12:02}:{parse_time.minute:02}"
                     time_queries.append(alternate_time)
             except:
+                # If nothing, move on
                 pass
 
     if time_queries:
