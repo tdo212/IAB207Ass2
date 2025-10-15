@@ -1,4 +1,3 @@
-# import flask - from 'package' import 'Class'
 from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
@@ -6,11 +5,9 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 
-# create a function that creates a web application
-# a web server will run this web application
 def create_app():
 
-   app = Flask(__name__)  # this is the name of the module/package that is calling this app
+   app = Flask(__name__)  
    # Should be set to false in a production environment
    app.debug = True
    app.secret_key = 'somesecretkey'
@@ -25,7 +22,7 @@ def create_app():
    login_manager = LoginManager()
    
    # set the name of the login function that lets user login
-   # in our case it is auth.login (blueprintname.viewfunction name)
+   # in our case it is auth.login
    login_manager.login_view = 'auth.login'
    login_manager.init_app(app)
 
@@ -36,18 +33,19 @@ def create_app():
    def load_user(user_id):
       return db.session.scalar(db.select(User).where(User.id==user_id))
 
+   # Import main blueprint
    from . import views
    app.register_blueprint(views.main_bp)
-
+   # Import authentication blueprint
    from .auth import auth
    app.register_blueprint(auth.auth_bp)
-
+   # Import event blueprint
    from .event import event
    app.register_blueprint(event.event_bp)
-
+   # Import booking blueprint
    from .booking import booking
    app.register_blueprint(booking.booking_bp)
-
+   # Import user blueprint
    from .user import user
    app.register_blueprint(user.user_bp)
 

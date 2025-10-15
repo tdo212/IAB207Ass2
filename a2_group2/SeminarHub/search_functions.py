@@ -23,7 +23,7 @@ def search_table(model, columns, search_query):
 
     * = Unpacks a List and passes each element in the list as seperate arguments into the or_ statment.
 
-    cast(col, type) = Casts the specific column from whatever it was defined as initially to the type defined. In this case using it to convert DateTime to String as that is how the search_query is read.
+    cast(col, type) = Casts the specific column from whatever it was defined as initially to the type defined. E.g. from DateTime to String.
     """
     sql_queries = []
 

@@ -30,6 +30,10 @@ def event_details(event_id):
 @event_bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
+    """Initialises the CreateForm for event creation.
+
+    Retrieves the data from the form once the user hits submit and the form has been validated, creates an Event object and commits it to the database.
+    """
     form = CreateForm()
     if form.validate_on_submit():
         db_file_path = check_upload_file(form)
@@ -102,6 +106,12 @@ def register_event(event_id):
 @event_bp.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_event(event_id):
+    """Edits an already created event object if and only if the logged in users ID matches the event creators ID.
+
+    Pre-fills out data in the form based on the data currently within the database.
+
+    If form is validated, updates the database entries and commits it. 
+    """
     # Get the seminar information from the database
     event = Event.query.get_or_404(event_id)
 
@@ -150,6 +160,8 @@ def edit_event(event_id):
 @event_bp.route('/event/<int:event_id>/cancel', methods=['POST'])
 @login_required
 def cancel_event(event_id):
+    """Updates an event status to 'Cancelled' if and only if the logged in users ID matches the event creators ID. 
+    """
     event = Event.query.get_or_404(event_id)
     
     if current_user.id != event.owner_user_id:

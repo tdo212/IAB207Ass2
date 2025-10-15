@@ -1,10 +1,8 @@
-from flask import Blueprint, render_template, redirect, request, url_for, flash
-from .forms import CreateForm
+from flask import Blueprint, render_template, request
 import os, random, string
 from werkzeug.utils import secure_filename
-from flask_login import login_required, current_user
 from . import db
-from .models import Event, Booking, Comment
+from .models import Event, Booking
 from datetime import datetime
 from .search_functions import *
 

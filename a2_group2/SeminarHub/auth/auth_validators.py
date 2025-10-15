@@ -14,11 +14,13 @@ def password_validator():
     def _password_validator(form, field):
         special_characters = r"!@#$%^&*()_+[]{}|;:,.<>?/\`~=-"
         password = field.data
-
+        # Validate length greater than 6
         if len(password) < 6:
             raise ValidationError(length_message)
+        # Validate special character presence
         elif not any(char in special_characters for char in password):
             raise ValidationError(character_message)
+        # Validate capital letter
         elif not any(char.isupper() for char in password):
             raise ValidationError(character_message)
         

@@ -21,14 +21,9 @@ def login():
 
     # Check for user already logged in
     if current_user.is_authenticated:
-        # Development information
-        print('Already logged in as {}'.format(current_user))
         return redirect(url_for('main.index'))
 
     if login_form.validate_on_submit():
-        # Development information
-        print('Login requested for user {}, remember me = {}'. format(login_form.email.data, login_form.remember_me.data))
-
         # Get input credentials
         email = login_form.email.data
         password = login_form.password.data
@@ -40,7 +35,7 @@ def login():
         if user is None:
             error = 'Incorrect email'
         # If correct email but incorrect password
-        elif not check_password_hash(user.password_hash, password): # takes the hash and cleartext password
+        elif not check_password_hash(user.password_hash, password):
             error = 'Incorrect password'
         # If all credentials correct
         if error is None:
@@ -51,7 +46,7 @@ def login():
                 login_user(user)
 
             nextp = request.args.get('next') # this gives the url from where the login page was accessed
-            print(nextp)
+
             if nextp is None or not nextp.startswith('/'):
                 flash('Successfully logged in.', 'success')
                 return redirect(url_for('main.index'))
@@ -66,10 +61,7 @@ def login():
 @login_required
 def logout():
     """Logs the user out of their account using the inbuilt method from flask_login."""
-    
-    # Development information
-    print('Logout requested for user {}'. format(current_user))
-
+    # Force clear the session data
     session.clear()
     logout_user()
     flash('Logged out.', 'success')
