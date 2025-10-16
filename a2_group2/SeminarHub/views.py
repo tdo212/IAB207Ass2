@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 import os, random, string
 from werkzeug.utils import secure_filename
 from . import db
@@ -92,6 +92,10 @@ def index():
 
 @main_bp.route('/search')
 def search():
+    """Processes the users search query with the help of multiple helper functions in order to retrieve all possible database entries that match or partially match that query.
+
+    Then renders the results on the main search page along with the raw search query as entered by the user.
+    """
     # For displaying the exact user input in the HTML template
     raw_query = (request.args.get('search') or '').strip()
     query = raw_query.lower()
