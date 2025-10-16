@@ -40,11 +40,11 @@
                 </div>
 
                 <!-- Create account / Login links -->
-                {% if heading|lower =='login' %}
+                {% if heading|lower =='login | ' %}
                 <div class="text-center pt-3">
                     <p class="mb-0 me-2">Don't have an account? <a href="{{url_for('auth.signup')}}" type="button" class="text-accent">Create one now</a></p>
                 </div>
-                {% elif heading|lower == 'sign up' %}
+                {% elif heading|lower == 'sign up | ' %}
                 <div class="text-center pt-3">
                     <p class="mb-0 me-2">Already have an account? <a href="{{url_for('auth.login')}}" type="button" class="text-accent">Log in here</a></p>
                 </div>
