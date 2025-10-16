@@ -168,10 +168,14 @@ def cancel_event(event_id):
         flash('You are not the owner of that event.', 'error')
         return redirect(url_for('event.event_details', event_id=event.id))
     
-    # Change status
-    event.status = "Cancelled"
-    db.session.commit()
-    flash('Event has been cancelled.', 'info')
+    # Buttons should be disabled on events with these status, but as a fallback
+    if event.status == 'Inactive' or event.status == 'Cancelled':
+        flash('This event has finished or has already been cancelled.', 'error')
+    else:
+        # Change status
+        event.status = "Cancelled"
+        db.session.commit()
+        flash('Event has been cancelled.', 'info')
 
     return redirect(url_for('event.event_details', event_id=event.id))
 

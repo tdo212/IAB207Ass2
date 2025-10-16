@@ -28,20 +28,22 @@ def search_table(model, columns, search_query):
     sql_queries = []
 
     for col in columns:
+        # Get the table and column object for each col e.g. Event.title
         col_object = getattr(model, col)
 
+        # If object type == DatetTIme
         if col_object.type.python_type == datetime:
+            # If search query has been passed through as a list indicates it's from date_search and therefore is a day + month search
             if type(search_query) is list:
                 for query in search_query:
+                    # Cast column to type String and search
                     sql_queries.append(cast(col_object, String).ilike(f'%{query}%'))
-                    # sql_queries = or_(*[cast(getattr(model, col), String).ilike(f'%{search}%') for col in columns])
             else:
+                # If not a list, indicates it's just a month or day or year individually
                 sql_queries.append(cast(col_object, String).ilike(f'%{search_query}%'))
-                # sql_queries = or_(*[cast(getattr(model, col), String).ilike(f'%{search_query}%') for col in columns])
         else:
-            # sql_queries = or_(*[getattr(model, col).ilike(f'%{search_query}%') for col in columns])
+            # Otherwise search like normal
             sql_queries.append(col_object.ilike(f'%{search_query}%'))
-
     
     return model.query.filter(or_(*sql_queries)).all()
 
@@ -214,14 +216,14 @@ def time_search(search_query):
     """Attempts to match the search query against multiple different formats that the user may input.
 
     Covers:
-    - AM/PM time: e.g. 01:30 am/pm or 1:30 am/pm
+    - AM/PM time: e.g. 01:30 am/pm or 1:30 am/pm or 01:30am/pm or 1:30am/pm
     - 24hr time: e.g. 13:30 or 01:30
     - 12hr time: e.g. 01:30 or 1:30
 
     If matches any of the formats, adds them to a list and returns it.
     """
     # Dfficult strptime formats to iterate through e.g. 1:30 pm/am
-    am_pm_format = ["%I:%M %p",  "%-I:%M %p", "%I:%M%p", "%-I:%M %p"]
+    am_pm_format = ["%I:%M %p",  "%-I:%M %p", "%I:%M%p", "%-I:%M%p"]
     parse_time = None
 
     time_queries = []
@@ -240,9 +242,11 @@ def time_search(search_query):
 
                 # 12 hour time
                 if parse_time.hour < 12:
+                    # Pads the minutes with a zero if it is provided as a single digit time. E.g. 13:3 into 1:30
                     alternate_time = f"{parse_time.hour + 12}:{parse_time.minute:02}"
                     time_queries.append(alternate_time)
                 elif parse_time.hour > 12:
+                    # Pads the minutes and hours with a zero if it is provided as a single digit time. E.g. 1:3 into 01:30
                     alternate_time = f"{parse_time.hour - 12:02}:{parse_time.minute:02}"
                     time_queries.append(alternate_time)
             except:

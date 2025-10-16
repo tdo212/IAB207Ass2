@@ -44,11 +44,11 @@ def login():
                 login_user(user, remember=True)
             else:
                 login_user(user)
+                flash(f'Successfully logged in. Welcome, {user.first_name}!', 'success')
 
             nextp = request.args.get('next') # this gives the url from where the login page was accessed
 
             if nextp is None or not nextp.startswith('/'):
-                flash('Successfully logged in.', 'success')
                 return redirect(url_for('main.index'))
             return redirect(nextp)
         else:
@@ -96,7 +96,7 @@ def signup():
 
         return redirect(url_for('auth.login'))
     
-    return render_template('signup.html', heading = 'Sign Up', logo_message = 'Become a member of', form = signup_form, title = 'Sign up | ')
+    return render_template('signup.html', heading = 'Sign up | ', logo_message = 'Become a member of', form = signup_form)
 
 @auth_bp.route('/profile/<int:user_id>/change_password', methods = ['GET', 'POST'])
 def change_password(user_id):
