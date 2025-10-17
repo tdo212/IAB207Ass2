@@ -55,11 +55,6 @@ class Event(db.Model):
         back_populates="event",
         cascade="all, delete-orphan"
     )
-    orders = db.relationship(
-        "Order",
-        back_populates="event",
-        cascade="all, delete-orphan"
-    )
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -136,23 +131,3 @@ class Booking(db.Model):
 
     def __repr__(self):
         return f"<Booking {self.id} #{self.booking_number} qty={self.quantity} status={self.status}>"
-        
-# Order ---------------------------
-class Order(db.Model):
-    __tablename__ = "orders"
-
-    id          = db.Column(db.Integer, primary_key=True)
-    quantity    = db.Column(db.Integer, nullable=False, default=1)
-    ticket_type = db.Column(db.String(64), default="General Admission")
-    total_price = db.Column(db.Float, default=0.0)
-    order_date  = db.Column(db.DateTime, default=datetime.utcnow)
-
-    user_id  = db.Column(db.Integer, db.ForeignKey("users.id"))
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-
-    user  = db.relationship("User",  backref="orders")
-    event = db.relationship("Event", back_populates="orders")
-
-    def __repr__(self):
-        return f"<Order {self.id} x{self.quantity} event={self.event_id}>"
-
