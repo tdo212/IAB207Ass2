@@ -62,7 +62,7 @@
           <div class="comment">
             <div class="d-flex justify-content-between">
               <h6>{{ (c.user.first_name ~ ' ' ~ c.user.last_name).strip() if c.user else 'Anonymous' }}</h6>
-              <small class="text-muted">{% if c.created_at %}{{ c.created_at.strftime('%b %d, %Y') }}{% endif %}</small>
+              <small class="text-muted">{% if c.created_at %}{{ c.created_at.strftime('%b %d, %Y • %I:%M %p') }}{% endif %}</small>
             </div>
             <p class="mb-0">{{ c.text }}</p>
           </div>
