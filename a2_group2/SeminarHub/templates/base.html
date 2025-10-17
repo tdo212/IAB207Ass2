@@ -19,7 +19,7 @@
   </header>
 
   <!-- Flash messages -->
-    <div class="container alert-container" aria-live="polite" aria-atomic="true">
+    <div class="container alert-container z-1" aria-live="polite" aria-atomic="true">
       {% with messages = get_flashed_messages(with_categories=True) %}
       {% if messages %}
       {% for category, message in messages %}

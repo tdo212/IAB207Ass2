@@ -33,10 +33,10 @@
                         action="{{ url_for('event.cancel_event', event_id=seminar.id) }}"
                         onsubmit="return confirm('Cancel this event? Attendees will no longer be able to register.');"
                         class="w-100">
-                        <a href="{{ url_for('event.cancel_event', event_id=seminar.id )}}" role="button" type="submit" class="btn btn-danger text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}">
+                        <button href="{{ url_for('event.cancel_event', event_id=seminar.id )}}" type="submit" class="btn btn-danger text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}">
                             <i class="bi bi-x-circle me-2"></i>
                             Cancel Event
-                        </a>
+                        </button>
                     </form>
                     
                 </div>

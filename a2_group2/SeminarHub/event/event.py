@@ -115,6 +115,11 @@ def edit_event(event_id):
     # Get the seminar information from the database
     event = Event.query.get_or_404(event_id)
 
+    # Gets the page the user was on prior to error
+    back = request.referrer
+    if back is None:
+        back = url_for('main.index')
+
     # Check that the owner of the seminar is the one trying to access and edit it
     if current_user.id != event.owner_user_id:
         flash('You are not the owner of that seminar.', 'error')
@@ -154,7 +159,7 @@ def edit_event(event_id):
         # Back to details page
         return redirect(url_for('event.event_details', event_id = event.id))
 
-    return render_template('edit_seminar.html', form = form, event = event)
+    return render_template('edit_seminar.html', form = form, event = event, back = back)
 
 
 @event_bp.route('/event/<int:event_id>/cancel', methods=['POST'])
