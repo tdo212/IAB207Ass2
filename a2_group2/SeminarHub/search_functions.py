@@ -175,18 +175,18 @@ def get_booking_results(search_query):
 
 def date_search(search_query):
     """Compares the search query against a dictionary of months to see if the input is a spelt out month as opposed to digits. If it is a spelt out month, turns it back into digits for compatibility with the database storage.
-    Detects if the user inputs a month that is spelt out as opposed to just a number as the database stores 
 
-    Also detects if there is a date with the month search query.
+    Attempts to also see if there is a date and a year with the month. 
 
-    Returns a "MM-DD" query if both are detected, otherwise returns "MM", otherwise returns the original search query.
+    Returns a "YYYY-MM-DD" if all are detected.
+    Returns a "MM-DD" query if only month and day are detected.
+    Returns "MM" if day and year not detected or search query only contains 1 word, otherwise returns the original search query.
     """
     months = {'january': '01', 'february': '02', 'march': '03', 'april':'04', 'may':'05', 'june':'06', 'july':'07', 'august':'08', 'september':'09', 'october':'10', 'november':'11', 'december':'12'}
     month = None
     day = None
-    original_query = search_query
+    year = None
 
-    # TODO: Find a way to do this for the year as well
     # Split query into list and iterate it to see if there's potentially a day that goes with the month
     split_query = search_query.split()
 
@@ -200,17 +200,21 @@ def date_search(search_query):
         # If the split list is longer than 1, means maybe the date was included with it
         if len(split_query) > 1:
             # If word is a digit and between 1 and 31, maybe a date
-            if word.isdigit():
-                day = int(word)
-    
-    # If both present send through as query, else just keep the month, and if nothing return the original search query
-    if month and day:
-        if 1 <= day <= 31:
+            if word.isdigit() and word is not month:
+                if 1 <= int(word) <= 31:
+                    day = int(word)
+                elif int(word) >= 2025:
+                    year = int(word)
+
+    # Check for day and year presence if we found a month and return those formatted values
+    if month:
+        if day and year:
+            search_query = f"{year}-{month}-{day}"
+        elif day:
             search_query = f"-{month}-{day}"
-        else:
-            search_query = original_query
 
     return search_query
+
 
 def time_search(search_query):
     """Attempts to match the search query against multiple different formats that the user may input.

@@ -12,7 +12,7 @@
 
     <h2 class="mb-3">Search results</h2>
     {% if page_results or seminar_results or comment_results or booking_results %}
-    <h5 class="mb-5">Showing results for: <span class="text-danger">{{raw_query}}</span></h5>
+    <h5 class="mb-5">Showing <span class="text-danger">{{page_results|length + seminar_results|length + comment_results|length + booking_results|length}}</span> results for: <span class="text-danger">"{{raw_query}}"</span></h5>
 
     {% if page_results %}
     <div class="my-5">
@@ -38,7 +38,7 @@
                 <div class="row g-0">
                     <div class="col-md-3 me-3">
                         <img src="{{seminar.image_url}}" class="img-fluid rounded-start search-card-img" alt="">
-                        <span class="position-absolute top-0 start-0 m-2"><span class="badge {% if seminar.category == 'Computer Science' %}bg-primary{% elif seminar.category == 'Business' %}bg-info{% elif seminar.category == 'Engineering' %}bg-warning{% elif seminar.category == 'Medicine' %}bg-success{% elif seminar.category == 'Social Sciences' %}bg-danger{% elif seminar.category == 'Other' %}bg-secondary{% endif %}">{{seminar.category}}</span></span>
+                        <span class="position-absolute top-0 start-0 m-2"><span class="badge bg-{{ 'primary' if seminar.category == 'Computer Science' else 'info' if seminar.category == 'Business' else 'warning' if seminar.category == 'Engineering' else 'success' if seminar.category == 'Medicine' else 'danger' if seminar.category == 'Social Sciences' else 'secondary'}}">{{seminar.category}}</span></span>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -63,12 +63,12 @@
 
         {% for comment in comment_results %}
         <a href="{{url_for('event.event_details', event_id=comment.event_id)}}" class="text-decoration-none text-reset">
-        <div class="comment search-comment mb-4">
+        <div class="comment search-comment mb-4 bg-white rounded shadow-sm p-2">
             <div class="d-flex justify-content-between">
-                <h6>{{comment.user.first_name}} {{comment.user.last_name}}</h6>
-                <small class="text-muted">{{comment.created_at.strftime("%B %d, %Y | %I:%M %p")}}</small>
+                <h6 class="ms-2">{{comment.user.first_name}} {{comment.user.last_name}}</h6>
+                <small class="text-muted me-2">{{comment.created_at.strftime("%B %d, %Y | %I:%M %p")}}</small>
             </div>
-            <p>{{comment.text}}</p>
+            <p class="ms-2">{{comment.text}}</p>
         </div>
         </a>
         {% endfor %}
@@ -102,7 +102,7 @@
     {% endif %}
 
     {% else %}
-    No results found.
+    <p class="mb-5">No results found.</p>
     {% endif %}
     
 </div>
