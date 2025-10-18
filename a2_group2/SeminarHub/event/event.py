@@ -144,8 +144,8 @@ def edit_event(event_id):
         event.category = form.category.data
         event.location = form.location.data
         event.capacity = form.capacity.data
-        event.start_dt = datetime.combine(form.date.data, form.start_time.data)
-        event.end_dt = datetime.combine(form.date.data, form.end_time.data)
+        event.start_dt = datetime.combine(form.start_date.data, form.start_time.data)
+        event.end_dt = datetime.combine(form.end_date.data, form.end_time.data)
         event.speaker = form.speaker.data
         event.speaker_bio = form.speaker_bio.data
         # Keep current image unless a new one is uploaded
