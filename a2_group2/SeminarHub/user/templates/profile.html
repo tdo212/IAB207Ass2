@@ -30,7 +30,7 @@
 
                         <div class="px-4 mb-3 mt-4 d-flex">
                             <h5 class="me-4 text-muted mb-2"><i class="bi bi-clock fs-5 pe-2"></i>Last login:</h5>
-                            <h5 class="">date...</h5>
+                            <h5 class="">{% if user.last_seen %}{{user.last_seen.strftime('%H:%M %d/%m/%Y')}}{% else %}No previous login{% endif %}</h5>
                         </div>
                         <div class="px-4 mb-3 d-flex">
                             <h5 class="me-4 text-muted mb-2"><i class="bi bi-shield-lock fs-5 pe-2"></i>2FA:</h5>
