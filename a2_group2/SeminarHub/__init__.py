@@ -1,7 +1,8 @@
 from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
+from datetime import datetime, timezone
 
 db = SQLAlchemy()
 
@@ -65,5 +66,12 @@ def create_app():
       if back is None:
          back = url_for('main.index')
       return render_template('500.html', heading = 'Server Error | ', back = back), 500
+   
+   # Last seen helper
+   @app.before_request
+   def before():
+      if current_user.is_authenticated:
+         current_user.last_seen = datetime.now(timezone.utc)
+         db.session.commit()
    
    return app

@@ -13,11 +13,16 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(256), nullable=False)
     number     = db.Column(db.String(64), nullable=False)
     address    = db.Column(db.String(256), nullable=False)
+    
+    # Utility
+    last_seen = db.Column(db.DateTime, default=datetime.now())
 
     # Relationships
     bookings      = db.relationship("Booking", back_populates="user")
     comments      = db.relationship("Comment", back_populates="user")
     owned_events  = db.relationship("Event",   back_populates="owner")
+
+
 
     def __repr__(self):
         return f"<User {self.first_name} {self.last_name} ({self.email})>"
