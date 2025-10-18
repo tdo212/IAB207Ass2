@@ -44,8 +44,9 @@ class CreateForm(FlaskForm):
     title = StringField('Seminar Title', validators=[InputRequired(message='Please enter a title.')], render_kw={'placeholder': 'Enter seminar title'})
     category = SelectField('Category', choices=CATEGORY_CHOICES, validators=[InputRequired(message='Please select a category for your seminar')], coerce=str, render_kw={'class': 'form-select'})
     description = TextAreaField('Description', validators=[InputRequired(message='Please enter a description of your seminar.')], render_kw={'placeholder': 'Describe your seminar in detail...', 'rows':'4'})
-    date = DateField('Date', validators=[InputRequired(message='Please enter a valid date.')])
+    start_date = DateField('Start Date', validators=[InputRequired(message='Please enter a valid date.')])
     start_time = TimeField('Start Time', validators=[InputRequired(message='Please enter a valid start time.')])
+    end_date = DateField('End Date', validators=[InputRequired(message='Please enter a valid date.')])
     end_time = TimeField('End Time', validators=[InputRequired(message='Please enter a valid end time.')])
     location = StringField('Location', validators=[InputRequired(message='Please enter a location for the seminar.')], render_kw={'placeholder': 'e.g. Main Auditorium'})
     capacity = IntegerField('Capacity', validators=[InputRequired(message='Please enter the maximum attendees.'), NumberRange(min=0)], render_kw={'placeholder': 'Maximum attendees'})
@@ -57,14 +58,19 @@ class CreateForm(FlaskForm):
 
     # End time is after start time (on the same date)
     def validate_end_time(self, field):
-        if self.start_time.data and field.data:
-            if field.data <= self.start_time.data:
+        if self.start_time.data and field.data and self.end_date.data:
+            if field.data <= self.start_time.data and self.start_date.data == self.end_date.data:
                 raise ValidationError('End Time must be after Start Time.')
             
-    # Validate date - should not be a past date
-    def validate_date(self, field):
+    # Validate start date - should not be a past date
+    def validate_start_date(self, field):
         if field.data < date.today():
             raise ValidationError('Seminar date cannot be set to a past date.')
+    
+    # Validate end date - should not be before start date
+    def validate_end_date(self, field):
+        if self.start_date.data and field.data < self.start_date.data:
+            raise ValidationError('End date must be after the start date')
 
 
 class EditForm(CreateForm):

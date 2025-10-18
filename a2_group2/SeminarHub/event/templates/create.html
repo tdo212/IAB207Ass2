@@ -14,63 +14,69 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-10">
-        <div class="form-section">
-            <!-- Information section -->
-            <div class="text-center mb-5">
-                <h1 class="fs-2 fw-bold mb-4">Create a new seminar</h1>
-                <h5 class="mb-3">Simply fill out all the required sections below and once you are finished click 'Create Seminar' to host your event.</h5>
-                <small class="text-muted">Listings are subject to a review and approval process.</small>
-            </div>
-
-            <!-- Form -->
-            <form action="" method="post" enctype="multipart/form-data" novalidate>
+        <!-- Form -->
+        <form action="" method="post" enctype="multipart/form-data" novalidate>
             {{ form.hidden_tag() }}
-                <!-- Title, category row -->
-                {{ render_form_row([form.title, form.category], col_class_default='col-md-6')}}
-
-                <!-- Description -->
-                <div class="mb-3">
-                    {{render_field(form.description)}}
+            <div class="form-section">
+                <!-- Information section -->
+                <div class="text-center mb-5">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <h1 class="fs-2 fw-bold mb-4 mx-auto">Create a new seminar</h1>
+                        <button class="btn btn-secondary btn-sm px-3 border fw-semibold fs-6" type="reset">Reset</button>
+                    </div>
+                    <h5 class="mb-3">Simply fill out all the required sections below and once you are finished click 'Create Seminar' to host your event.</h5>
+                    <small class="text-muted">Listings are subject to a review and approval process.</small>
                 </div>
+                
+                    <!-- Title, category row -->
+                    {{ render_form_row([form.title, form.category], col_class_default='col-md-6')}}
 
-                <!-- Date, start time, end time row -->
-                {{ render_form_row([form.date, form.start_time, form.end_time], col_class_default='col-md-4')}}
+                    <!-- Description -->
+                    <div class="mb-3">
+                        {{render_field(form.description)}}
+                    </div>
 
-                <!-- Location, capacity row -->
-                {{ render_form_row([form.location, form.capacity], col_class_default='col-md-6')}}
+                    <!-- Start date, start time row -->
+                    {{ render_form_row([form.start_date, form.start_time], col_class_default='col-md-6')}}
 
-                <!-- Speaker -->
-                <div class="mb-3">
-                    {{render_field(form.speaker)}}
+                    <!-- End date, end time row -->
+                    {{ render_form_row([form.end_date, form.end_time], col_class_default='col-md-6')}}
+
+                    <!-- Location, capacity row -->
+                    {{ render_form_row([form.location, form.capacity], col_class_default='col-md-6')}}
+
+                    <!-- Speaker -->
+                    <div class="mb-3">
+                        {{render_field(form.speaker)}}
+                    </div>
+
+                    <!-- Speaker bio -->
+                    <div class="mb-3">
+                        {{render_field(form.speaker_bio)}}
+                    </div>
+
+                    <!-- Image -->
+                    <div class="mb-4">
+                        {{render_field(form.image)}}
+                        <div class="form-text">Upload an image that represents your seminar. Max size 5MB.</div>
+                    </div>
+
+                    <!-- TOC -->
+                    <div class="mb-5">
+                        {{render_field(form.accept_toc)}}
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md mb-4">
+                        {{ form.submit(class="btn btn-primary login-button btn-lg") }}
+                    </div>
+                
+                <!-- Edit event link -->
+                <div class="text-center mt-5">
+                    <p class="">Already hosting a seminar? <a href="{{url_for('user.events', user_id=current_user.id)}}" type="button" class="text-accent">See my seminars</a></p>
                 </div>
-
-                <!-- Speaker bio -->
-                <div class="mb-3">
-                    {{render_field(form.speaker_bio)}}
-                </div>
-
-                <!-- Image -->
-                <div class="mb-4">
-                    {{render_field(form.image)}}
-                    <div class="form-text">Upload an image that represents your seminar. Max size 5MB.</div>
-                </div>
-
-                <!-- TOC -->
-                <div class="mb-5">
-                    {{render_field(form.accept_toc)}}
-                </div>
-
-                <!-- Submit button -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md mb-4">
-                    {{ form.submit(class="btn btn-primary login-button btn-lg") }}
-                </div>
-            </form>
-
-            <!-- Edit event link -->
-            <div class="text-center mt-5">
-                <p class="">Already hosting a seminar? <a href="{{url_for('user.events', user_id=current_user.id)}}" type="button" class="text-accent">See my seminars</a></p>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}
