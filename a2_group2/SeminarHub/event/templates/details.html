@@ -60,11 +60,32 @@
         {% if comments and comments|length %}
           {% for c in comments %}
           <div class="comment">
-            <div class="d-flex justify-content-between">
-              <h6>{{ (c.user.first_name ~ ' ' ~ c.user.last_name).strip() if c.user else 'Anonymous' }}</h6>
-              <small class="text-muted"data-datetime="{{ c.created_at.isoformat() }}Z">{{ c.created_at.strftime('%b %d, %Y • %I:%M %p') }}</small>
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="mb-1">
+                  {{ (c.user.first_name ~ ' ' ~ c.user.last_name).strip() if c.user else 'Anonymous' }}
+                </h6>
+                <small class="text-muted" data-datetime="{{ c.created_at.isoformat() }}Z">
+                  {{ c.created_at.strftime('%b %d, %Y • %I:%M %p') }}
+                </small>
+              </div>
+
+              {% if current_user.is_authenticated and c.user_id == current_user.id %}
+              <form method="POST"
+                    action="{{ url_for('event.delete_comment', event_id=event.id, comment_id=c.id) }}"
+                    onsubmit="return confirm('Delete this comment?');"
+                    class="m-0 p-0">
+                {% if csrf_token is defined %}
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% endif %}
+                <button type="submit" class="btn btn-link text-danger p-0 ms-2" title="Delete comment" aria-label="Delete comment">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+              {% endif %}
             </div>
-            <p class="mb-0">{{ c.text }}</p>
+
+            <p class="mb-0 mt-1">{{ c.text }}</p>
           </div>
           {% endfor %}
         {% else %}
@@ -78,7 +99,9 @@
             <div class="mb-3">
               {{ comment_form.text.label(class="form-label") }}
               {{ comment_form.text(class="form-control", rows="3", placeholder="Join the discussion...") }}
-              {% for e in comment_form.text.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              {% for e in comment_form.text.errors %}
+                <div class="text-danger small">{{ e }}</div>
+              {% endfor %}
             </div>
             <button type="submit" class="btn btn-primary">Post Comment</button>
           {% else %}
