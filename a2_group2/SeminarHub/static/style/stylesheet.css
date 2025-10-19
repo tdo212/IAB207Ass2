@@ -224,14 +224,15 @@ footer {
 .horizontal-card-img {
     object-fit: cover;
     height: auto;
-    max-height: 250px;
+    min-height: 220px;
+    max-height: 220px;
     width: 100%;
 }
 
 @media (min-width: 768px) {
     .horizontal-card-img {
-        min-height: 220px;
-        max-height: 220px;
+        min-height: 200px;
+        max-height: 200px;
     }
 }
 
