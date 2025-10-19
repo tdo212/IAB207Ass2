@@ -6,7 +6,7 @@ from ..models import Event, Booking
 from datetime import datetime
 from .search_functions import *
 
-main_bp = Blueprint('main', __name__)
+main_bp = Blueprint('main', __name__, template_folder='templates')
 
 # ---------- helpers ----------
 
