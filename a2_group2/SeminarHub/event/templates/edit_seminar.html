@@ -33,8 +33,11 @@
                     {{render_field(form.description)}}
                 </div>
 
-                <!-- Date, start time, end time row -->
-                {{ render_form_row([form.date, form.start_time, form.end_time], col_class_default='col-md-4')}}
+                <!-- Start date, start time row -->
+                {{ render_form_row([form.start_date, form.start_time], col_class_default='col-md-6')}}
+
+                <!-- End date, end time row -->
+                {{ render_form_row([form.end_date, form.end_time], col_class_default='col-md-6')}}
 
                 <!-- Location, capacity row -->
                 {{ render_form_row([form.location, form.capacity], col_class_default='col-md-6')}}

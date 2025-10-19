@@ -131,9 +131,10 @@ def edit_event(event_id):
     # Pre-fill date/time fields on first load
     if request.method == 'GET' and event.start_dt and event.end_dt:
         try:
-            form.date.data = event.start_dt.date()
+            form.start_date.data = event.start_dt.date()
             form.start_time.data = event.start_dt.time()
             form.end_time.data = event.end_dt.time()
+            form.end_date.data = event.end_dt.date()
         except Exception:
             pass
 
