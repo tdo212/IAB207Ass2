@@ -145,7 +145,12 @@
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <span><i class="bi bi-geo-alt me-2"></i>Location</span>
-              <span>{{ event.location or 'TBA' }}</span>
+              <span class="text-end" title="{{ event.location or 'TBA' }}">
+                {% set parts = (event.location or 'TBA').replace('\n', ', ').split(',') %}
+                {% for p in parts if p.strip() %}
+                  {{ p.strip() }}{% if not loop.last %}<br>{% endif %}
+                {% endfor %}
+              </span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <span><i class="bi bi-people me-2"></i>Capacity</span>
