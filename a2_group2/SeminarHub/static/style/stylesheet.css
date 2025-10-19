@@ -223,7 +223,7 @@ footer {
 
 .horizontal-card-img {
     object-fit: cover;
-    height: 180px;
+    max-height: 220px;
     width: 100%;
 }
 
@@ -237,10 +237,18 @@ footer {
 
 .search-card-img {
     object-fit: cover; 
-    height: 200px;
+    height: auto;
+    min-height: 220px;
+    max-height: 220px;
     width: 100%;
 }
 
+@media (min-width: 768px) {
+    .horizontal-card-img .search-card-img {
+        min-height: 200px;
+        max-height: 200px;
+    }
+}
 /* Make cards pop on hover over */
 .search-card:hover {
     transform: scale(1.01); 
