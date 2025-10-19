@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import os, random, string
 from werkzeug.utils import secure_filename
-from . import db
-from .models import Event, Booking
+from .. import db
+from ..models import Event, Booking
 from datetime import datetime
 from .search_functions import *
 

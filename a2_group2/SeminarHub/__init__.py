@@ -35,7 +35,7 @@ def create_app():
       return db.session.scalar(db.select(User).where(User.id==user_id))
 
    # Import main blueprint
-   from . import views
+   from .main import views
    app.register_blueprint(views.main_bp)
    # Import authentication blueprint
    from .auth import auth

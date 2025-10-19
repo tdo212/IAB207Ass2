@@ -2,7 +2,7 @@ from flask import Blueprint, flash, render_template, request, url_for, redirect,
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models import User
-from ..forms import LoginForm, RegisterForm, ChangePasswordForm
+from ..main.forms import LoginForm, RegisterForm, ChangePasswordForm
 from .. import db
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
