@@ -1,7 +1,7 @@
 """
 This file contains helper functions that enable the search bar to work.
 """
-from .models import Event, Booking, Comment, User
+from ..models import Event, Booking, Comment, User
 from flask_login import current_user
 from sqlalchemy import or_, cast, String
 from datetime import datetime

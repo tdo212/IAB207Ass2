@@ -2,7 +2,7 @@ from flask import Blueprint, flash, render_template, url_for, redirect
 from .. import db
 from ..models import Event, User, Comment
 from flask_login import login_required, current_user
-from ..forms import EditProfileForm
+from ..main.forms import EditProfileForm
 
 user_bp = Blueprint('user', __name__, template_folder='templates')
 

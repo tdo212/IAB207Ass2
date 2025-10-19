@@ -2,9 +2,9 @@ from flask import Blueprint, flash, render_template, request, url_for, redirect
 from .. import db
 from ..models import Event, Comment, Booking
 from flask_login import login_required, current_user
-from ..forms import EditForm, CreateForm
+from ..main.forms import EditForm, CreateForm
 from datetime import datetime
-from ..views import check_upload_file, maybe_refresh_status, remaining_for, generate_booking_number
+from ..main.views import check_upload_file, maybe_refresh_status, remaining_for, generate_booking_number
 
 event_bp = Blueprint('event', __name__, template_folder='templates')
 

@@ -7,7 +7,7 @@ from datetime import date, datetime
 from markupsafe import Markup
 
 # Custom validators for password and phone number checks
-from .auth import auth_validators
+from ..auth import auth_validators
 
 # Allowed file types for uploaded images
 ALLOWED_FILE = {'PNG', 'JPG', 'JPEG', 'png', 'jpg', 'jpeg'}
