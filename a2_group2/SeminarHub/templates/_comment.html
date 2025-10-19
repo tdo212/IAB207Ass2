@@ -1,0 +1,11 @@
+<!-- Comment template to be re-used in multiple areas in app -->
+
+<a href="{{url_for('event.event_details', event_id=comment.event_id)}}" class="text-decoration-none text-reset">
+    <div class="comment search-comment mb-4 bg-white rounded shadow-sm p-3">
+        <div class="d-flex justify-content-between">
+            <h6 class="ms-1">{{comment.user.first_name}} {{comment.user.last_name}}</h6>
+            <small class="text-muted me-2">{{comment.created_at.strftime("%B %d, %Y, %I:%M %p")}}</small>
+        </div>
+        <p class="ms-1">{{comment.text}}</p>
+    </div>
+</a>

@@ -1,0 +1,24 @@
+            <div class="card booking-card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{booking.event.title}}</h5>
+                        <span class="badge bg-success py-2">{{booking.status}}</span>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-muted">Booking #{{booking.booking_number}}</h6>
+                    <p class=""><i class="bi bi-calendar-event me-2"></i>{{booking.event.start_dt.strftime("%d %B, %Y | %I:%M %p")}}</p>
+                    <p class=""><i class="bi bi-geo-alt me-2"></i>{{booking.event.location}}</p>
+                    <p class=""><i class="bi bi-ticket-perforated me-2"></i>{{booking.quantity}} ticket{% if booking.quantity > 1 %}s{% endif %}</p>
+
+                    {% if active_page == 'search' %}
+                    <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
+                    {% else %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Booked on: {{booking.booking_date.strftime("%d %B, %Y, %I:%M %p")}}</small>
+                        <form method="POST" action="{{ url_for('booking.cancel_booking', booking_id=booking.id) }}" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Booking</button>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>

@@ -1,0 +1,64 @@
+<!-- 
+Event card partial template to be reused in multiple pages throughout app.
+
+If no_buttons is set to True: Removes the buttons column and add a description instead.
+
+If no_buttons set to True: Makes the whole card clickable through a stretched link, otherwise just the image and other headings are clickable
+
+If on the profile page which has an active_page of 'events': Adds in the status of the event
+-->
+
+<div class="card mb-3">
+    <div class="row g-0">
+
+        <div class="col-md-3">
+            <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset {% if no_buttons %}stretched-link{% endif %}"><img src="{{seminar.image_url}}" class="img-fluid rounded-start horizontal-card-img" alt="Seminar image">
+            {% set badge_background = {'Computer Science': 'primary', 'Business': 'info', 'Engineering': 'warning', 'Medicine': 'success', 'Social Sciences': 'danger'}.get(seminar.category, 'secondary') %}
+            <span class="position-absolute top-0 start-0 m-2"><span class="badge bg-{{ badge_background }}">{{seminar.category}}</span></span></a>
+        </div>
+
+        <div class="col-md-{{ '9' if no_buttons else '5' }}">
+            <div class="card-body mt-lg-2">
+                {% set badge_class = {'Open':'success','Inactive':'secondary','Sold Out':'danger','Cancelled':'dark'}.get(seminar.status, 'secondary') %}
+                <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset">
+                    <div class="d-flex align-items-baseline">
+                        <h5 class="card-title">{{seminar.title}}</h5>
+                        <span class="ms-2 badge bg-{{badge_class}} small">{{ seminar.status }}</span>
+                    </div>
+                </a>
+                <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset"><p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p></a>
+                <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset"><small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%M %p")}}</small></a>
+                {% if no_buttons %}
+                    <p class="card-text mt-2">{{seminar.description}}</p>
+                {% else %}
+                    <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset">
+                        <div>
+                            <p class="card-text mt-2"><i class="bi bi-ticket-perforated me-2"></i>Total tickets: {{seminar.capacity}}</p>
+                            Date Created: {{seminar.date_added.strftime("%B %d, %Y | %I:%M %p")}}
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if not no_buttons %}
+        <div class="col-md-4 d-flex justify-content-center align-items-center mt-lg-2 mb-2">
+            <div class="d-flex flex-md-column flex-row flex-xl-row gap-2"> 
+                <a href="{{ url_for('event.edit_event', event_id=seminar.id )}}" class="btn btn-secondary text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}" role="button"><i class="bi bi-pencil-square me-2"></i>Edit Seminar</a>
+
+                <form method="POST"
+                    action="{{ url_for('event.cancel_event', event_id=seminar.id) }}"
+                    onsubmit="return confirm('Cancel this event? Attendees will no longer be able to register.');"
+                    class="w-100">
+                    <button href="{{ url_for('event.cancel_event', event_id=seminar.id )}}" type="submit" class="btn btn-danger text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Cancel Event
+                    </button>
+                </form>
+                
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>

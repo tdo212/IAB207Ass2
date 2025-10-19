@@ -1,5 +1,6 @@
 {% extends '_profile_navigation.html' %}
 {% set active_page =  'events'%}
+{% set no_buttons = False %}
 {% block title %}{{heading}}{% endblock %}
 
 {% block profile_content %}
@@ -10,39 +11,9 @@
 
     {% if seminars|length > 0 %}
     {% for seminar in seminars %}
-    <div class="card mb-3">
-        <div class="row g-0">
-            <div class="col-md-3">
-                <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset"><img src="{{seminar.image_url}}" class="img-fluid rounded-start horizontal-card-img" alt="">
-                <span class="position-absolute top-0 start-0 m-2"><span class="badge {% if seminar.category == 'Computer Science' %}bg-primary{% elif seminar.category == 'Business' %}bg-info{% elif seminar.category == 'Engineering' %}bg-warning{% elif seminar.category == 'Medicine' %}bg-success{% elif seminar.category == 'Social Sciences' %}bg-danger{% elif seminar.category == 'Other' %}bg-secondary{% endif %}">{{seminar.category}}</span></span></a>
-            </div>
-            <div class="col-md-5">
-                <div class="card-body mt-lg-2">
-                    {% set badge_class = {'Open':'success','Inactive':'secondary','Sold Out':'danger','Cancelled':'dark'}.get(seminar.status, 'secondary') %}
-                    <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset"><span class="badge mb-1 bg-{{badge_class}}">{{ seminar.status }}</span></a>
-                    <h5 class="card-title"><a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset">{{seminar.title}}</a></h5>
-                    <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset"><p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p></a>
-                    <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset"><small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%M %p")}}</small></a>
-                </div>
-            </div>
-            <div class="col-md-4 d-flex justify-content-center align-items-center mt-lg-2 mb-2">
-                <div class="d-flex flex-md-column flex-row flex-xl-row gap-2"> 
-                    <a href="{{ url_for('event.edit_event', event_id=seminar.id )}}" class="btn btn-secondary text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}" role="button"><i class="bi bi-pencil-square me-2"></i>Edit Seminar</a>
 
-                    <form method="POST"
-                        action="{{ url_for('event.cancel_event', event_id=seminar.id) }}"
-                        onsubmit="return confirm('Cancel this event? Attendees will no longer be able to register.');"
-                        class="w-100">
-                        <button href="{{ url_for('event.cancel_event', event_id=seminar.id )}}" type="submit" class="btn btn-danger text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}">
-                            <i class="bi bi-x-circle me-2"></i>
-                            Cancel Event
-                        </button>
-                    </form>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
+        {% include '_event_card.html'%}
+        
     {% endfor %}
     {% else %}
     <div class="text-center py-5">
