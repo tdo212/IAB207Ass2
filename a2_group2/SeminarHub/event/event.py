@@ -205,3 +205,19 @@ def add_comment(event_id):
 
     flash('Comment posted!', 'success')
     return redirect(url_for('event.event_details', event_id=event.id))
+
+@event_bp.route('/event/<int:event_id>/comment/<int:comment_id>/delete', methods=['POST'])
+@login_required
+def delete_comment(event_id, comment_id):
+    """Delete a comment if the current user is the owner."""
+    comment = Comment.query.get_or_404(comment_id)
+
+    # Check ownership
+    if comment.user_id != current_user.id:
+        flash('You can only delete your own comments.', 'warning')
+        return redirect(url_for('event.event_details', event_id=event_id))
+
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted successfully.', 'success')
+    return redirect(url_for('event.event_details', event_id=event_id))
