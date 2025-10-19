@@ -70,8 +70,9 @@ def create_app():
    # Last seen helper
    @app.before_request
    def before():
+      # If logged in set the last seen datetime object and add to database
       if current_user.is_authenticated:
-         current_user.last_seen = datetime.now(timezone.utc)
+         current_user.last_seen = datetime.now()
          db.session.commit()
    
    return app
