@@ -1,13 +1,26 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from .. import db
+import os
 from ..models import Event, Comment, Booking
 from flask_login import login_required, current_user
 from ..main.forms import EditForm, CreateForm
 from datetime import datetime
-from ..main.views import check_upload_file, maybe_refresh_status, remaining_for, generate_booking_number
+from werkzeug.utils import secure_filename
+from ..main.views import maybe_refresh_status, remaining_for, generate_booking_number
 
 event_bp = Blueprint('event', __name__, template_folder='templates')
 
+
+def check_upload_file(form) -> str:
+    """Save uploaded image and return the DB path (served from /static/img/...)."""
+    fp = form.image.data
+    filename = secure_filename(fp.filename)
+    base_path = os.path.dirname(__file__)
+    upload_path = os.path.join(base_path, '..', 'static', 'img', filename)
+    # DB path should be web-served path
+    db_upload_path = f'/static/img/{filename}'
+    fp.save(upload_path)
+    return db_upload_path
 
 @event_bp.route('/event/<int:event_id>')
 def event_details(event_id):
@@ -39,8 +52,8 @@ def create():
         db_file_path = check_upload_file(form)
 
         # Compile individual dates and times into datetime objects
-        start_datetime = datetime.combine(form.date.data, form.start_time.data)
-        end_datetime = datetime.combine(form.date.data, form.end_time.data)
+        start_datetime = datetime.combine(form.start_date.data, form.start_time.data)
+        end_datetime = datetime.combine(form.end_date.data, form.end_time.data)
 
         seminar = Event(
             title=form.title.data,

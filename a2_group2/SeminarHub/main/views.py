@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import os, random, string
-from werkzeug.utils import secure_filename
 from .. import db
 from ..models import Event, Booking
 from datetime import datetime
@@ -46,17 +45,6 @@ def maybe_refresh_status(event: Event) -> None:
                 db.session.commit()
         except Exception:
             pass
-
-def check_upload_file(form) -> str:
-    """Save uploaded image and return the DB path (served from /static/img/...)."""
-    fp = form.image.data
-    filename = secure_filename(fp.filename)
-    base_path = os.path.dirname(__file__)
-    upload_path = os.path.join(base_path, 'static', 'img', filename)
-    # DB path should be web-served path
-    db_upload_path = f'/static/img/{filename}'
-    fp.save(upload_path)
-    return db_upload_path
 
 # ---------- routes ----------
 
