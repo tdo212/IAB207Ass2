@@ -222,11 +222,13 @@ footer {
 }
 
 .horizontal-card-img {
-    object-fit: cover;
+    object-fit: cover; 
     height: auto;
-    min-height: 220px;
-    max-height: 220px;
+    min-height: 275px;
+    max-height: 275px;
     width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .list-group-item:hover {
@@ -240,9 +242,11 @@ footer {
 .search-card-img {
     object-fit: cover; 
     height: auto;
-    min-height: 220px;
-    max-height: 220px;
+    min-height: 225px;
+    max-height: 275px;
     width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 @media (min-width: 768px) {
@@ -251,6 +255,29 @@ footer {
         max-height: 200px;
     }
 }
+
+/* Fix to only apply rounded corners to the start of the image on medium and above screens for search template */
+@media (min-width: 768px) {
+    .search-card-img {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        border-top-right-radius: 0px;
+    }
+}
+
+/* Fix to only apply rounded corners to the start of the image on large and above screens for my_seminars template */
+@media (min-width: 992px) {
+    .horizontal-card-img {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        border-top-right-radius: 0px;
+    }
+}
+
+.horizontal-card-btn {
+    min-width: 105px;
+}
+
 /* Make cards pop on hover over */
 .search-card:hover {
     transform: scale(1.01); 
