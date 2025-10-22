@@ -54,8 +54,10 @@
 
                 
                 <div class="mb-4">
-                    {{form.image.label(value='Current Image')}}
-                    <div><img src="{{ event.image_url }}" alt="Current seminar image" class="mb-3" width="200px"></div>
+                    <p class="mb-2">Current image</p>
+                    <div class="mb-3 edit-img-container border rounded">
+                        <img src="{{ event.image_url }}" alt="Current seminar image" class="edit-img">
+                    </div>
                     {{render_field(form.image)}}
                     <div class="form-text">Upload a new seminar image. Max size 5MB.</div>
                 </div>

@@ -380,3 +380,15 @@ footer {
     background-color: #e9ecef !important;
     border-color: #444 !important;
 }
+
+.edit-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.edit-img-container {
+    width: 400px;
+    height: 400px;
+}
