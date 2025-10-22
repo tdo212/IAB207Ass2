@@ -1,0 +1,56 @@
+<!-- 
+Event card partial template to be reused in multiple pages throughout app. Currently only set up for 'search' template and 'my_seminars' template.
+
+If template == 'search': Removes the buttons column, make whole card clickable through a stretched link and increase the description length. Goes from horizontal to vertical at md.
+
+If template == 'events': Adds in buttons column and makes only the image and text clickable to allow the buttons to work. Goes from horizontal to vertical at lg.
+-->
+
+
+<div class="card mb-3 search-card position-relative">
+    <div class="row g-0">
+
+        <div class="col-{{'md' if active_page == 'search' else 'lg'}}-3 col-xl-2">
+            <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset {% if active_page == 'search' %} stretched-link {% endif %}">
+                <img src="{{seminar.image_url}}" class="img-fluid h-100 {% if active_page == 'search' %} search-card-img {% else %} horizontal-card-img {% endif %}" alt="">
+                <span class="position-absolute top-0 start-0 m-2"><span class="badge bg-{{ 'primary' if seminar.category == 'Computer Science' else 'info' if seminar.category == 'Business' else 'warning' if seminar.category == 'Engineering' else 'success' if seminar.category == 'Medicine' else 'danger' if seminar.category == 'Social Sciences' else 'secondary'}}">{{seminar.category}}</span></span>
+            </a>
+        </div>
+
+        <div class="col-{{'md' if active_page == 'search' else 'lg'}}-{{'8' if active_page == 'search' else '6'}} col-xl-{{'10' if active_page == 'search' else '8'}}">
+            <div class="card-body">
+                <a href="{{url_for('event.event_details', event_id=seminar.id)}}" class="text-decoration-none text-reset">
+                    {% set badge_class = {'Open':'success','Inactive':'secondary','Sold Out':'danger','Cancelled':'dark'}.get(seminar.status, 'secondary') %}
+                    <span class="badge mb-1 bg-{{badge_class}}">{{ seminar.status }}</span>
+                    <h5 class="card-title">{{seminar.title}}</h5>
+
+                    <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p>
+                    <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%M %p")}} - {{seminar.end_dt.strftime("%I:%M %p")}}</small>
+                    {% set description_limit = 180 if active_page == 'search' else 150 %}
+                    <p class="card-text mt-2">{{ seminar.description[:description_limit] }}{% if seminar.description|length > description_limit %}...{% endif %}</p>
+                </a>
+            </div>
+        </div>
+        
+        {% if active_page == 'events' %}
+        <div class="col-{{'md' if active_page == 'search' else 'lg'}}-3 col-xl-2 d-flex flex-row flex-lg-column justify-content-lg-center align-items-center gap-2 py-3 px-4">
+
+            <a href="{{ url_for('event.edit_event', event_id=seminar.id )}}" class="btn btn-secondary text-nowrap flex-grow-1 flex-lg-grow-0 w-100 horizontal-card-btn {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}" role="button">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit
+            </a>                        
+
+            <form method="POST"
+                    action="{{ url_for('event.cancel_event', event_id=seminar.id) }}"
+                    onsubmit="return confirm('Cancel this event? Attendees will no longer be able to register.');"
+                    class="d-grid flex-grow-1 flex-lg-grow-0 w-100 horizontal-card-btn">
+                <button href="{{ url_for('event.cancel_event', event_id=seminar.id )}}" type="submit" class="btn btn-danger text-nowrap {% if seminar.status == 'Cancelled' or seminar.status == 'Inactive' %}disabled{% endif %}">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Cancel
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+    </div>
+</div>

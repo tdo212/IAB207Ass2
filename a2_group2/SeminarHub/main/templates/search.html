@@ -1,3 +1,4 @@
+{% set active_page = 'search' %}
 {% extends 'base.html' %}
 
 {% block content %}
@@ -33,28 +34,8 @@
         <hr class="pb-1">
 
         {% for seminar in seminar_results %}
-        <a href="{{url_for('event.event_details', event_id = seminar.id)}}" class="text-decoration-none text-reset">
-            <div class="card mb-3 search-card">
-                <div class="row g-0">
-                    <div class="col-md-3 me-2">
-                        <img src="{{seminar.image_url}}" class="img-fluid h-100 rounded-start search-card-img" alt="">
-                        <span class="position-absolute top-0 start-0 m-2"><span class="badge bg-{{ 'primary' if seminar.category == 'Computer Science' else 'info' if seminar.category == 'Business' else 'warning' if seminar.category == 'Engineering' else 'success' if seminar.category == 'Medicine' else 'danger' if seminar.category == 'Social Sciences' else 'secondary'}}">{{seminar.category}}</span></span>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                                {% set badge_class = {'Open':'success','Inactive':'secondary','Sold Out':'danger','Cancelled':'dark'}.get(seminar.status, 'secondary') %}
-                                <div class="d-flex align-items-baseline">
-                                    <h5 class="card-title">{{seminar.title}}</h5>
-                                    <span class="ms-2 badge bg-{{badge_class}} small">{{ seminar.status }}</span>
-                                </div>
-                            <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{seminar.location}}</p>
-                            <small class="text-muted"><i class="bi bi-calendar-event me-2"></i>{{seminar.start_dt.strftime("%B %d, %Y | %I:%M %p")}} - {{seminar.end_dt.strftime("%I:%M %p")}}</small>
-                            <p class="card-text mt-2">{{seminar.description}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-        </a>
+            <!-- From partial template -->
+            {% include '_horizontal_card.html' %}
         {% endfor %}
     </div>
     {% endif %}
@@ -66,15 +47,8 @@
         <hr class="pb-1">
 
         {% for comment in comment_results %}
-        <a href="{{url_for('event.event_details', event_id=comment.event_id)}}" class="text-decoration-none text-reset">
-        <div class="comment search-comment mb-4 bg-white rounded shadow-sm p-3">
-            <div class="d-flex justify-content-between">
-                <h6 class="ms-1">{{comment.user.first_name}} {{comment.user.last_name}}</h6>
-                <small class="text-muted me-2">{{comment.created_at.strftime("%B %d, %Y, %I:%M %p")}}</small>
-            </div>
-            <p class="ms-1">{{comment.text}}</p>
-        </div>
-        </a>
+            <!-- From partial template -->
+            {% include '_comment.html' %}
         {% endfor %}
     </div>
     {% endif %}

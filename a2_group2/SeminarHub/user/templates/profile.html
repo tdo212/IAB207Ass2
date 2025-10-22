@@ -3,20 +3,20 @@
 {% block title %}{{heading}}{% endblock %}
 
 {% block profile_content %}
-<div class="container pt-md-3 pt-2 ps-4 pe-4 ps-lg-0 mt-md-5 mt-3">
+<div class="container-fluid pt-md-3 pt-2 ps-4 pe-4 ps-lg-0 mt-md-5 mt-3">
     <div class="row">
         <!-- Left side -->
         <!-- Account details -->
         <div class="col-12 col-lg-5 col-xl-4 pb-3">
             <div class="profile-form-section shadow rounded mb-3 w-100">
                 {% block account_details %}
-                {% include details_template %}
+                    {% include details_template %}
                 {% endblock %}
             </div>
         </div>
 
         <!-- Right side -->
-        <div class="col-12 col-lg-7 col-xl-8 pe-4">
+        <div class="col-12 col-lg-5 pe-4">
             <!-- Security -->
             <div class="row ps-3 pb-3">
                 <div class="profile-form-section shadow rounded mb-3 w-100">
@@ -28,17 +28,17 @@
                         
                         <hr class="text-secondary">
 
-                        <div class="px-4 mb-3 mt-4 d-flex">
-                            <h5 class="me-4 text-muted mb-2"><i class="bi bi-clock fs-5 pe-2"></i>Last login:</h5>
+                        <div class="px-4 mb-3 mt-4 d-column d-md-flex">
+                            <h5 class="me-2 text-muted mb-2 text-nowrap"><i class="bi bi-clock fs-5 pe-2"></i>Last login:</h5>
                             <h5 class="">{% if user.last_seen %}{{user.last_seen.strftime('%H:%M %d/%m/%Y')}}{% else %}No previous login{% endif %}</h5>
                         </div>
-                        <div class="px-4 mb-3 d-flex">
-                            <h5 class="me-4 text-muted mb-2"><i class="bi bi-shield-lock fs-5 pe-2"></i>2FA:</h5>
+                        <div class="px-4 mb-3 d-column d-md-flex">
+                            <h5 class="me-2 text-muted mb-2"><i class="bi bi-shield-lock fs-5 pe-2"></i>2FA:</h5>
                             <h5 class="">Disabled</h5>
                         </div>
-                        <div class="px-4 mb-3 d-flex">
-                            <h5 class="me-4 text-muted text-nowrap"><i class="bi bi-key fs-5 pe-2"></i>Password:</h5>
-                            <a href="{{url_for('auth.change_password', user_id=current_user.id)}}" class="text-decoration-none text-danger text-nowrap"><button class="btn btn-danger btn-sm me-2 px-1 px-lg-3 py-1 ">Change Password</button></a>
+                        <div class="px-4 mb-3 d-column d-md-flex">
+                            <h5 class="me-2 text-muted text text-nowrap"><i class="bi bi-key fs-5 pe-2"></i>Password:</h5>
+                            <a href="{{url_for('auth.change_password', user_id=current_user.id)}}" class="text-decoration-none text-danger text-nowrap"><button class="btn btn-danger btn-sm me-2 py-1 ">Change Password</button></a>
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                         <div class="px-4 mb-4 mt-4 d-flex">
                             <a href="" class="text-decoration-none text-reset">
                                 <h5 class="google-icon-container">
-                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" class="google-icon me-4">
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" class="google-icon me-3">
                                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
                                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
                                         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
@@ -85,11 +85,11 @@
                             <hr>
                         </div>
                         <div class="px-4 mb-4 mt-4 d-flex">
-                            <a href="" class="text-decoration-none text-reset"><h5 class=""><i class="bi bi-facebook h4 pe-4 text-primary"></i>Sign in with <span class="text-primary">Facebook</span></h5></a>
+                            <a href="" class="text-decoration-none text-reset"><h5 class=""><i class="bi bi-facebook h4 pe-3 text-primary"></i>Sign in with <span class="text-primary">Facebook</span></h5></a>
                             <hr>
                         </div>
                         <div class="px-4 mb-3 mt-4 d-flex">
-                            </i><a href="" class="text-decoration-none text-reset"><h5 class=""><i class="bi bi-apple h4 pe-4 text-secondary"></i>Sign in with <span class="text-secondary">Apple</span></h5></a>
+                            </i><a href="" class="text-decoration-none text-reset"><h5 class=""><i class="bi bi-apple h4 pe-3 text-secondary"></i>Sign in with <span class="text-secondary">Apple</span></h5></a>
                         </div>
                     </div>
                 </div>
