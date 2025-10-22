@@ -63,9 +63,9 @@ def index():
     if any_changed:
         db.session.commit()
     if selected_category:
-        events = Event.query.filter_by(category=selected_category).all()
+        events = Event.query.filter_by(category=selected_category).order_by(Event.start_dt.asc()).all()
     else:
-        events = Event.query.all()
+        events = Event.query.order_by(Event.start_dt.asc()).all()
     recent_cutoff = datetime.now().date()
     recently_added = [event for event in events if (recent_cutoff - event.date_added.date()).days <= 7]
 
