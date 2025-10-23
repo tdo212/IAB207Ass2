@@ -50,7 +50,9 @@ def maybe_refresh_status(event: Event) -> None:
 
 @main_bp.route('/')
 def index():
+    # base query to get all events
     events = Event.query.all()
+    # gets the selected category from the url parameters, by default it is None
     selected_category = request.args.get('category', None)
     any_changed = False
     for e in events:
@@ -62,17 +64,19 @@ def index():
                 pass
     if any_changed:
         db.session.commit()
+    # if category is selected, filter events with that category within database by ascending start date
     if selected_category:
         events = Event.query.filter_by(category=selected_category).order_by(Event.start_dt.asc()).all()
     else:
         events = Event.query.order_by(Event.start_dt.asc()).all()
+    # query for recently added events (within last 7 days)
     recent_cutoff = datetime.now().date()
     recently_added = [event for event in events if (recent_cutoff - event.date_added.date()).days <= 7]
 
     categories = db.session.query(Event.category).distinct().all()
     categories = [category[0] for category in categories]
 
-
+    # render the index.html, passing events, categories, selected category and recently added events
     return render_template('index.html', events=events, categories = categories, selected_category=selected_category, recently_added=recently_added)
 
 
