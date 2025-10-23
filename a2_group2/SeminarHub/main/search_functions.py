@@ -13,17 +13,6 @@ def search_table(model, columns, search_query):
     If a column is type datetime, first cast it into a string and then complete the search as datetime is the only type that does not work with the original search functionality.
 
     Taken and modified from: https://stackoverflow.com/a/57192587 and https://stackoverflow.com/a/42780340
-
-    Original search: or_(*[getattr(model, col).ilike(f'%{search_query}%') for col in columns])
-    Explanation for my benefit:
-
-    getattr(object, attribute) = where the object is the table name and the attribute is the column name. Returns the value of a name attribute of an object (e.g. returns the value of Event.title).
-
-    or_ = Essentially an SQL OR statement.
-
-    * = Unpacks a List and passes each element in the list as seperate arguments into the or_ statment.
-
-    cast(col, type) = Casts the specific column from whatever it was defined as initially to the type defined. E.g. from DateTime to String.
     """
     sql_queries = []
 
@@ -46,6 +35,7 @@ def search_table(model, columns, search_query):
             sql_queries.append(col_object.ilike(f'%{search_query}%'))
     
     return model.query.filter(or_(*sql_queries)).all()
+
 
 def get_page_results(search_query):
     """
@@ -172,6 +162,7 @@ def get_booking_results(search_query):
         booking_results = list(dict.fromkeys(filtered_events + booking_results))
         
     return booking_results
+
 
 def date_search(search_query):
     """Compares the search query against a dictionary of months to see if the input is a spelt out month as opposed to digits. If it is a spelt out month, turns it back into digits for compatibility with the database storage.

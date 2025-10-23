@@ -22,8 +22,6 @@ class User(db.Model, UserMixin):
     comments      = db.relationship("Comment", back_populates="user")
     owned_events  = db.relationship("Event",   back_populates="owner")
 
-
-
     def __repr__(self):
         return f"<User {self.first_name} {self.last_name} ({self.email})>"
         

@@ -22,6 +22,7 @@ def check_upload_file(form) -> str:
     fp.save(upload_path)
     return db_upload_path
 
+
 @event_bp.route('/event/<int:event_id>')
 def event_details(event_id):
     event = Event.query.get_or_404(event_id)

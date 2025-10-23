@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, url_for
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
-from datetime import datetime, timezone
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -22,8 +22,7 @@ def create_app():
    # initialise the login manager
    login_manager = LoginManager()
    
-   # set the name of the login function that lets user login
-   # in our case it is auth.login
+   # Set the name of the login function that lets user login - auth.login
    login_manager.login_view = 'auth.login'
    login_manager.init_app(app)
 

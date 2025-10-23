@@ -2,6 +2,8 @@ from wtforms.validators import ValidationError
 from .. import db
 from ..models import User
 
+# Custom validators for authentication forms which include: RegisterForm and LoginForm. Uses the factory template as outlined in the WTForms documention: https://wtforms.readthedocs.io/en/3.2.x/validators/#custom-validators
+
 def password_validator():
     """Checks the password entered by a user in a form to make sure that it contains an uppercase letter, a lower case letter, a special character and that it is at least 6 characters long.
     
