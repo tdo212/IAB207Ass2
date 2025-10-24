@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, request, url_for, redirect
+from flask import Blueprint, flash, render_template, request, url_for, redirect, session
 from .. import db
 import os
 from ..models import Event, Comment, Booking
@@ -129,11 +129,6 @@ def edit_event(event_id):
     # Get the seminar information from the database
     event = Event.query.get_or_404(event_id)
 
-    # Gets the page the user was on prior to error
-    back = request.referrer
-    if back is None:
-        back = url_for('main.index')
-
     # Check that the owner of the seminar is the one trying to access and edit it
     if current_user.id != event.owner_user_id:
         flash('You are not the owner of that seminar.', 'error')
@@ -142,15 +137,25 @@ def edit_event(event_id):
     # Pre-fill the form using the current seminars data
     form = EditForm(obj = event)
 
-    # Pre-fill date/time fields on first load
-    if request.method == 'GET' and event.start_dt and event.end_dt:
-        try:
-            form.start_date.data = event.start_dt.date()
-            form.start_time.data = event.start_dt.time()
-            form.end_time.data = event.end_dt.time()
-            form.end_date.data = event.end_dt.date()
-        except Exception:
-            pass
+
+    if request.method == 'GET':
+        # Gets the page the user was on prior to error
+        back = request.referrer
+        # If doesnt exist or it is itself, send back to details
+        if back is None or request.url in back:
+            back = url_for('event.event_details', event_id=event.id)
+        # Store back url in session data to keep it present in case of validation error
+        session['back'] = back
+        
+        # Pre-fill date/time fields on first load
+        if event.start_dt and event.end_dt:
+            try:
+                form.start_date.data = event.start_dt.date()
+                form.start_time.data = event.start_dt.time()
+                form.end_time.data = event.end_dt.time()
+                form.end_date.data = event.end_dt.date()
+            except Exception:
+                pass
 
     # If submitted which means request.method == 'POST', update database columns
     if form.validate_on_submit():
@@ -168,13 +173,14 @@ def edit_event(event_id):
             event.image_url = check_upload_file(form)
         
         db.session.commit()
+        session.pop('back')
         
         maybe_refresh_status(event)
         flash(f'{event.title} successfully updated!', 'success')
         # Back to details page
         return redirect(url_for('event.event_details', event_id = event.id))
 
-    return render_template('edit_seminar.html', form = form, event = event, back = back)
+    return render_template('edit_seminar.html', form = form, event = event)
 
 
 @event_bp.route('/event/<int:event_id>/cancel', methods=['POST'])

@@ -49,7 +49,7 @@ class CreateForm(FlaskForm):
     end_date = DateField('End Date', validators=[InputRequired(message='Please enter a valid date.')])
     end_time = TimeField('End Time', validators=[InputRequired(message='Please enter a valid end time.')])
     location = StringField('Location', validators=[InputRequired(message='Please enter a location for the seminar.')], render_kw={'placeholder': 'e.g. Main Auditorium'})
-    capacity = IntegerField('Capacity', validators=[InputRequired(message='Please enter the maximum attendees.'), NumberRange(min=0)], render_kw={'placeholder': 'Maximum attendees'})
+    capacity = IntegerField('Capacity', validators=[InputRequired(message='Please enter the maximum attendees.'), NumberRange(min=1, message='Number of tickets available must be more than 1.')], render_kw={'placeholder': 'Maximum attendees'})
     speaker = StringField('Speaker Name', validators=[InputRequired(message="Please enter the speaker's name.")], render_kw={'placeholder': "Enter speaker's name"})
     speaker_bio = TextAreaField('Speaker Bio', validators=[Optional()], render_kw={'placeholder': 'Brief background about the speaker... (Optional)', 'rows':'3'})
     image = FileField('Seminar Image', validators=[FileRequired(message='Please select an image to upload.'), FileAllowed(ALLOWED_FILE, message='Uploaded image must be a PNG, JPG or JPEG.')])
