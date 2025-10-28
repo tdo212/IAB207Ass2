@@ -82,7 +82,9 @@ def create():
 @event_bp.route('/event/<int:event_id>/register', methods=['POST'])
 @login_required
 def register_event(event_id):
+    # Retrieve the event by its ID or return 404 if not found
     event = Event.query.get_or_404(event_id)
+    # Check if the event has an 'is_sold_out' method or attribute and handle accordingly
     is_sold_out = getattr(event, "is_sold_out", None)
     if callable(is_sold_out):
         if event.is_sold_out():
@@ -92,13 +94,15 @@ def register_event(event_id):
         if event.is_sold_out:
             flash('Sorry, this event is sold out!', 'danger')
             return redirect(url_for('event.event_details', event_id=event.id))
-
+    # Get the quantity of tickets requested (default is 1)
     qty = int(request.form.get('quantity', 1))
+    # Check how many tickets are still available
     remaining = remaining_for(event)
     if qty > remaining:
+        # If requested quantity is more than what's left, show warning and redirect
         flash(f'Only {remaining} tickets remaining!', 'warning')
         return redirect(url_for('event.event_details', event_id=event.id))
-
+    # Create a new booking record for the current user
     booking = Booking(
         booking_number=generate_booking_number(),
         quantity=qty,
@@ -109,9 +113,9 @@ def register_event(event_id):
     )
     db.session.add(booking)
     db.session.commit()
-
+    # Refresh the event's status 
     maybe_refresh_status(event)
-
+    # Show success message with the unique booking number
     flash(f'Booking confirmed! Your booking number is: {booking.booking_number}', 'success')
     return redirect(url_for('event.event_details', event_id=event.id))
 
@@ -210,35 +214,39 @@ def cancel_event(event_id):
 @event_bp.route('/event/<int:event_id>/comment', methods=['POST'])
 @login_required
 def add_comment(event_id):
+    # Retrieve the event by its ID or return 404 if not found
     event = Event.query.get_or_404(event_id)
-
+    # Get and clean the comment text from the submitted form
     text = (request.form.get('text') or '').strip()
+    # If the comment is empty, show a warning and redirect back to the event page
     if not text:
         flash('Please enter a comment before posting.', 'warning')
         return redirect(url_for('event.event_details', event_id=event.id))
+    # If the comment is too long, show a warning and redirect back
     if len(text) > 1000:
         flash('Comment is too long (max 1000 characters).', 'warning')
         return redirect(url_for('event.event_details', event_id=event.id))
-
+    # Create a new Comment record linked to the current user and event
     comment = Comment(text=text, user_id=current_user.id, event_id=event.id)
     db.session.add(comment)
     db.session.commit()
-
+    # Confirm successful posting of the comment
     flash('Comment posted!', 'success')
     return redirect(url_for('event.event_details', event_id=event.id))
 
 @event_bp.route('/event/<int:event_id>/comment/<int:comment_id>/delete', methods=['POST'])
 @login_required
 def delete_comment(event_id, comment_id):
-    """Delete a comment if the current user is the owner."""
+    # Retrieve the comment by its ID or return 404 if not found
     comment = Comment.query.get_or_404(comment_id)
 
     # Check ownership
     if comment.user_id != current_user.id:
         flash('You can only delete your own comments.', 'warning')
         return redirect(url_for('event.event_details', event_id=event_id))
-
+    # Delete the comment and save the change
     db.session.delete(comment)
     db.session.commit()
+    # Confirm successful deletion to the user
     flash('Comment deleted successfully.', 'success')
     return redirect(url_for('event.event_details', event_id=event_id))
