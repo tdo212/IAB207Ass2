@@ -9,9 +9,10 @@ db = SQLAlchemy()
 def create_app():
 
    app = Flask(__name__)  
-   # Should be set to false in a production environment
-   app.debug = True
-   app.secret_key = 'somesecretkey'
+   # Debug false on production version
+   app.debug = False
+   # Secret key randomised from Python 'secrets' package. Would not be hardcoded in a real application
+   app.secret_key = '3d34ba27378f990f46d1f9b698791c0a13d2cd389077e155'
    # set the app configuration data 
    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seminarhub.sqlite'
    # initialise db with flask app
@@ -52,19 +53,13 @@ def create_app():
    # Error handling for errors 404 and 500
    @app.errorhandler(404)
    def page_not_found(error):
-      # Gets the page the user was on prior to error
-      back = request.referrer
-      if back is None:
-         back = url_for('main.index')
-      return render_template('404.html', heading = 'Page Missing | ', back = back), 404
+      # Render 404 template
+      return render_template('404.html', heading = 'Page Missing | '), 404
 
    @app.errorhandler(500)
    def internal_error(error):
-      # Gets the page the user was on prior to error
-      back = request.referrer
-      if back is None:
-         back = url_for('main.index')
-      return render_template('500.html', heading = 'Server Error | ', back = back), 500
+      # Render 500 tempalte
+      return render_template('500.html', heading = 'Server Error | '), 500
    
    # Last seen helper
    @app.before_request
