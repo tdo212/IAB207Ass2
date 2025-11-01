@@ -79,11 +79,17 @@ def create():
     return render_template('create.html', form=form, heading='Create a Seminar | ')
 
 
-@event_bp.route('/event/<int:event_id>/register', methods=['POST'])
+@event_bp.route('/event/<int:event_id>/register', methods=['GET', 'POST'])
 @login_required
 def register_event(event_id):
     # Retrieve the event by its ID or return 404 if not found
     event = Event.query.get_or_404(event_id)
+
+    # Handle GET request which occurs automatically if the user tries to reserve a ticket without being logged in
+    if request.method == 'GET':
+        # Redirects to the page again to avoid automatic reservation that was requested before the user logged in
+        return redirect(url_for('event.event_details', event_id=event.id))
+
     # Check if the event has an 'is_sold_out' method or attribute and handle accordingly
     is_sold_out = getattr(event, "is_sold_out", None)
     if callable(is_sold_out):
